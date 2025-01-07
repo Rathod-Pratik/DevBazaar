@@ -1,0 +1,16 @@
+login -ok
+sign up -ok
+Account data -ok
+
+Fetch Product Data
+
+fetch data from wishlist -ok
+add to wishlist -ok
+remove from wishlist -ok
+
+add to cart -ok
+remove from cart -ok
+
+Billing
+Profile
+Contect us
