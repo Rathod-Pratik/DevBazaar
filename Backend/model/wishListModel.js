@@ -2,7 +2,7 @@ const mongoose =require('mongoose');
 
 const wishListSchema=new mongoose.Schema({
     Product_name:{
-        type:Number,
+        type:String,
         required:true,
     },
     product_image_url:{

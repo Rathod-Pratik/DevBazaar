@@ -2,14 +2,14 @@ const WishList = require("../model/wishListModel");
 
 
 async function RemoveItem (req, res){  // Change to DELETE for deleting data
-    const { user, Product_name } = req.query;
+    const { user, Product_name } = req.body;
   
-    if (!user || !Product_name) {
-      return res.status(400).json({ error: "User and Product Name are required" });
-    }
+     if (!user || !Product_name) {
+       return res.status(400).json({ error: "User and Product Name are required" });
+     }
   
     try {
-      const deleteWishList = await WishList.deleteOne({ user, Product_name });
+      const deleteWishList = await WishList.deleteOne({user, Product_name });
   
       if (deleteWishList.deletedCount === 0) {
         return res.status(404).json({ message: "Product not found in the wish list" });
@@ -24,20 +24,21 @@ async function RemoveItem (req, res){  // Change to DELETE for deleting data
 
   async function AddToWishList (req, res){  // Change to POST for creating data
     try {
-      const { user, Product_name, product_image_url, Price,reting } = req.body;
+      const { user, Product_name, product_image_url, Price,Rating,offer } = req.body;
   
       // Validate required fields
-      if (!user || !Product_name || !product_image_url || !Price || !reting) {
+      if (!user || !Product_name || !product_image_url || !Price || !Rating || !offer) {
         return res.status(400).json({ error: "All the Product data is required" });
       }
   
       // Add product to wishlist
       const AddToWishList = await WishList.create({
-        user,
-        Product_name,
-        product_image_url,
-        Price,
-        reting
+        user:user,
+        Product_name: Product_name,
+        product_image_url:product_image_url,
+        Price:Price,
+        reting:Rating,
+        offer:offer
       });
   
       // Check if the product was added successfully
@@ -54,7 +55,7 @@ async function RemoveItem (req, res){  // Change to DELETE for deleting data
 
   async function getWishList (req, res){  // Change to GET for reading data
 
-    const { user } = req.query;
+    const { user } = req.body;
   
     if (!user) {
       return res.status(400).json({ error: "User is required" });
