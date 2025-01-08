@@ -32,6 +32,9 @@ app.get('/',(req,res)=>{
 
 app.use('/Auth',require('./routes/AuthRoutes'));
 app.use('/wishList',require('./routes/WishListRoute'))
+app.use('/Billing',require('./routes/BillingRoutes'));
+app.use('/Product',require('./routes/ProductRoutes'));
+app.use('/Cart',require('./routes/CartRoute'));
 
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');

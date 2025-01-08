@@ -11,6 +11,6 @@ remove from wishlist -ok
 add to cart -ok
 remove from cart -ok
 
-Billing
+Billing - ok
 Profile
 Contect us
