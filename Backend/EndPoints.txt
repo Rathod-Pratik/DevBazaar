@@ -12,5 +12,5 @@ add to cart -ok
 remove from cart -ok
 
 Billing - ok
-Profile
-Contect us
+Profile -ok
+Contect us -ok
