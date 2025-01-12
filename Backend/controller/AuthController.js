@@ -36,18 +36,13 @@ const signup = async (req, res) => {
 
     const solt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, solt);
-    const user = await User.create({name:name, email: email, password: hashPassword });
+    const [firstName, ...rest] = name.split(" ");
+  const lastName = rest.join(" ");
+    const user = await User.create({FirstName:firstName,LastName:lastName, email: email, password: hashPassword });
 
-    //Create token
-    const data={
-      user:{
-        id:user.id
-      }
-    }
-    const Authtoken=jwt.sign(data,process.env.JWT_SECRET);
-    return res.status(201).send({Authtoken:Authtoken});
+    return res.status(201).send({user});
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(403).json({ error: err.message });
   }
 };
 
@@ -91,7 +86,7 @@ const Login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
-    return res.status(200).json({ message: "Login successful" });
+    return res.status(200).json({user});
   } catch (error) {
     console.error("Error during login:", error.message);
     return res.status(500).json({ error: "Internal Server Error" });
