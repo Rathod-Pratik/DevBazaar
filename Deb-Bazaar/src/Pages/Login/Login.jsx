@@ -4,25 +4,53 @@ import { apiClient } from "../../lib/api-Client";
 import { LOGIN_ROUTES } from "../../Utils/Constant";
 import { useAppStore } from "../../Store";
 
-const Login = () => {
-  const {setUserInfo,userInfo}=useAppStore();
+const Login = (props) => {
+  const {setUserInfo}=useAppStore();
   const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
 
+  const validateLogin = () => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating email
+  
+    if (!email.length) {
+      props.ShowAlert('text-red-800', "Email is required", 'bg-red-50');
+      return false;
+    }
+    
+    if (!emailPattern.test(email)) {
+      props.ShowAlert('text-red-800', "Please enter a valid email address", 'bg-red-50');
+      return false;
+    }
+  
+    if (!password.length) {
+      props.ShowAlert('text-red-800', "Password is required", 'bg-red-50');
+      return false;
+    }
+  
+    return true;
+  };
+  
   const handleLogin=async()=>{
+    props.setProgress(10);
+    if(validateLogin()){
     try {
-      const response=apiClient.post(LOGIN_ROUTES,{email,password},{withCredentials:true});
+      const response=await apiClient.post(LOGIN_ROUTES,{email,password},{withCredentials:true});
 
-      console.log(response.data.user);
-      if(response.status==200){
-        setUserInfo(response);
-        // navigate('/');
-        console.log(userInfo);
+      const {data,status}=response;
+      props.setProgress(50);
+      if(status==200){
+        props.ShowAlert('text-green-800','Login Successfully','bg-green-50')
+        setUserInfo(data.user);
+        navigate('/');
+        props.setProgress(100);
       }
     } catch (error) {
       console.log(error);
+      props.ShowAlert('text-red-800','Please enter valid email and Password','bg-red-50');
+      props.setProgress(100);
     }
+  }
   }
   return (
     <div className="flex flex-col md:flex-row items-center justify-evenly w-4/5 mx-auto gap-8 py-12 md:py-16">

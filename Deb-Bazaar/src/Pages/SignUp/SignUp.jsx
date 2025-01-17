@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {apiClient} from '../../lib/api-Client'
 import { SIGNUP_ROUTES } from '../../Utils/Constant';
 import { useAppStore } from '../../Store';
-const SignUp = () => {
+const SignUp = (props) => {
   const {setUserInfo}=useAppStore();
   const [name,setName]=useState("");
   const [email,setEmail]=useState("");
@@ -11,33 +11,54 @@ const SignUp = () => {
 
   const navigate=useNavigate();
   const handleSignup=async()=>{
+    props.setProgress(10);
    if(validateSignup()){
      try {
     const response=await apiClient.post(SIGNUP_ROUTES,{name,email,password},{withCredentials:true});
-    console.log(response);
+    const {data,status}=response;
+    props.setProgress(50);
     if(response.status==201){
-      navigate('/')
-      setUserInfo(response.data.user)
+      props.ShowAlert('text-green-800','SignUp Successfully','bg-green-50');
+      setUserInfo(data.user);
+      navigate('/');
+      props.setProgress(100);
     }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      props.setProgress(100);
     }}
   }
   const validateSignup = () => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating email
+  
     if (!email.length) {
-      toast.error("Email is required.");
+      props.ShowAlert('text-red-800', "Email is required", 'bg-red-50');
       return false;
     }
+    
+    if (!emailPattern.test(email)) {
+      props.ShowAlert('text-red-800', "Please enter a valid email address", 'bg-red-50');
+      return false;
+    }
+  
     if (!password.length) {
-      toast.error("Password is required");
+      props.ShowAlert('text-red-800', "Password is required", 'bg-red-50');
       return false;
     }
+  
+    if (password.length < 8) {
+      props.ShowAlert('text-red-800', "Password must be at least 8 characters long", 'bg-red-50');
+      return false;
+    }
+  
     if (!name.length) {
-      toast.error("Password and confirm password should be the same.");
+      props.ShowAlert('text-red-800', "Name is required", 'bg-red-50');
       return false;
     }
+  
     return true;
   };
+  
   return (
     <div className="flex flex-col md:flex-row items-center justify-evenly w-4/5 mx-auto gap-8 py-12 md:py-16">
       {/* Image Section */}
