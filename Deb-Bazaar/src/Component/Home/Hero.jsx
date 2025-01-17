@@ -8,7 +8,8 @@ import "swiper/css/pagination";
 
 // Import required modules
 import { Pagination, Autoplay } from "swiper/modules";
-
+import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa6";
 const Hero = () => {
   const products = [
     {
@@ -68,60 +69,91 @@ const Hero = () => {
   ];
 
   return (
-    <div>
-  <Swiper
-    spaceBetween={30}
-    // loop={true} // Enables infinite scrolling
-    pagination={{
-      clickable: true, // Enables pagination dots
-    }}
-    modules={[Pagination, Autoplay]}
-     autoplay={{
-       delay: 5000, // Changes slide every 5 seconds (5000 ms)
-       disableOnInteraction: false,
-     }}
-    className="mySwiper"
-  >
-    {products.map((product, index) => (
-      <SwiperSlide key={product.id}>
-        {/* Add even:bg-black here */}
-        <div className={`flex items-center justify-center p-4 rounded-lg shadow-md h-[80vh] ${index % 2 === 1 ? 'bg-[#2c2525] text-white' : 'bg-white text-gray-800'}`}>
-          {/* Product Details */}
-          <div className="w-1/2 text-left flex flex-col">
-            {/* Product Name */}
-            <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
+    <div className="grid grid-cols-4 gap-4 h-[70vh]">
+      {/* Menu Section */}
+      <div className="col-span-1 flex justify-center gap-2 p-4 mt-4 border-r-2">
+        <nav className="space-y-4">
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Women's Fashion
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Men's Fashion
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Electronics
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Home & Lifestyle
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Medicine
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Sports & Outdoor
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Baby's & Toys
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Groceries & Pets
+          </Link>
+          <Link className="block text-lg font-medium hover:underline hover:text-red-600">
+            Health & Beauty
+          </Link>
+        </nav>
+      </div>
 
-            {/* Product Rating */}
-            <p className="text-yellow-500 mb-2">
-              ⭐ {product.rating.toFixed(1)} / 5
-            </p>
+      {/* Swiper Section */}
+      <div className="col-span-3 p-4">
+        <Swiper
+          spaceBetween={30}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination, Autoplay]}
+          // autoplay={{
+          //   delay: 5000, // Changes slide every 5 seconds
+          //   disableOnInteraction: false,
+          // }}
+          className="mySwiper"
+        >
+          {products.map((product, index) => (
+            <SwiperSlide key={product.id}>
+              <div
+                className={`flex items-center justify-center p-4 rounded-lg shadow-md h-[80vh] ${
+                  index % 2 === 1
+                    ? "bg-[#2c2525] text-white"
+                    : "bg-white text-gray-800"
+                }`}
+              >
+                {/* Product Details */}
+                <div className="w-1/2 text-left flex flex-col">
+                  <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
+                  <p className="text-base mb-4">{product.description}</p>
+                  <p className="text-lg font-semibold">{product.price}</p>
+                  <p className="text-yellow-500 mb-2">
+                    ⭐ {product.rating.toFixed(1)} / 5
+                  </p>
+                  <button className="p-3 border border-transparent flex gap-2 justify-center my-2 mx-0 text-white bg-red-600 rounded-sm hover:bg-white hover:border-red-600 hover:border-3 transition-all hover:text-red-600">
+                    Shop Now
+                    <FaArrowRight className="self-center transition-all text-white group-hover:text-red-600" />
+                  </button>
+                </div>
 
-            {/* Product Description */}
-            <p className="text-base mb-4 text-start">{product.description}</p>
-
-            {/* Product Price */}
-            <p className="text-lg font-semibold">{product.price}</p>
-            <div>
-              <button className="p-3 border border-transparent flex justify-center my-2 mx-0 text-white bg-red-600 rounded-sm hover:bg-white hover:border-red-600 hover:border-3 transition-all hover:text-red-600">
-                Shop Now
-              </button>
-            </div>
-          </div>
-
-          {/* Product Image */}
-          <div className="flex justify-center">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-1/4 h-1/4 object-cover rounded-lg"
-            />
-          </div>
-        </div>
-      </SwiperSlide>
-    ))}
-  </Swiper>
-</div>
-
+                {/* Product Image */}
+                <div className="flex justify-center">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-1/4 h-1/4 object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`bg-white flex justify-between items-center px-8 py-4 shadow-md sticky top-0 z-30 ${style.container}`}
+        className={`bg-white flex justify-between items-center px-8 py-4 border-b sticky top-0 z-30 ${style.container}`}
       >
         {/* Logo */}
         <h2 className="text-2xl font-bold text-gray-800">DavBazzar</h2>
