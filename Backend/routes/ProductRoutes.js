@@ -6,6 +6,7 @@ router.get("/getProduct", (req, res) => {
   const data = [
     {
       Review: 97,
+      off:25,
       Original_Price: "22000",
       Product_name: "Smartphone",
       product_image_url:
@@ -16,39 +17,43 @@ router.get("/getProduct", (req, res) => {
         "A sleek smartphone with a powerful processor and long battery life.",
     },
     {
+      off:35,
       Review: 136,
       Original_Price: "65000",
       Product_name: "Laptop",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198663/laptop_utvcyb.png",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298862/laptop_kukve0.png",
       Price: "60000",
       Rating: 4.8,
       Description:
         "A lightweight laptop with high performance and stunning display.",
     },
     {
+      off:45,
       Review: 122,
       Original_Price: "20000",
       Product_name: "Smartwatch",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198421/smart_Watch_cvjrsb.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298842/smart_Watch-removebg-preview_fmk3fp.png",
       Price: "15000",
       Rating: 4.3,
       Description:
         "A stylish smartwatch with health tracking and notifications.",
     },
     {
+      off:35,
       Review: 200,
       Original_Price: "50000",
       Product_name: "Camera",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198417/camera_wohfeo.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298836/camera-removebg-preview_sa7a88.png",
       Price: "45000",
       Rating: 4.7,
       Description:
         "A high-resolution camera perfect for photography enthusiasts.",
     },
     {
+      off:35,
       Review: 188,
       Original_Price: "4000",
       Product_name: "Headphones",
@@ -59,28 +64,31 @@ router.get("/getProduct", (req, res) => {
       Description: "Comfortable headphones with excellent sound quality.",
     },
     {
+      off:45,
       Review: 189,
       Original_Price: "43000",
       Product_name: "Gaming Console",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198415/gaming_console_ja1hfq.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737299724/gaming_console-removebg-preview_fwjdjm.png",
       Price: "40000",
       Rating: 4.9,
       Description:
         "A gaming console for immersive and high-performance gaming.",
     },
     {
+      off:33,
       Review: 177,
       Original_Price: "32000",
       Product_name: "Tablet",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198412/tablet_qjrzb5.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298835/tablet-removebg-preview_aiqq12.png",
       Price: "25000",
       Rating: 4.4,
       Description:
         "A versatile tablet with a vivid screen and multitasking capabilities.",
     },
     {
+      off:34,
       Review: 167,
       Original_Price: "2500",
       Product_name: "Keyboard",
@@ -92,37 +100,41 @@ router.get("/getProduct", (req, res) => {
         "A mechanical keyboard with customizable keys and RGB lighting.",
     },
     {
+      off:10,
       Review: 250,
       Original_Price: "2000",
       Product_name: "Mouse",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198410/mouse_j2ybde.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737299339/mouse-removebg-preview_k5v8ai.png",
       Price: "1200",
       Rating: 4.1,
       Description: "An ergonomic mouse with high precision and durability.",
     },
     {
+      off:15,
       Review: 176,
       Original_Price: "12000",
       Product_name: "Gaming Chair",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198404/gaming_Chair_bqnsfu.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298846/gaming_Chair-removebg-preview_xlvwmv.png",
       Price: "10000",
       Rating: 4.6,
       Description:
         "A comfortable gaming chair with lumbar support and adjustable settings.",
     },
     {
+      off:17,
       Review: 166,
       Original_Price: "45000",
       Product_name: "Smart TV",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198397/smart_tv_f6yqco.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198679/Monitor_y6b3pk.png",
       Price: "35000",
       Rating: 4.7,
       Description: "A smart TV with stunning visuals and seamless streaming.",
     },
     {
+      off:35,
       Review: 225,
       Original_Price: "6000",
       Product_name: "Bluetooth Speaker",
@@ -133,6 +145,7 @@ router.get("/getProduct", (req, res) => {
       Description: "A portable Bluetooth speaker with crystal-clear sound.",
     },
     {
+      off:45,
       Review: 219,
       Original_Price: "2500",
       Product_name: "Power Bank",
@@ -151,43 +164,48 @@ router.get("/getProduct", (req, res) => {
       Price: "3000",
       Rating: 4.4,
       Description: "Compact wireless earbuds with noise cancellation.",
+      off:40,
     },
     {
+      off:45,
       Review: 227,
       Original_Price: "3000",
       Product_name: "Fitness Tracker",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198445/fitness_tracker_hil54k.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737299922/fitness_tracker-removebg-preview_1_wobads.png",
       Price: "2500",
       Rating: 4.2,
       Description: "A fitness tracker to monitor your health and activities.",
     },
     {
+      off:30,
       Review: 212,
       Original_Price: "22000",
       Product_name: "Drone",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198447/Drone_oklfx1.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298816/Drone-removebg-preview_p16we9.png",
       Price: "20000",
       Rating: 4.8,
       Description: "A high-tech drone with a 4K camera and long flight time.",
     },
     {
+      off:35,
       Review: 245,
       Original_Price: "17500",
       Product_name: "VR Headset",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198457/VR_headSet_orwim8.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298816/VR_headSet-removebg-preview_n5usff.png",
       Price: "15000",
       Rating: 4.7,
       Description: "A virtual reality headset for immersive experiences.",
     },
     {
+      off:25,
       Review: 239,
       Original_Price: "55000",
       Product_name: "Desktop PC",
       product_image_url:
-        "https://res.cloudinary.com/rathodpratik/image/upload/v1737198575/Desk_top_d9g46y.jpg",
+        "https://res.cloudinary.com/rathodpratik/image/upload/v1737298816/Desk_top-removebg-preview_kk5edc.png",
       Price: "50000",
       Rating: 4.9,
       Description: "A powerful desktop PC for gaming and productivity.",
@@ -201,6 +219,7 @@ router.get("/getProduct", (req, res) => {
       Price: "4000",
       Rating: 4.5,
       Description: "An external hard drive with ample storage capacity.",
+      off:40,
     },
   ];
   res.status(200).json(data);
