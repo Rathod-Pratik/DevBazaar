@@ -23,12 +23,11 @@ const CartSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    reting:{
-        type:Number
-    },
-    offer:{
-        type:Number
-    },
+    Original_Price:{
+        type:String,
+        required:true
+    }
+    
 })
 
 const CartModel=mongoose.model('Cart',CartSchema);

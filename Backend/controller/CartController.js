@@ -2,10 +2,10 @@ const CartModel = require("../model/CartModel");
 
 const AddToCart = async (req, res) => {
   try {
-    const { user, Product_name, product_image_url, Price ,reting} = req.body;
+    const { user, Product_name, Product_image, Price ,Original_Price} = req.body;
 
     // Validate required fields
-    if (!user || !Product_name || !product_image_url || !Price || !reting) {
+    if (!user || !Product_name || !Product_image || !Price  || !Original_Price) {
       return res
         .status(400)
         .json({ error: "All the Product data is required" });
@@ -13,11 +13,11 @@ const AddToCart = async (req, res) => {
 
     // Add product to cart
     const AddToCart = await CartModel.create({
+      Original_Price,
       user,
       Product_name,
-      product_image_url,
-      Price,
-      reting
+      Product_image,
+      Price
     });
 
     // Check if the product was added successfully
