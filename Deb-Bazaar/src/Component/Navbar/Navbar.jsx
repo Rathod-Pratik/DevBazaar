@@ -188,8 +188,9 @@ const Navbar = () => {
           </div>
         </nav>
       </header>
-      {openModal && (
-        <div className="absolute right-[45px] top-12 bg-transparent backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50">
+      <div className="relative">
+      { openModal && (
+        <div className="right-[45px] fixed top-12 bg-transparent backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50">
           <ul className="list-none">
             <li className="py-2">
               <Link
@@ -239,6 +240,7 @@ const Navbar = () => {
           </ul>
         </div>
       )}
+      </div>
     </>
   );
 };
