@@ -1,64 +1,121 @@
 import React from "react";
 import { FaRegHeart } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { apiClient } from "../../lib/api-Client";
+import { ADD_TO_CART, ADD_TO_WISHLIST } from "../../Utils/Constant";
+import { useAppStore } from '../../Store/index'
+import { toast } from "react-toastify";
+
 const ProductCard = ({ data }) => {
+ const {userInfo}=useAppStore();
+ const {_id} =userInfo;
+  const {
+    off,
+    product_image_url,
+    Product_name,
+    Original_Price,
+    Review,
+    Price,
+    Rating,
+  } = data;
+
+  const AddToCart = async () => {
+    const response = await apiClient.post(ADD_TO_CART, {
+      Product_name:Product_name,
+      Product_image:product_image_url,
+      user:_id,
+      Price: Price,
+      Original_Price:Original_Price
+    },{withCredentials:true});
+
+    if(response.status==201){
+      toast.success('Product added to Cart');
+    }
+    else{
+      toast.error('Product failed to add to Cart');
+    }
+  };
+  const AddToWishList = async () => {
+    const response = await apiClient.post(ADD_TO_WISHLIST, {
+      user:_id,
+      Product_name:Product_name,
+      Product_image:product_image_url,
+      Price: Price,
+      Original_Price:Original_Price,
+      offer:off
+    },{withCredentials:true});
+
+    if(response.status==201){
+      toast.success('Product added to WishList');
+    }
+    else{
+      toast.error('Product failed to add to WishList');
+    }
+  };
+
+  const maxStars = 5;
+  const fullStars = Math.floor(Rating); // Number of full stars
+  const hasHalfStar = Rating % 1 !== 0; // Check if there's a half-star
+  const emptyStars = maxStars - Math.ceil(Rating); // Remaining empty stars
   return (
-    <div className="w-full max-w-sm bg-white rounded-lg dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-[280px] !border-none bg-white rounded-lg group">
       {/* Product Image */}
-      <a href="#">
-        <div className="w-full h-64 overflow-hidden flex flex-col">
-        <FaRegHeart className="justify-end" />
-          <img
-            className="w-full h-full object-cover rounded-t-lg"
-            src={data.product_image_url}
-            alt={data.Product_name}
-          />
-        </div>
-      </a>
-
-      {/* Product Details */}
-      <div className="px-5 pb-5">
-        <a href="#">
-          <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-            {data.Product_name}
-          </h5>
-        </a>
-
-        {/* Rating Section */}
-        <div className="flex items-center mt-2.5 mb-5">
-          <div className="flex items-center space-x-1 rtl:space-x-reverse">
-            {[...Array(5)].map((_, index) => (
-              <svg
-                key={index}
-                className={`w-4 h-4 ${
-                  index < Math.floor(data.Rating)
-                    ? "text-yellow-300"
-                    : "text-gray-200 dark:text-gray-600"
-                }`}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            ))}
+      <div className="bg-[#F5F5F5] ">
+        <div className="flex flex-col relative">
+          {/* Discount Badge and Wishlist Icon */}
+          <div className="flex justify-between">
+            <p className="px-3 py-1 m-2 rounded-[5px] bg-[#DB4444] text-white">
+              -{off}%
+            </p>
+            <FaRegHeart className="cursor-pointer m-2 text-[20px]" onClick={AddToWishList} />
           </div>
-          <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">
-            {data.Rating.toFixed(1)}
-          </span>
-        </div>
 
-        {/* Price and Add to Cart Button */}
-        <div className="flex items-center justify-between">
-          <span className="text-3xl font-bold text-gray-900 dark:text-white">
-            ${data.Price}
-          </span>
-          <a
-            href="#"
-            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Add to cart
-          </a>
+          {/* Product Image */}
+          <img
+            className="m-auto w-[150px] h-[150px] object-contain rounded-lg"
+            src={product_image_url}
+            alt={Product_name}
+          />
+
+          {/* Add to Cart Button */}
+          <button onClick={AddToCart} className="bg-black text-white h-[40px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+      {/* Product Details */}
+      <div>
+        <div className="flex flex-col gap-3 mt-1">
+          <h1 className="text-[16px] font-medium text-gray-900 dark:text-white">
+            {Product_name}
+          </h1>
+          <div className="flex flex-row items-center gap-2">
+            <p className="font-medium text-red-500 text-[16px]">${Price}</p>
+            <p className="text-gray-500 line-through font-medium text-[16px]">
+              ${Original_Price}
+            </p>
+          </div>
+          <div className="flex items-center">
+            {/* Full Stars */}
+            {Array(fullStars)
+              .fill(0)
+              .map((_, index) => (
+                <FaStar key={`full-${index}`} className="text-yellow-500" />
+              ))}
+
+            {/* Half Star */}
+            {hasHalfStar && <FaStarHalfAlt className="text-yellow-500" />}
+
+            {/* Empty Stars */}
+            {Array(emptyStars)
+              .fill(0)
+              .map((_, index) => (
+                <FaRegStar key={`empty-${index}`} className="text-gray-300" />
+              ))}
+
+            {/* Show numeric rating */}
+            <p className="ml-2 text-sm text-gray-600">({Review})</p>
+          </div>
         </div>
       </div>
     </div>
