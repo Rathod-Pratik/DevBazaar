@@ -1,71 +1,85 @@
 const WishList = require("../model/wishListModel");
 
+async function RemoveItem(req, res) {
+  // Change to DELETE for deleting data
+  const { user, Product_name } = req.body;
 
-async function RemoveItem (req, res){  // Change to DELETE for deleting data
-    const { user, Product_name } = req.body;
-  
-     if (!user || !Product_name) {
-       return res.status(400).json({ error: "User and Product Name are required" });
-     }
-  
-    try {
-      const deleteWishList = await WishList.deleteOne({user, Product_name });
-  
-      if (deleteWishList.deletedCount === 0) {
-        return res.status(404).json({ message: "Product not found in the wish list" });
-      }
-  
-      return res.status(200).json({ message: "Product removed from the wish list" });
-    } catch (error) {
-      console.error("Error deleting from wishlist:", error.message);  // Log the error for debugging
-      return res.status(500).json({ error: "Internal Server Error" });  // Handle unexpected errors
-    }
+  if (!user || !Product_name) {
+    return res
+      .status(400)
+      .json({ error: "User and Product Name are required" });
   }
 
-  async function AddToWishList (req, res){  // Change to POST for creating data
-    try {
-      const { user, Product_name, product_image_url, Price,Rating,offer } = req.body;
-  
-      // Validate required fields
-      if (!user || !Product_name || !product_image_url || !Price || !Rating || !offer) {
-        return res.status(400).json({ error: "All the Product data is required" });
-      }
-  
-      // Add product to wishlist
-      const AddToWishList = await WishList.create({
-        user:user,
-        Product_name: Product_name,
-        product_image_url:product_image_url,
-        Price:Price,
-        reting:Rating,
-        offer:offer
-      });
-  
-      // Check if the product was added successfully
-      if (AddToWishList) {
-        return res.status(201).json({ message: "Product added to WishList" });
-      } else {
-        return res.status(400).json({ message: "Product failed to add to WishList" });
-      }
-    } catch (error) {
-      console.error("Error adding to wishlist:", error.message);  // Log the error for debugging
-      return res.status(500).json({ error: "Internal Server Error" });  // Handle unexpected errors
+  try {
+    const deleteWishList = await WishList.deleteOne({ user, Product_name });
+
+    if (deleteWishList.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Product not found in the wish list" });
     }
+
+    return res
+      .status(200)
+      .json({ message: "Product removed from the wish list" });
+  } catch (error) {
+    console.error("Error deleting from wishlist:", error.message); // Log the error for debugging
+    return res.status(500).json({ error: "Internal Server Error" }); // Handle unexpected errors
+  }
+}
+
+
+async function AddToWishList(req, res) {
+  // Change to POST for creating data
+  try {
+    const { user, Product_name, Product_image, Price, Original_Price, offer } =
+      req.body;
+
+    // Validate required fields
+    if (!user || !Product_name || !Product_image || !Price || !offer) {
+      return res
+        .status(400)
+        .json({ error: "All the Product data is required" });
+    }
+
+    // Add product to wishlist
+    const AddToWishList = await WishList.create({
+      user: user,
+      Product_name: Product_name,
+      Product_image: Product_image,
+      Price: Price,
+      Original_Price: Original_Price,
+      offer: offer,
+    });
+
+    // Check if the product was added successfully
+    if (AddToWishList) {
+      return res.status(201).json({ message: "Product added to WishList" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Product failed to add to WishList" });
+    }
+  } catch (error) {
+    console.error("Error adding to wishlist:", error.message); // Log the error for debugging
+    return res.status(500).json({ error: "Internal Server Error" }); // Handle unexpected errors
+  }
+}
+
+async function getWishList(req, res) {
+  // Change to GET for reading data
+
+  const { user } = req.body;
+
+  if (!user) {
+    return res.status(400).json({ error: "User is required" });
   }
 
-  async function getWishList (req, res){  // Change to GET for reading data
-
-    const { user } = req.body;
-  
-    if (!user) {
-      return res.status(400).json({ error: "User is required" });
-    }
-  
-    try {
-      const wishList = await WishList.find({ user });
-      return res.status(200).json({ wishList});
-    } catch (error) {
-      console.error("Error getting wishlist:", error.message);  // Log the error for debugging
-    }
+  try {
+    const wishList = await WishList.find({ user });
+    return res.status(200).json({ wishList });
+  } catch (error) {
+    console.error("Error getting wishlist:", error.message); // Log the error for debugging
   }
-  module.exports ={RemoveItem,AddToWishList,getWishList};  
+}
+module.exports = { RemoveItem, AddToWishList, getWishList };

@@ -5,22 +5,26 @@ const wishListSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    product_image_url:{
+    Product_image:{
         type:String,
         required:true
     },
      user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
+        ref:'User',
+        required:true
     },
     Price:{
-        type:Number
+        type:Number,
+        required:true
     },
-    reting:{
-        type:Number
+    Original_Price:{
+        type:Number,
+        required:true
     },
     offer:{
-        type:Number
+        type:Number,
+        required:true
     },
 })
 
