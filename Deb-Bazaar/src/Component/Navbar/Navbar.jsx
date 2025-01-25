@@ -27,7 +27,7 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const { userInfo } = useAppStore();
+  const { userInfo ,wishListItems,cartItems} = useAppStore();
 
   return (
     <>
@@ -93,8 +93,26 @@ const Navbar = () => {
 
           {/* Icons */}
           <div className="flex items-center gap-4">
-            <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
-            <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
+            <div className="relative">
+              <Link to="/cart">
+                <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
+              </Link>
+               {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartItems.length}
+                </span>
+              )} 
+            </div>
+            <div className="relative">
+              <Link to="/wishlist">
+                <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
+              </Link>
+              {wishListItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {wishListItems.length}
+                </span>
+              )}
+            </div>
             {userInfo && (
               <LuUser
                 className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
@@ -189,57 +207,57 @@ const Navbar = () => {
         </nav>
       </header>
       <div className="relative">
-      { openModal && (
-        <div className="right-[45px] fixed top-12 bg-transparent backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50">
-          <ul className="list-none">
-            <li className="py-2">
-              <Link
-                to="/account"
-                className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-              >
-                <LuUser />
-                Manage My Account
-              </Link>
-            </li>
-            <li className="py-2">
-              <Link
-                to="/cart"
-                className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-              >
-                <FiShoppingBag />
-                My Orders
-              </Link>
-            </li>
-            <li className="py-2">
-              <Link
-                to="/account"
-                className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-              >
-                <MdOutlineCancel />
-                My Cancellations
-              </Link>
-            </li>
-            <li className="py-2">
-              <Link
-                to="/account"
-                className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-              >
-                <TiStarOutline />
-                My Reviews
-              </Link>
-            </li>
-            <li className="py-2">
-              <Link
-                to="/account"
-                className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-              >
-                <BiLogOut />
-                Logout
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+        {openModal && (
+          <div className="right-[45px] fixed top-12 bg-white backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50">
+            <ul className="list-none">
+              <li className="py-2">
+                <Link
+                  to="/account"
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                >
+                  <LuUser />
+                  Manage My Account
+                </Link>
+              </li>
+              <li className="py-2">
+                <Link
+                  to="/cart"
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                >
+                  <FiShoppingBag />
+                  My Orders
+                </Link>
+              </li>
+              <li className="py-2">
+                <Link
+                  to="/account"
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                >
+                  <MdOutlineCancel />
+                  My Cancellations
+                </Link>
+              </li>
+              <li className="py-2">
+                <Link
+                  to="/account"
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                >
+                  <TiStarOutline />
+                  My Reviews
+                </Link>
+              </li>
+              <li className="py-2">
+                <Link
+                  to="/account"
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                >
+                  <BiLogOut />
+                  Logout
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </>
   );
