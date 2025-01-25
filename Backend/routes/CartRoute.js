@@ -1,6 +1,5 @@
 const express=require('express');
 const {AddToCart,RemoveItem,GetCart}=require('../controller/CartController');
-const { route } = require('./WishListRoute');
 
 const router=express.Router();
 

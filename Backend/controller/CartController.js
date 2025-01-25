@@ -10,7 +10,16 @@ const AddToCart = async (req, res) => {
         .status(400)
         .json({ error: "All the Product data is required" });
     }
+    const productExists = await CartModel.findOne({
+      user: user,
+      Product_name: Product_name,
+    });
 
+    if (productExists) {
+      return res
+        .status(409)
+        .json({ error: "Product already exists in the wishlist" });
+    }
     // Add product to cart
     const AddToCart = await CartModel.create({
       Original_Price,
