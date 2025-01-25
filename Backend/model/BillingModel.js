@@ -3,7 +3,7 @@ const mongoose=require('mongoose');
 const BillingSchema=mongoose.Schema({
     product_date:{
         type:Object,
-        required:true
+        default:Date.now
     },
     name:{
         type:String,
