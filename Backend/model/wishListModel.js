@@ -22,7 +22,7 @@ const wishListSchema=new mongoose.Schema({
         type:Number,
         required:true
     },
-    offer:{
+    off:{
         type:Number,
         required:true
     },

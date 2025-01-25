@@ -2,7 +2,7 @@ const WishList = require("../model/wishListModel");
 
 async function RemoveItem(req, res) {
   // Change to DELETE for deleting data
-  const { user, Product_name } = req.body;
+  const { user, Product_name } = req.query;
 
   if (!user || !Product_name) {
     return res
@@ -28,20 +28,29 @@ async function RemoveItem(req, res) {
   }
 }
 
-
 async function AddToWishList(req, res) {
   // Change to POST for creating data
   try {
-    const { user, Product_name, Product_image, Price, Original_Price, offer } =
+    const { user, Product_name, Product_image, Price, Original_Price, off } =
       req.body;
 
     // Validate required fields
-    if (!user || !Product_name || !Product_image || !Price || !offer) {
+    if (!user || !Product_name || !Product_image || !Price || !off || !Original_Price) {
       return res
         .status(400)
         .json({ error: "All the Product data is required" });
     }
 
+    const productExists = await WishList.findOne({
+      user: user,
+      Product_name: Product_name,
+    });
+
+    if (productExists) {
+      return res
+        .status(409)
+        .json({ error: "Product already exists in the wishlist" });
+    }
     // Add product to wishlist
     const AddToWishList = await WishList.create({
       user: user,
@@ -49,7 +58,7 @@ async function AddToWishList(req, res) {
       Product_image: Product_image,
       Price: Price,
       Original_Price: Original_Price,
-      offer: offer,
+      off: off,
     });
 
     // Check if the product was added successfully
@@ -68,15 +77,12 @@ async function AddToWishList(req, res) {
 
 async function getWishList(req, res) {
   // Change to GET for reading data
-
-  const { user } = req.body;
-
-  if (!user) {
-    return res.status(400).json({ error: "User is required" });
-  }
-
   try {
-    const wishList = await WishList.find({ user });
+    const { user } = req.body;
+    if (!user) {
+      return res.status(400).json({ error: "User is required" });
+    }
+    const wishList = await WishList.find({ user: user });
     return res.status(200).json({ wishList });
   } catch (error) {
     console.error("Error getting wishlist:", error.message); // Log the error for debugging
