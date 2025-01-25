@@ -1,5 +1,7 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+//Import Pages
 import Alert from "./Component/Alert/Alert";
 import Home from "./Pages/Home/Home";
 import About from "./Pages/About/About";
@@ -8,22 +10,34 @@ import Contect from "./Pages/ContectUs/Contect";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import WishList from "./Pages/WishList/WishList";
+import Account from "./Pages/Account/Account";
+
+//import Toast
 import { ToastContainer, toast } from "react-toastify";
+
+//import Component
 import Navbar from "./Component/Navbar/Navbar";
 import Footer from "./Component/Footer/Footer";
 import LoadingBar from "react-top-loading-bar";
+
 import Cookies from "js-cookie";
 
+//import states and constants
 import { useAppStore } from "./Store";
-import Account from "./Pages/Account/Account";
+import { GET_CART, GET_WISHLIST } from "./Utils/Constant";
+import { apiClient } from "./lib/api-Client";
+import { FaAws } from "react-icons/fa";
+import Billing from "./Pages/Billing/Billing";
 
 const App = () => {
-
-  const {setLoggedIn} =useAppStore();
+  const { setWishListItems, setCartItems,userInfo } = useAppStore();
+  const { setLoggedIn } = useAppStore();
   const [progress, setProgress] = useState();
   const [alert, setAlert] = useState("");
 
   const notifymessage = (message) => toast(message);
+
+  //Function for showing alert
   const ShowAlert = async (color, message, bgcolor) => {
     setAlert({
       color: color,
@@ -64,6 +78,43 @@ const App = () => {
       }
     }
   }, [setLoggedIn]);
+
+  //Fetch WishList and Cart Data
+  useEffect(() => {
+    const fetchWishList = async () => {
+      try {
+        const response = await apiClient.post(
+          GET_WISHLIST,
+          { user: userInfo._id },
+          { withCredentials: true }
+        );
+        if (response.status === 200) {
+          setWishListItems(response.data.wishList);
+        } else {
+          toast.error("Failed to fetch WishList");
+        }
+      } catch (error) {
+        console.log("Error fetching wishlist:", error);
+      }
+    };
+    fetchWishList();
+
+    const fetchCartList=async()=>{
+      try {
+        const response=await apiClient.get(`${GET_CART}?user=${userInfo._id}`)
+        if(response.status==200){
+          setCartItems(response.data);
+        }
+        else {
+          toast.error("Failed to fetch CartData");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchCartList();
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -96,6 +147,10 @@ const App = () => {
             }
           />
           <Route
+            path="/billing"
+            element={<Billing/>}
+          />
+          <Route
             path="/login"
             element={<Login setProgress={setProgress} ShowAlert={ShowAlert} />}
           />
@@ -125,7 +180,9 @@ const App = () => {
           />
           <Route
             path="/account"
-            element={<Account setProgress={setProgress} ShowAlert={ShowAlert} />}
+            element={
+              <Account setProgress={setProgress} ShowAlert={ShowAlert} />
+            }
           />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

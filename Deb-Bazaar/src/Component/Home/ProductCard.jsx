@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { apiClient } from "../../lib/api-Client";
 import { ADD_TO_CART, ADD_TO_WISHLIST } from "../../Utils/Constant";
-import { useAppStore } from '../../Store/index'
+import { useAppStore } from "../../Store/index";
 import { toast } from "react-toastify";
 
 const ProductCard = ({ data }) => {
- const {userInfo}=useAppStore();
- const {_id} =userInfo;
+  const { userInfo, addWishListItem } = useAppStore();
   const {
     off,
     product_image_url,
@@ -20,37 +19,68 @@ const ProductCard = ({ data }) => {
   } = data;
 
   const AddToCart = async () => {
-    const response = await apiClient.post(ADD_TO_CART, {
-      Product_name:Product_name,
-      Product_image:product_image_url,
-      user:_id,
-      Price: Price,
-      Original_Price:Original_Price
-    },{withCredentials:true});
+    const response = await apiClient.post(
+      ADD_TO_CART,
+      {
+        Product_name: Product_name,
+        Product_image: product_image_url,
+        user: userInfo._id,
+        Price: Price,
+        Original_Price: Original_Price,
+      },
+      { withCredentials: true }
+    );
 
-    if(response.status==201){
-      toast.success('Product added to Cart');
-    }
-    else{
-      toast.error('Product failed to add to Cart');
+    if (response.status == 201) {
+      toast.success("Product added to Cart");
+    } else {
+      toast.error("Product failed to add to Cart");
     }
   };
-  const AddToWishList = async () => {
-    const response = await apiClient.post(ADD_TO_WISHLIST, {
-      user:_id,
-      Product_name:Product_name,
-      Product_image:product_image_url,
-      Price: Price,
-      Original_Price:Original_Price,
-      offer:off
-    },{withCredentials:true});
 
-    if(response.status==201){
-      toast.success('Product added to WishList');
+  
+  const AddToWishList = async () => {
+    try {
+      const response = await apiClient.post(
+        ADD_TO_WISHLIST,
+        {
+          user: userInfo._id,
+          Product_name: Product_name,
+          Product_image: product_image_url,
+          Price: Price,
+          Original_Price: Original_Price,
+          off: off,
+        },
+        { withCredentials: true }
+      );
+  
+      if (response.status == 201) {
+        const ProductItem = {
+          Product_name: Product_name,
+          Product_image: product_image_url,
+          Price: Price,
+          Original_Price: Original_Price,
+          off: off,
+        };
+        addWishListItem(ProductItem);
+        toast.success("Product added to WishList");
+      }else {
+        toast.error("Product failed to add to WishList");
+      }
+    } catch (error) {
+      if (error.response) {
+        // Check for specific status codes
+        if (error.response.status === 409) {
+          toast.error("Product already exists in the WishList");
+        } else {
+          toast.error("Failed to add product to WishList");
+        }
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Something went wrong. Please try again.");
+      }
     }
-    else{
-      toast.error('Product failed to add to WishList');
-    }
+   
   };
 
   const maxStars = 5;
@@ -67,7 +97,10 @@ const ProductCard = ({ data }) => {
             <p className="px-3 py-1 m-2 rounded-[5px] bg-[#DB4444] text-white">
               -{off}%
             </p>
-            <FaRegHeart className="cursor-pointer m-2 text-[20px]" onClick={AddToWishList} />
+            <FaRegHeart
+              className="cursor-pointer m-2 text-[20px]"
+              onClick={AddToWishList}
+            />
           </div>
 
           {/* Product Image */}
@@ -78,7 +111,10 @@ const ProductCard = ({ data }) => {
           />
 
           {/* Add to Cart Button */}
-          <button onClick={AddToCart} className="bg-black text-white h-[40px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button
+            onClick={AddToCart}
+            className="bg-black text-white h-[40px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
             Add to Cart
           </button>
         </div>
