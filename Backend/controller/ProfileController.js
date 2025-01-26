@@ -1,63 +1,67 @@
 const User = require("../model/UserModel");
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 async function UpdateProfile(req, res) {
-    try {
-        
-  
-  const {
-    firstname,
-    email,
-    lastname,
-    address,
-    Oldpassword,
-    NewPassword,
-    user,
-  } = req.body;
+  try {
+    const {address , Oldpassword, NewPassword, user,email } = req.body;
 
-  const userName = await User.findOne({ email });
-  if (!userName) {
-    return res.status(400).json({ message: "User not found" });
-  }
-  // Validate password
-  const isMatch = await bcrypt.compare(Oldpassword, user.password);
-  if (!isMatch) {
-    return res.status(400).json({ error: "Invalid credentials" });
-  }
-
-  // Create JWT token
-  const tokenPayload = { id: user.id }; // Minimal payload for security
-  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-    expiresIn: "1d", // Matches cookie lifetime
-  });
-
-  // Set the token in a secure cookie
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    secure: true, // Use HTTPS in production
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  });
-
-  const updateData=User.updateOne(
-    { email: user.email },
-    {
-      $set: {
-        firstname: firstname,
-        email: email,
-        lastname: lastname,
-        address: address,
-        password: NewPassword,
-      },
+    // Check if required fields are present
+    if (!Oldpassword || !NewPassword || !user) {
+      return res.status(400).json({ message: "All fields are required" });
     }
-  );
 
-  if(updateData){
-    res.status(201).json({ message: "Profile Updated" });
+    // Find user in the database
+    const userName = await User.findOne({ email });
+    if (!userName) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Validate old password
+    const isMatch = await bcrypt.compare(Oldpassword, userName.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(NewPassword, 10);
+
+    const updateFields = { password: hashedPassword }; // Always update password
+    if (address && address.length > 0) {
+      updateFields.address = address; // Add address only if provided
+    }
+    
+    const updateData = await User.updateOne(
+      { email: email },
+      { $set: updateFields }
+    );
+    
+
+    // Check if the update was successful
+    if (updateData.modifiedCount > 0) {
+      // Create JWT token
+      const tokenPayload = { id: userName.id }; // Minimal payload for security
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+        expiresIn: "1d", // Matches cookie lifetime
+      });
+
+      // Set the token in a secure cookie
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: true, // Use HTTPS in production
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      });
+
+      const data = await User.findOne({ email });
+
+      res.status(200).json({user:data, message: "Profile updated successfully" });
+    } else {
+      res.status(400).json({ message: "Profile update failed" });
+    }
+  } catch (error) {
+    console.error("Error during profile update:", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
-  else{
-    res.status(400).json({ message: "Profile not Updated" });
-  }
-} catch (error) {
-        console.log("Error during profile update:", error.message);
 }
-}
+
+module.exports={UpdateProfile}
