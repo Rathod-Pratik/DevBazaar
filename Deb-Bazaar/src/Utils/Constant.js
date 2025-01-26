@@ -18,5 +18,6 @@ export const GET_WISHLIST=`${WISHLIST}/getWishList`;
 
 export const BILLING='Billing/getBilling';
 
+export const UPDATE_PROFILE=`Profile/updateProfile`
 
 
