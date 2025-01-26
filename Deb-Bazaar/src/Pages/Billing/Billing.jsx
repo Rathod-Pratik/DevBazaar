@@ -24,7 +24,8 @@ const Billing = () => {
                 apartment: Apartment,
                 city:TownCity,
                 phoneNumber:PhoneNumber,
-                email:EmailAddress
+                email:EmailAddress,
+                productData:cartItems
             },{withCredentials:true})
 
             if(response.status===201){
