@@ -25,6 +25,11 @@ async function AddToBilling(req, res) {
     return res.status(400).json({ error: "All the Product data is required" });
   }
 
+  const alreadyExists = await Billing.findOne({ Name: Name, email: email, phoneNumber: phoneNumber, productData: productData });
+
+  if (alreadyExists) {
+    res.status(200).json({ message: "Product already exists in Billing" });
+  }
   try {
     const AddToBilling = await Billing.create({
       name: Name,
@@ -34,7 +39,7 @@ async function AddToBilling(req, res) {
       city: city,
       phone_number: phoneNumber,
       email: email,
-      product_date: productData,
+      productData: productData,
     });
 
     if (AddToBilling) {

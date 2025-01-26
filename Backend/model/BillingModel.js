@@ -31,6 +31,10 @@ const BillingSchema=mongoose.Schema({
     },
     apartment:{
         type:String
+    },
+    productData:{
+        type:Object,
+        required:true
     }
 });
 
