@@ -2,8 +2,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../model/UserModel");
 const {validationResult}=require('express-validator');
-//id  rathodpratik1928
-//pass ACTPXa6iOFxkziHp
 
 //Expire time for the token
 const maxAge = 3 * 24 * 60 * 60;

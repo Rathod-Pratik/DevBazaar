@@ -26,7 +26,6 @@ import Cookies from "js-cookie";
 import { useAppStore } from "./Store";
 import { GET_CART, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
-import { FaAws } from "react-icons/fa";
 import Billing from "./Pages/Billing/Billing";
 
 const App = () => {
@@ -125,7 +124,7 @@ const App = () => {
           onLoaderFinished={() => setProgress(0)}
         />
         <Alert alert={alert} />
-        <Routes>
+        <Routes >
           <Route
             path="/"
             element={
