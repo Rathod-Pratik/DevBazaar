@@ -7,7 +7,7 @@ import { useAppStore } from "../../Store/index";
 import { toast } from "react-toastify";
 
 const ProductCard = ({ data }) => {
-  const { userInfo, addWishListItem } = useAppStore();
+  const { userInfo, addWishListItem,addCartItem } = useAppStore();
   const {
     off,
     product_image_url,
@@ -32,6 +32,7 @@ const ProductCard = ({ data }) => {
     );
 
     if (response.status == 201) {
+      addCartItem(data);
       toast.success("Product added to Cart");
     } else {
       toast.error("Product failed to add to Cart");
