@@ -27,6 +27,7 @@ import { useAppStore } from "./Store";
 import { GET_CART, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
 import Billing from "./Pages/Billing/Billing";
+import NotFound from "./Component/404 NotFound/NotFound";
 
 const App = () => {
   const { setWishListItems, setCartItems,userInfo } = useAppStore();
@@ -183,7 +184,7 @@ const App = () => {
               <Account setProgress={setProgress} ShowAlert={ShowAlert} />
             }
           />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<NotFound/>} />
         </Routes>
         <ToastContainer position="bottom-right" />
         <Footer />
