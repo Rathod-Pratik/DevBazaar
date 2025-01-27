@@ -13,6 +13,7 @@ const Account = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const UpdateData = async () => {
+    if(validataion()){
     if (newPassword !== confirmPassword) {
       return toast.error("New Password and Confirm Password Should be same");
     }
@@ -38,8 +39,18 @@ const Account = () => {
     } catch (error) {
       console.log(error);
     }
+  }
   };
 
+  const validataion=()=>{
+    if(!address || userInfo.address){
+      return false;
+    }
+    if(!oldPassword || !newPassword || !confirmPassword){
+      return false;
+    }
+    return true;
+  }
   return (
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto flex flex-col gap-10">
       <p className="flex justify-end gap-2 text-red-600">
