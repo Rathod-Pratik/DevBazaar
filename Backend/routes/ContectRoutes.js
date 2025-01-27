@@ -3,6 +3,6 @@ const Contect = require('../controller/ContectController');
 const router=express.Router();
 const nodemailer = require("nodemailer");
 
-router.post('/contect',Contect);
+router.post('/',Contect);
 
 module.exports=router;

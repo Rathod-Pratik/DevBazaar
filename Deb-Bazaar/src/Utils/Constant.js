@@ -20,4 +20,6 @@ export const BILLING='Billing/getBilling';
 
 export const UPDATE_PROFILE=`Profile/updateProfile`
 
+export const SEND_MESSAGE='Contect'
+
 
