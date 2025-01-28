@@ -45,10 +45,11 @@ const Billing = () => {
         }
     }
 
-  const totalPrice = cartItems.reduce(
-    (total, item) => total + item.Price * item.quantity,
-    0 // Initial total is 0
-  );
+    let totalPrice = 0;
+
+    for (const item of cartItems) {
+      totalPrice += Number(item.Price); // Convert Price to a number
+    }
 
   return (
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto">
