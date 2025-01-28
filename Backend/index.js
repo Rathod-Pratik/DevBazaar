@@ -17,7 +17,7 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
 
 
 const corsOptions={
-    origin:'http://localhost:5173',
+    origin:process.env.frounted,
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials:true
 }
