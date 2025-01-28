@@ -7,10 +7,10 @@ export default {
   ],
   theme: {
   	extend: {backgroundImage: {
-      'PS5': "url('/public/Ps5.png')",
-      'WomenCollection' : "url('/public/Women collection.png')" ,
-      'Speaker': "url('/public/Speaker.png')",
-      'Perfume': "url('/public/Perfume.png')",
+      'PS5': "url('/Ps5.png')",
+      'WomenCollection' : "url('/Women collection.png')" ,
+      'Speaker': "url('/Speaker.png')",
+      'Perfume': "url('/Perfume.png')",
     },
   		borderRadius: {
   			lg: 'var(--radius)',

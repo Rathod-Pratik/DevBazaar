@@ -38,34 +38,40 @@ const Categories_section = () => {
       }, []);
     
   return (
-    <div className="grid grid-cols-2 mt-4 h-[80vh] bg-black text-white p-4">
-      <div className="flex gap-2 flex-col justify-center text-start p-4">
-        <p className="text-[#00FF66] text-[16px] font-semibold ">Categories</p>
-            <p className="text-[65px] font-semibold">Enhance Your<br />Music Experience</p>
-        <div className="flex gap-6 mt-4">
-      <div className="box bg-white text-black p-4 rounded-full w-[62px] h-[62px] text-center">
-        <p className="text-[16px] font-bold">{timeLeft.days}</p>
-        <p className="text-[11px] flex items-center justify-center" >Days</p>
+    <div className="flex flex-col-reverse md:flex-row items-center bg-black text-white p-4 md:p-8 min-h-screen md:min-h-[80vh] gap-8 md:gap-12">
+    {/* Text Content */}
+    <div data-aos="fade-right" className="flex flex-col justify-center text-start w-full md:w-1/2 p-4 space-y-6 md:space-y-8">
+      <p className="text-[#00FF66] text-sm md:text-base font-semibold">Categories</p>
+      <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight">
+        Enhance Your <br className="hidden md:block" /> Music Experience
+      </h1>
+      
+      {/* Timer Section */}
+      <div className="flex flex-wrap gap-4 md:gap-6 justify-start">
+        {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
+          <div key={unit} className="flex flex-col items-center bg-white text-black p-3 md:p-4 rounded-full w-14 h-14 md:w-20 md:h-20">
+            <p className="text-base md:text-xl font-bold">{timeLeft[unit]}</p>
+            <p className="text-[10px] md:text-xs uppercase mt-[-2px]">{unit}</p>
+          </div>
+        ))}
       </div>
-      <div className="box bg-white text-black p-4 rounded-full w-[62px] h-[62px] text-center">
-        <p className="text-[16px] font-bold">{timeLeft.hours}</p>
-        <p className="text-[11px] flex items-center justify-center" >Hours</p>
-      </div>
-      <div className="box bg-white text-black p-4 rounded-full w-[62px] h-[62px] text-center">
-        <p className="text-[16px] font-bold">{timeLeft.minutes}</p>
-        <p className="text-[11px] flex items-center justify-center" >Minutes</p>
-      </div>
-      <div className="box bg-white text-black p-4 rounded-full w-[62px] h-[62px] text-center">
-        <p className="text-[16px] font-bold">{timeLeft.seconds}</p>
-        <p className="text-[11px] flex items-center justify-center" >Seconds</p>
-      </div>
-    </div >
-        <button className="bg-[#00FF66] text-white mx-3 my-4 w-[120px] h-[40px] rounded-[5px] ">Buy Now</button>
-      </div>
-      <div className="flex items-center justify-center backdrop-blur-lg p-4">
-  <img src="/public/Frame 694.png" alt="" />
-</div>
+  
+      <button className="bg-[#00FF66] text-white px-6 py-3 rounded-lg w-fit text-sm md:text-base hover:bg-green-600 transition-colors mt-4">
+        Buy Now
+      </button>
     </div>
+  
+    {/* Image Section */}
+    <div data-aos="fade-left" className="w-full md:w-1/2 flex items-center justify-center p-4">
+      <div className="relative w-full max-w-xl aspect-[1/1]">
+        <img 
+          src="/Frame 694.png" 
+          alt="Music Experience" 
+          className="w-full h-full object-contain object-center" 
+        />
+      </div>
+    </div>
+  </div>
   )
 }
 

@@ -9,7 +9,7 @@ import New_Arrive from '../../Component/Home/New_Arrive'
 
 const Home = () => {
   return (
-    <div className='flex flex-col gap-7 m-auto w-[90%]'>
+    <div className='flex flex-col gap-7 m-auto w-[90%] overflow-auto'>
       <Hero/>
       <Sale/>
       <hr className='w-[90%] m-auto' />

@@ -41,7 +41,14 @@ const WishListCard = ({ data }) => {
         { withCredentials: true }
       );
       if (response.status === 201) {
-        addCartItem(data);
+
+        const CartItem={
+          Product_name:data.Product_name,
+          Product_image:data.Product_image,
+          Price:data.Price,
+        }
+
+        addCartItem(CartItem);
         toast.success("Product added to cart");
       } else {
         toast.error("Product failed to add to cart");

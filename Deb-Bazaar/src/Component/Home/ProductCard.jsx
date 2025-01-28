@@ -32,7 +32,14 @@ const ProductCard = ({ data }) => {
     );
 
     if (response.status == 201) {
-      addCartItem(data);
+      const ProductItem = {
+        Product_name: Product_name,
+        Product_image: product_image_url,
+        Price: Price,
+        Original_Price: Original_Price,
+        off: off,
+      };
+      addCartItem(ProductItem);
       toast.success("Product added to Cart");
     } else {
       toast.error("Product failed to add to Cart");
@@ -89,7 +96,7 @@ const ProductCard = ({ data }) => {
   const hasHalfStar = Rating % 1 !== 0; // Check if there's a half-star
   const emptyStars = maxStars - Math.ceil(Rating); // Remaining empty stars
   return (
-    <div className="w-[280px] !border-none bg-white rounded-lg group">
+    <div className="w-[280px] !border-none bg-white rounded-lg group" data-aos="zoom-in" >
       {/* Product Image */}
       <div className="bg-[#F5F5F5] ">
         <div className="flex flex-col relative">
@@ -106,7 +113,8 @@ const ProductCard = ({ data }) => {
 
           {/* Product Image */}
           <img
-            className="m-auto w-[150px] h-[150px] object-contain rounded-lg"
+          onClick={()=>window.location.href=`/product/${Product_name}`}
+            className="m-auto w-[150px] h-[150px] object-contain rounded-lg cursor-pointer"
             src={product_image_url}
             alt={Product_name}
           />
@@ -123,7 +131,7 @@ const ProductCard = ({ data }) => {
       {/* Product Details */}
       <div>
         <div className="flex flex-col gap-3 mt-1">
-          <h1 className="text-[16px] font-medium text-gray-900 dark:text-white">
+          <h1 className="text-[16px] font-medium text-gray-900 dark:text-white cursor-pointer" onClick={()=>window.location.href=`/product/${Product_name}`}>
             {Product_name}
           </h1>
           <div className="flex flex-row items-center gap-2">

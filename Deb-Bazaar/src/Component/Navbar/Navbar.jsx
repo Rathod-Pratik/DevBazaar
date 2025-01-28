@@ -32,6 +32,10 @@ const Navbar = () => {
     setOpenModal(false);
   };
 
+  const Logout=()=>{
+localStorage.removeItem('auth-storage');
+  }
+
   const { userInfo, wishListItems, cartItems } = useAppStore();
   return (
     <>
@@ -98,7 +102,7 @@ const Navbar = () => {
           {/* Icons */}
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Link to="/cart">
+            <Link to={userInfo?'/cart':'/signup'}>
                 <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
               {cartItems.length > 0 && (
@@ -108,7 +112,7 @@ const Navbar = () => {
               )}
             </div>
             <div className="relative">
-              <Link to="/wishlist">
+              <Link to={userInfo?'/wishlist':'/signup'}>
                 <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
               {wishListItems.length > 0 && (
@@ -203,7 +207,7 @@ const Navbar = () => {
                 {/* Icons */}
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Link to="/cart">
+                    <Link to={userInfo?'/cart':'/signup'}>
                       <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {cartItems.length > 0 && (
@@ -213,7 +217,7 @@ const Navbar = () => {
                     )}
                   </div>
                   <div className="relative">
-                    <Link to="/wishlist">
+                    <Link to={userInfo?"/wishlist":"/signup"}>
                       <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {wishListItems.length > 0 && (
@@ -227,9 +231,10 @@ const Navbar = () => {
                 {userInfo && (
                   <LuUser
                   className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
+                  onClick={()=>window.location.href=`/account`}
                   />
                 )}
-                <p>{userInfo.FirstName} {userInfo.LastName}</p>
+            {userInfo &&  <p>{userInfo.FirstName} {userInfo.LastName}</p>}
                 </div>
               </div>
             </ul>
@@ -284,9 +289,9 @@ const Navbar = () => {
               </li>
               <li className="py-2">
                 <Link
-                  onClick={CloseModel}
-                  to="/account"
-                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
+                to='/'
+                  onClick={()=>{CloseModel(),Logout()}}
+                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm cursor-pointer"
                 >
                   <BiLogOut />
                   Logout

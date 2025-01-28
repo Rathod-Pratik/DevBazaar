@@ -5,7 +5,7 @@ const About = () => {
     <div className="min-h-[100vh] mt-10 flex flex-col gap-10">
       <div className="flex flex-col-reverse lg:flex-row">
         <div className="flex justify-center items-center ">
-          <div className=" lg:w-[70%]">
+          <div data-aos="fade-right" className=" lg:w-[70%]">
             <h2 className="font-semibold text-[54px] px-8 my-5 ">Our Story</h2>
             <p className="px-8 my-5">
               Launced in 2015, Exclusive is South Asia’s premier online shopping
@@ -21,16 +21,22 @@ const About = () => {
             </p>
           </div>
         </div>
-        <div className="flex lg:justify-end justify-center w-full">
-          <img src="/public/About Image.png" alt="" />
+        <div
+          data-aos="fade-left"
+          className="flex lg:justify-end justify-center w-full"
+        >
+          <img src="/About Image.png" alt="" />
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-6 w-[90%] mx-auto mt-10">
+      <div className="flex flex-wrap justify-evenly gap-6 w-[80%] mx-auto mt-10">
         {/* Card 1 */}
-        <div className="border-[1px] border-gray-400 flex flex-col items-center p-4 text-center rounded-[6px] shadow-md w-[20%] h-[210px] justify-center cursor-pointer">
+        <div
+          data-aos="fade-down"
+          className="border-[1px] border-gray-400 flex flex-col items-center p-4 text-center rounded-[6px] shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
+        >
           <img
-            src="/public/About Services-1.png"
+            src="/About Services-1.png"
             alt="Sellers Active"
             className="w-16 h-16 mb-2"
           />
@@ -39,9 +45,12 @@ const About = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-red-500 rounded-[6px] text-white flex flex-col items-center p-4 text-center shadow-md w-[20%] h-[210px] justify-center cursor-pointer">
+        <div
+          data-aos="fade-down"
+          className="bg-red-500 rounded-[6px] text-white flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
+        >
           <img
-            src="/public/About Services-2.png"
+            src="/About Services-2.png"
             alt="Monthly Product Sale"
             className="w-16 h-16 mb-2"
           />
@@ -50,9 +59,12 @@ const About = () => {
         </div>
 
         {/* Card 3 */}
-        <div className=" border-[1px] border-gray-400  rounded-[6px]  flex flex-col items-center p-4 text-center shadow-md w-[20%] h-[210px] justify-center cursor-pointer">
+        <div
+          data-aos="fade-down"
+          className=" border-[1px] border-gray-400  rounded-[6px]  flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
+        >
           <img
-            src="/public/About Services-3.png"
+            src="/About Services-3.png"
             alt="Customer Active"
             className="w-16 h-16 mb-2"
           />
@@ -61,9 +73,12 @@ const About = () => {
         </div>
 
         {/* Card 4 */}
-        <div className="border-[1px] border-gray-400  rounded-[6px] flex flex-col items-center p-4 text-center shadow-md w-[20%] h-[210px] justify-center cursor-pointer">
+        <div
+          data-aos="fade-down"
+          className="border-[1px] border-gray-400  rounded-[6px] flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
+        >
           <img
-            src="/public/About Services-4.png"
+            src="/About Services-4.png"
             alt="Annual Gross Sale"
             className="w-16 h-16 mb-2"
           />
@@ -74,14 +89,21 @@ const About = () => {
 
       <div className="w-[90%] mx-auto my-10">
         {/* Section Heading */}
-        <h2 className="text-3xl font-semibold text-center mb-10">Our Team</h2>
+        <h2
+          data-aos="fade-down"
+          className="text-3xl font-semibold text-center mb-10"
+        >
+          Our Team
+        </h2>
 
         {/* Team Members */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Team Member 1 */}
+        <div
+          data-aos="fade-down"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
             <img
-              src="/public/Frame 874.png"
+              src="/Frame 874.png"
               alt="Tom Cruise"
               className="w-24 h-24 rounded-full mb-4 object-cover"
             />
@@ -122,11 +144,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* Repeat for Team Members 2 and 3 with their details */}
-          {/* Team Member 2 */}
           <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
             <img
-              src="/public/Frame 875.png"
+              src="/Frame 875.png"
               alt="Emma Watson"
               className="w-24 h-24 rounded-full mb-4 object-cover"
             />
@@ -166,10 +186,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* Team Member 3 */}
           <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
             <img
-              src="/public/Frame 876.png"
+              src="/Frame 876.png"
               alt="Will Smith"
               className="w-24 h-24 rounded-full mb-4 object-cover"
             />
@@ -211,23 +230,50 @@ const About = () => {
         </div>
       </div>
 
-      <div className="flex w-[80%] lg:flex-row flex-col m-auto my-8 justify-evenly">
-  <div className="flex flex-col gap-5 mx-3 mb-8">
-    <img src="/public/Services.png" className="h-[50px] w-[50px] m-auto" alt="" />
-    <h2 className="text-[20px] font-semibold text-center">FREE AND FAST DELIVERY</h2>
-    <p className="text-[14px] text-center">Free delivery for all orders over $140</p>
-  </div>
-  <div className="flex flex-col gap-5 mx-3 mb-8">
-    <img src="/public/Services (1).png" className="h-[50px] w-[50px] m-auto" alt="" />
-    <h2 className="text-[20px] font-semibold text-center">24/7 CUSTOMER SERVICE</h2>
-    <p className="text-[14px] text-center">Friendly 24/7 customer support</p>
-  </div>
-  <div className="flex flex-col gap-5 mx-3 mb-8">
-    <img src="/public/Services (2).png" className="h-[50px] w-[50px] m-auto " alt="" />
-    <h2 className="text-[20px] font-semibold text-center">MONEY BACK GUARANTEE</h2>
-    <p className="text-[14px] text-center">We reurn money within 30 days</p>
-  </div>
-</div>
+      <div
+        data-aos="fade-down"
+        className="flex w-[80%] lg:flex-row flex-col m-auto my-8 justify-evenly"
+      >
+        <div className="flex flex-col gap-5 mx-3 mb-8">
+          <img
+            src="/Services.png"
+            className="h-[50px] w-[50px] m-auto"
+            alt=""
+          />
+          <h2 className="text-[20px] font-semibold text-center">
+            FREE AND FAST DELIVERY
+          </h2>
+          <p className="text-[14px] text-center">
+            Free delivery for all orders over $140
+          </p>
+        </div>
+        <div className="flex flex-col gap-5 mx-3 mb-8">
+          <img
+            src="/Services (1).png"
+            className="h-[50px] w-[50px] m-auto"
+            alt=""
+          />
+          <h2 className="text-[20px] font-semibold text-center">
+            24/7 CUSTOMER SERVICE
+          </h2>
+          <p className="text-[14px] text-center">
+            Friendly 24/7 customer support
+          </p>
+        </div>
+        <div className="flex flex-col gap-5 mx-3 mb-8">
+          <img
+            src="/Services (2).png"
+            className="h-[50px] w-[50px] m-auto "
+            alt=""
+          />
+          <h2 className="text-[20px] font-semibold text-center">
+            MONEY BACK GUARANTEE
+          </h2>
+          <p className="text-[14px] text-center">
+            We reurn money within 30 days
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

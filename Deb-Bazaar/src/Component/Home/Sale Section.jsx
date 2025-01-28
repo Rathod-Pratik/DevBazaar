@@ -1,54 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { apiClient } from "../../lib/api-Client";
-import { GET_PRODUCT_DATA } from "../../Utils/Constant";
-import { toast } from "react-toastify";
 import ProductCard from "./ProductCard";
+import { useAppStore } from "../../Store";
 
 const Sale = () => {
+  const {productData}=useAppStore();
   const [data, setData] = useState([]); // Initialize as an empty array
 
   useEffect(() => {
-    const fetchProductData = async () => {
-      try {
-        const response = await apiClient.get(GET_PRODUCT_DATA);
-        if (response.status === 200) {
-          // Limit data to the first 6 objects
-          const limitedData = response.data.slice(0, 5);
-          setData(limitedData);
-        } else {
-          toast.error(
-            "An error occurred while loading products. Please try again later."
-          );
-        }
-      } catch (error) {
-        toast.error("Failed to fetch products. Check your connection.");
-      }
-    };    
-    fetchProductData();
+    const limitedData = productData.slice(0, 5);
+     setData(limitedData);
+
   }, []);
 
   return (
-    <div className="p-4 mt-4">
-      <div className="flex flex-col pl-1 lg:pl-20 gap-5 mx-3 mb-[30px]">
-        <div className="flex flex-row gap-3 items-center text-lg font-semibold text-red-600">
-          <span className="bg-red-600  px-2 rounded py-1">A</span>
-          Today's
-        </div>
-        <div className="text-3xl font-medium">Flash Sales</div>
-      </div>
-
-       <div className=" flex flex-wrap justify-center">
-          {data.map((product,index) => (
-            <div key={index} className="rounded-lg mb-6 mx-3">
-              <ProductCard data={product} />
-            </div>
-          ))}
-        </div>
-
-        <div className="flex justify-center mt-3">
-          <button className="bg-[#DB4444] hover:bg-[#E07575] text-white p-3 border-none">View All Products</button>
-        </div>
+<div className="p-4 mt-4">
+  {/* Header Section */}
+  <div data-aos="fade-right" className="flex flex-col pl-1 lg:pl-20 gap-5 mx-3 mb-[30px]">
+    <div className="flex flex-row gap-3 items-center text-lg font-semibold text-red-600">
+      <span className="bg-red-600 px-2 rounded py-1">A</span>
+      Today's
     </div>
+    <div className="text-2xl md:text-3xl lg:text-4xl font-medium">Flash Sales</div>
+  </div>
+
+  {/* Product Cards Section */}
+  <div className="flex flex-wrap justify-center gap-6">
+    {data.map((product, index) => (
+      <div
+        key={index}
+        className="rounded-lg mb-6 mx-3 max-w-[300px] md:max-w-[250px] lg:max-w-[300px] w-full"
+      >
+        <ProductCard data={product} />
+      </div>
+    ))}
+  </div>
+
+  {/* View All Products Button */}
+  <div className="flex justify-center mt-6">
+    <button className="bg-[#DB4444] hover:bg-[#E07575] text-white px-6 py-3 rounded transition-all duration-300">
+      View All Products
+    </button>
+  </div>
+</div>
+
+
   );
 };
 

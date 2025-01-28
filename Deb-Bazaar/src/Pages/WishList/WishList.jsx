@@ -37,12 +37,12 @@ const WishList = () => {
     <div className="mt-4 flex flex-col gap-10 my-5">
       <main className="flex flex-col">
         <div className="flex justify-between items-center w-[80%]  m-auto ">
-          <p>WishList ({wishListItems.length})</p>
-          <button className="px-3 py-4 border-gray-600 border-2">
+          <p data-aos="fade-right">WishList ({wishListItems.length})</p>
+          <button data-aos="fade-left" className="px-3 py-4 border-gray-600 border-2">
             Move All to Bag
           </button>
         </div>
-        <div className="flex flex-wrap justify-center gap-5 m-auto my-6">
+        <div data-aos="fade-down" className="flex flex-wrap justify-center gap-5 m-auto my-6">
           {wishListItems.map((product) => (
             <WishListCard key={product._id} data={product} />
           ))}
@@ -50,14 +50,14 @@ const WishList = () => {
       </main>
       <section className="flex flex-col mt-5">
         <div className="flex justify-between items-center w-[80%]  m-auto ">
-          <div className="flex flex-col gap-5 mx-3 mb-[30px]">
+          <div data-aos="fade-right" className="flex flex-col gap-5 mx-3 mb-[30px]">
             <div className="flex flex-row gap-3 items-center text-lg font-semibold text-red-600">
               <span className="bg-red-600  px-2 rounded py-1">A</span>
               Our Products
             </div>
             <div className="text-3xl font-medium">Just For You</div>
           </div>
-          <button className="px-5 py-4 border-gray-600 border-2">
+          <button data-aos="fade-left" className="px-5 py-4 border-gray-600 border-2">
             See All
           </button>
         </div>

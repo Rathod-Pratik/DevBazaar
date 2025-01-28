@@ -9,6 +9,7 @@ const CartItem = ({ data }) => {
   const { Quentity, setQuntity } = useState(1);
   const { removeCartItem, userInfo } = useAppStore();
 
+
   const removeCartItems = async () => {
     try {
       const response = await apiClient.delete(
@@ -49,7 +50,7 @@ const CartItem = ({ data }) => {
         />
       </div>
       <p className="flex justify-between">
-        ${Price * quantity}{" "}
+        ${Price}{" "}
         <button onClick={removeCartItems}>
           <MdDelete className="text-red-600 text-2xl" />
         </button>

@@ -2,7 +2,7 @@ login -ok
 sign up -ok
 Account data -ok
 
-Fetch Product Data
+Fetch Product Data -ok
 
 fetch data from wishlist -ok
 add to wishlist -ok

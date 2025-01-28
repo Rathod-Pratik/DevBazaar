@@ -7,6 +7,7 @@ export const SIGNUP_ROUTES=`${AUTH_ROUTES}/signup`;
 export const LOGIN_ROUTES=`${AUTH_ROUTES}/login`;
 
 export const CART='cart';
+export const UPDATE_QUANTITTY=`${CART}/updateQuantity`
 export const ADD_TO_CART=`${CART}/addToCart`;
 export const GET_CART=`${CART}/getCart`
 export const DELETE_FROM_CART=`${CART}/deleteFromCart`

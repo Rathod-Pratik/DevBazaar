@@ -50,15 +50,13 @@ const Contect = () => {
   }
   return (
     <>
-      <h2 className="text-center mt-10 text-3xl font-semibold">Contect Us</h2>
+      <h2 data-aos="fade-down" className="text-center mt-10 text-3xl font-semibold">Contect Us</h2>
 
       <div className="min-h-[100vh] mt-5 flex flex-col-reverse lg:flex-row justify-center items-center lg:items-start gap-8 p-6 lg:p-12">
-        {/* Contact Info Section */}
-        <div className="space-y-8 max-w-[400px]">
-          {/* Call To Us Section */}
+        <div data-aos="fade-right" className="space-y-8 max-w-[400px]">
           <div className="space-y-2">
             <p className="flex items-center gap-2">
-              <img src="/public/icons-phone.png" alt="" className="w-6 h-6" />
+              <img src="/icons-phone.png" alt="" className="w-6 h-6" />
               <span className="font-semibold text-lg">Call To Us</span>
             </p>
             <p>We are available 24/7, 7 days a week.</p>
@@ -68,7 +66,7 @@ const Contect = () => {
           {/* Write To Us Section */}
           <div className="space-y-2">
             <p className="flex items-center gap-2">
-              <img src="/public/icons-mail.png" alt="" className="w-6 h-6" />
+              <img src="/icons-mail.png" alt="" className="w-6 h-6" />
               <span className="font-semibold text-lg">Write To Us</span>
             </p>
             <p>Fill out our form and we will contact you within 24 hours.</p>
@@ -82,7 +80,7 @@ const Contect = () => {
         </div>
 
         {/* Form Section */}
-        <div className="space-y-6 w-full max-w-[600px]">
+        <div data-aos="fade-left" className="space-y-6 w-full max-w-[600px]">
           {/* Input Fields */}
           <div className="flex flex-wrap gap-4">
             <input

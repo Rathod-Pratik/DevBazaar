@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes,ScrollRestoration } from "react-router-dom";
 
 //Import Pages
 import Alert from "./Component/Alert/Alert";
@@ -11,6 +11,9 @@ import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import WishList from "./Pages/WishList/WishList";
 import Account from "./Pages/Account/Account";
+import Billing from "./Pages/Billing/Billing";
+import NotFound from "./Component/404 NotFound/NotFound";
+import ScrollToTop from "./Component/Scroll/scroll";
 
 //import Toast
 import { ToastContainer, toast } from "react-toastify";
@@ -20,18 +23,26 @@ import Navbar from "./Component/Navbar/Navbar";
 import Footer from "./Component/Footer/Footer";
 import LoadingBar from "react-top-loading-bar";
 
+
 import Cookies from "js-cookie";
 
 //import states and constants
 import { useAppStore } from "./Store";
-import { GET_CART, GET_WISHLIST } from "./Utils/Constant";
+import { GET_CART, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
-import Billing from "./Pages/Billing/Billing";
-import NotFound from "./Component/404 NotFound/NotFound";
+import ProductDetail from "./Pages/ProductDetail/ProductDetail";
 
+//import animation libarary
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 const App = () => {
-  const { setWishListItems, setCartItems,userInfo } = useAppStore();
-  const { setLoggedIn } = useAppStore();
+  const {
+    setWishListItems,
+    setCartItems,
+    userInfo,
+    setproductData,
+    setLoggedIn,
+  } = useAppStore();
   const [progress, setProgress] = useState();
   const [alert, setAlert] = useState("");
 
@@ -60,6 +71,10 @@ const App = () => {
     }
   };
 
+  //animation
+  useEffect(()=>{
+    AOS.init();
+  },[])
   useEffect(() => {
     const jwt = Cookies.get("jwt");
     if (jwt) {
@@ -97,22 +112,40 @@ const App = () => {
         console.log("Error fetching wishlist:", error);
       }
     };
-    fetchWishList();
 
-    const fetchCartList=async()=>{
+    const fetchCartList = async () => {
       try {
-        const response=await apiClient.get(`${GET_CART}?user=${userInfo._id}`)
-        if(response.status==200){
+        const response = await apiClient.get(
+          `${GET_CART}?user=${userInfo._id}`
+        );
+        if (response.status == 200) {
           setCartItems(response.data);
-        }
-        else {
+        } else {
           toast.error("Failed to fetch CartData");
         }
       } catch (error) {
         console.log(error);
       }
+    };
+    if(userInfo){
+      fetchCartList();
+      fetchWishList();
     }
-    fetchCartList();
+    const fetchProductData = async () => {
+      try {
+        const response = await apiClient.get(GET_PRODUCT_DATA);
+        if (response.status === 200) {
+          setproductData(response.data);
+        } else {
+          toast.error(
+            "An error occurred while loading products. Please try again later."
+          );
+        }
+      } catch (error) {
+        toast.error("Failed to fetch products. Check your connection.");
+      }
+    };
+    fetchProductData();
   }, []);
 
   return (
@@ -125,7 +158,8 @@ const App = () => {
           onLoaderFinished={() => setProgress(0)}
         />
         <Alert alert={alert} />
-        <Routes >
+        <ScrollToTop/>
+        <Routes>
           <Route
             path="/"
             element={
@@ -146,10 +180,7 @@ const App = () => {
               />
             }
           />
-          <Route
-            path="/billing"
-            element={<Billing/>}
-          />
+          <Route path="/billing" element={<Billing />} />
           <Route
             path="/login"
             element={<Login setProgress={setProgress} ShowAlert={ShowAlert} />}
@@ -158,6 +189,7 @@ const App = () => {
             path="/signup"
             element={<SignUp setProgress={setProgress} ShowAlert={ShowAlert} />}
           />
+          <Route path="/Product/:ProductName" element={<ProductDetail/>} />
           <Route
             path="/wishlist"
             element={
@@ -184,7 +216,7 @@ const App = () => {
               <Account setProgress={setProgress} ShowAlert={ShowAlert} />
             }
           />
-          <Route path="*" element={<NotFound/>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer position="bottom-right" />
         <Footer />

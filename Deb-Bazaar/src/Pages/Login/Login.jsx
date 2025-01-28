@@ -55,11 +55,11 @@ const Login = (props) => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-evenly w-4/5 mx-auto gap-8 py-12 md:py-16">
       {/* Image Section */}
-      <div className="w-1/2 hidden md:flex items-center justify-center p-4">
+      <div data-aos="fade-right" className="w-1/2 hidden md:flex items-center justify-center p-4">
         <img src="/Side Image.png" alt="Side visual illustration" className="max-w-full h-auto mx-auto" />
       </div>
       {/* Form Section */}
-      <div className="flex flex-col gap-7 w-full md:w-1/3">
+      <div data-aos="fade-left" className="flex flex-col gap-7 w-full md:w-1/3">
         <div>
           <h2 className="text-2xl md:text-2xl font-semibold">Login Account</h2>
           <span className="text-gray-600">Enter your details below</span>

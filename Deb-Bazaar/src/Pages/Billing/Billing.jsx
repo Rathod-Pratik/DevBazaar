@@ -52,9 +52,9 @@ const Billing = () => {
 
   return (
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto">
-      <h1 className="text-[36px] font-medium my-6">Billing Details</h1>
+      <h1 data-aos="fade-down" className="text-[36px] font-medium my-6">Billing Details</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <div className="flex flex-col gap-6">
+        <div data-aos="fade-right" className="flex flex-col gap-6">
           <div>
             <p className="text-gray-500">First Name*</p>
             <input value={FirstName} onChange={(e) => setFirstName(e.target.value)}
@@ -111,7 +111,7 @@ const Billing = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3 mt-6">
+        <div data-aos="fade-left" className="flex flex-col gap-3 mt-6">
           <div class="flex flex-col gap-6 ">
             {cartItems.map((product, index) => {
               return (
@@ -155,7 +155,7 @@ const Billing = () => {
                   <input type="radio" name="PaymentMethod" />
                   Bank
                 </div>
-                <img src="/public/Frame 834.png" alt="" />
+                <img src="/Frame 834.png" alt="" />
               </div>
               <div className="flex gap-2">
                 <input type="radio" name="PaymentMethod" />

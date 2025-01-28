@@ -87,5 +87,42 @@ async function GetCart(req, res) {
     return res.status(500).json({ error: "Internal Server Error" }); // Handle unexpected errors
   }
 }
+async function UpdateQuantity(req, res) {
+  try {
+    // Destructure data from the request body
+    const { quantity, user, product_name } = req.body;
 
-module.exports = { AddToCart, RemoveItem, GetCart };
+    // Validate required fields
+    if (!quantity) {
+      return res.status(400).json({ message: "Quantity is required" });
+    }
+    if (!user) {
+      return res.status(400).json({ message: "User is required" });
+    }
+    if (!product_name) {
+      return res.status(400).json({ message: "Product name is required" });
+    }
+
+    // Update the cart
+    const updateCart = await CartModel.findOneAndUpdate(
+      { user, product_name }, // Find by user and product name
+      { quantity }, // Update quantity
+      { new: true } // Return the updated document
+    );
+
+    // Check if the cart item exists
+    if (!updateCart) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    // Respond with the updated cart item
+    return res.status(200).json({ updateCart });
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+}
+
+
+module.exports = { AddToCart, RemoveItem, GetCart,UpdateQuantity };

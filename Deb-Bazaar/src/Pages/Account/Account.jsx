@@ -53,14 +53,14 @@ const Account = () => {
   }
   return (
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto flex flex-col gap-10">
-      <p className="flex justify-end gap-2 text-red-600">
+      <p data-aos="fade-left" className="flex justify-end gap-2 text-red-600">
         {" "}
         <span className="text-black">Welcome</span> {userInfo.FirstName}{" "}
         {userInfo.LastName}
       </p>
       <section className="flex flex-col-reverse justify-center lg:flex-row gap-10 min-h-[80vh] mt-10">
         {/* Links */}
-        <div className="flex flex-col space-y-6 w-[25%] ">
+        <div data-aos="fade-right" className="flex flex-col space-y-6 w-[25%] ">
           {/* Manage My Account Section */}
           <div>
             <h2 className="font-medium text-lg mb-2">Manage My Account</h2>
@@ -100,7 +100,7 @@ const Account = () => {
         </div>
 
         {/* Update Account Details */}
-        <div className="flex flex-col items-start ">
+        <div data-aos="fade-left" className="flex flex-col items-start ">
           <h2 className="text-red-600 text-xl font-semibold mb-4">
             Edit Your Profile
           </h2>
