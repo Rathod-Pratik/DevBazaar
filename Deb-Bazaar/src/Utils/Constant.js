@@ -1,4 +1,4 @@
-export const  HOST="http://localhost:3000";
+export const  HOST="https://dev-bazaar-backend.vercel.app";
 
 export const GET_PRODUCT_DATA='/Product/getProduct';
 
