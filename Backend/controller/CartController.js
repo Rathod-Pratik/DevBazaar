@@ -78,7 +78,7 @@ async function GetCart(req, res) {
     const cart = await CartModel.find({ user });
 
     if (cart.length === 0) {
-      return res.status(404).json({ message: "Cart is empty" });
+      return res.status(200).json({ message: "Cart is empty" });
     }
 
     return res.status(200).json(cart);

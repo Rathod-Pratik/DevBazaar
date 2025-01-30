@@ -4,7 +4,6 @@
 @tailwind utilities;
 
 body {
-  overflow: hidden;
   font-family: "Poppins", serif;
   margin: 0;
   padding: 0;
@@ -12,4 +11,7 @@ body {
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
   opacity: 1;
+}
+html {
+  scroll-behavior: smooth;
 }
