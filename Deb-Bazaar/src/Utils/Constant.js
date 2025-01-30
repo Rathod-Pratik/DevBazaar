@@ -21,6 +21,11 @@ export const BILLING='Billing/getBilling';
 
 export const UPDATE_PROFILE=`Profile/updateProfile`
 
-export const SEND_MESSAGE='Contect'
+export const SEND_MESSAGE='Contect';
+
+export const ORDER='order';
+export const GET_ORDER=`${ORDER}/getorder`;
+export const ADD_ORDER=`${ORDER}/addtoorder`;
+export const CANCEL_ORDER=`${ORDER}/CancelOrder`;
 
 

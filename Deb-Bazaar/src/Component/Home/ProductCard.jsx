@@ -5,6 +5,7 @@ import { apiClient } from "../../lib/api-Client";
 import { ADD_TO_CART, ADD_TO_WISHLIST } from "../../Utils/Constant";
 import { useAppStore } from "../../Store/index";
 import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
 
 const ProductCard = ({ data }) => {
   const { userInfo, addWishListItem,addCartItem } = useAppStore();
@@ -19,6 +20,12 @@ const ProductCard = ({ data }) => {
   } = data;
 
   const AddToCart = async () => {
+
+    if(!userInfo){
+      Navigate('/signup');
+      return;
+    }
+
     const response = await apiClient.post(
       ADD_TO_CART,
       {
@@ -48,6 +55,13 @@ const ProductCard = ({ data }) => {
 
   
   const AddToWishList = async () => {
+
+    if(!userInfo){
+      Navigate('/signup');
+      return;
+    }
+
+
     try {
       const response = await apiClient.post(
         ADD_TO_WISHLIST,

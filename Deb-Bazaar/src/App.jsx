@@ -28,15 +28,17 @@ import Cookies from "js-cookie";
 
 //import states and constants
 import { useAppStore } from "./Store";
-import { GET_CART, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
+import { GET_CART, GET_ORDER, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
 import ProductDetail from "./Pages/ProductDetail/ProductDetail";
 
 //import animation libarary
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Order from "./Pages/order/Order";
 const App = () => {
   const {
+    setOrderItem,
     setWishListItems,
     setCartItems,
     userInfo,
@@ -96,6 +98,19 @@ const App = () => {
 
   //Fetch WishList and Cart Data
   useEffect(() => {
+
+    const fetchOrder=async()=>{
+      const response=await apiClient.get(`${GET_ORDER}?user=${userInfo._id}`);
+
+      if(response.status===200){
+        setOrderItem(response.data.orders);
+      }
+      else{
+        toast.error("Error while fatching orders")
+      }
+    }
+    fetchOrder();
+
     const fetchWishList = async () => {
       try {
         const response = await apiClient.post(
@@ -204,6 +219,12 @@ const App = () => {
             path="/contact"
             element={
               <Contect setProgress={setProgress} ShowAlert={ShowAlert} />
+            }
+          />
+          <Route
+            path="/order"
+            element={
+              <Order />
             }
           />
           <Route

@@ -16,11 +16,11 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
     });
 
 
-const corsOptions={
-    origin:process.env.frounted,
-    methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials:true
-}
+    const corsOptions = {
+        origin: [process.env.FRONTEND, "http://localhost:3000"],
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true
+    };
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -37,6 +37,7 @@ app.use('/Product',require('./routes/ProductRoutes'));
 app.use('/Cart',require('./routes/CartRoute'));
 app.use('/Contect',require('./routes/ContectRoutes'));
 app.use('/Profile',require('./routes/ProfileRoutes'));
+app.use('/order',require('./routes/OrderRoutes'))
 
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');

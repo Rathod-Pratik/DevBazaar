@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
@@ -32,9 +32,25 @@ const Navbar = () => {
     setOpenModal(false);
   };
 
-  const Logout=()=>{
-localStorage.removeItem('auth-storage');
-  }
+  const Logout = () => {
+    localStorage.removeItem("auth-storage");
+  };
+  const modalRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setOpenModal(false); // Close modal when clicking outside
+      }
+    }
+
+    if (openModal) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openModal]);
 
   const { userInfo, wishListItems, cartItems } = useAppStore();
   return (
@@ -102,7 +118,7 @@ localStorage.removeItem('auth-storage');
           {/* Icons */}
           <div className="flex items-center gap-4">
             <div className="relative">
-            <Link to={userInfo?'/cart':'/signup'}>
+              <Link to={userInfo ? "/cart" : "/signup"}>
                 <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
               {cartItems.length > 0 && (
@@ -112,7 +128,7 @@ localStorage.removeItem('auth-storage');
               )}
             </div>
             <div className="relative">
-              <Link to={userInfo?'/wishlist':'/signup'}>
+              <Link to={userInfo ? "/wishlist" : "/signup"}>
                 <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
               {wishListItems.length > 0 && (
@@ -207,7 +223,7 @@ localStorage.removeItem('auth-storage');
                 {/* Icons */}
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Link to={userInfo?'/cart':'/signup'}>
+                    <Link to={userInfo ? "/cart" : "/signup"}>
                       <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {cartItems.length > 0 && (
@@ -217,7 +233,7 @@ localStorage.removeItem('auth-storage');
                     )}
                   </div>
                   <div className="relative">
-                    <Link to={userInfo?"/wishlist":"/signup"}>
+                    <Link to={userInfo ? "/wishlist" : "/signup"}>
                       <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {wishListItems.length > 0 && (
@@ -228,13 +244,17 @@ localStorage.removeItem('auth-storage');
                   </div>
                 </div>
                 <div className=" flex flex-col gap-2 items-center">
-                {userInfo && (
-                  <LuUser
-                  className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
-                  onClick={()=>window.location.href=`/account`}
-                  />
-                )}
-            {userInfo &&  <p>{userInfo.FirstName} {userInfo.LastName}</p>}
+                  {userInfo && (
+                    <LuUser
+                      className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
+                      onClick={() => (window.location.href = `/account`)}
+                    />
+                  )}
+                  {userInfo && (
+                    <p>
+                      {userInfo.FirstName} {userInfo.LastName}
+                    </p>
+                  )}
                 </div>
               </div>
             </ul>
@@ -245,7 +265,10 @@ localStorage.removeItem('auth-storage');
       {/* Model for account */}
       <div className="relative">
         {openModal && (
-          <div className="right-[45px] fixed top-12 bg-white backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50">
+          <div
+            ref={modalRef}
+            className="right-[45px] fixed top-12 bg-white backdrop-blur-sm shadow-lg rounded-md p-4 w-48 z-50"
+          >
             <ul className="list-none">
               <li className="py-2">
                 <Link
@@ -260,7 +283,7 @@ localStorage.removeItem('auth-storage');
               <li className="py-2">
                 <Link
                   onClick={CloseModel}
-                  to="/cart"
+                  to="/order"
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
                 >
                   <FiShoppingBag />
@@ -279,18 +302,10 @@ localStorage.removeItem('auth-storage');
               </li>
               <li className="py-2">
                 <Link
-                  onClick={CloseModel}
-                  to="/account"
-                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
-                >
-                  <TiStarOutline />
-                  My Reviews
-                </Link>
-              </li>
-              <li className="py-2">
-                <Link
-                to='/'
-                  onClick={()=>{CloseModel(),Logout()}}
+                  to="/"
+                  onClick={() => {
+                    CloseModel(), Logout();
+                  }}
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm cursor-pointer"
                 >
                   <BiLogOut />

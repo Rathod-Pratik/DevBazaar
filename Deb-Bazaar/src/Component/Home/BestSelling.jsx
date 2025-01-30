@@ -35,7 +35,7 @@ const BestSelling = () => {
   {/* Product Cards Section */}
   <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
     {data.map((product, index) => (
-      <div key={index} className="rounded-lg mb-4 sm:mb-6 mx-2 sm:mx-3 w-[150px] sm:w-auto">
+      <div key={index} className="rounded-lg mb-4 sm:mb-6 mx-2 sm:mx-3  sm:w-auto">
         <ProductCard data={product} />
       </div>
     ))}

@@ -1,7 +1,10 @@
 const Billing = require("../model/BillingModel");
+const CartModel = require("../model/CartModel");
+const OrderModel = require("../model/OrderModel");
 
 async function AddToBilling(req, res) {
   const {
+    user,
     Name,
     company_name,
     address,
@@ -13,21 +16,32 @@ async function AddToBilling(req, res) {
   } = req.body;
 
   if (
-    (!Name ||
-      !company_name ||
-      !address ||
-      !city ||
-      !phoneNumber ||
-      !email ||
-      !productData,
-    !apartment)
+    !Name ||
+    !company_name ||
+    !address ||
+    !city ||
+    !phoneNumber ||
+    !email ||
+    !productData ||
+    !apartment ||
+    !user
   ) {
     return res.status(400).json({ error: "All the Product data is required" });
   }
 
-  const alreadyExists = await Billing.findOne({ Name: Name, email: email, phoneNumber: phoneNumber, productData: productData });
+  const alreadyExistInBilling = await Billing.findOne({
+    Name: Name,
+    email: email,
+    phoneNumber: phoneNumber,
+    productData: productData,
+  });
+  const alreadyExistInOrder = await OrderModel.findOne({
+    user,
+    product: productData,
+  });
 
-  if (alreadyExists) {
+
+  if (alreadyExistInBilling && alreadyExistInOrder) {
     res.status(200).json({ message: "Product already exists in Billing" });
   }
   try {
@@ -42,7 +56,20 @@ async function AddToBilling(req, res) {
       productData: productData,
     });
 
-    if (AddToBilling) {
+    const newOrder = OrderModel.create({
+      user,
+      product: productData,
+      status: "Pending",
+    });
+
+    // Remove product from CartModel
+    const deleteCart = await CartModel.deleteMany({ user });
+
+    if (deleteCart.deletedCount === 0) {
+      return res.status(404).json({ message: "Product not found in the Cart" });
+    }
+
+    if (AddToBilling || newOrder) {
       return res.status(201).json({ message: "Product added to Billing" });
     } else {
       return res

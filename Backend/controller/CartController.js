@@ -105,7 +105,7 @@ async function UpdateQuantity(req, res) {
 
     // Update the cart
     const updateCart = await CartModel.findOneAndUpdate(
-      { user, product_name }, // Find by user and product name
+      { user, product_name },
       { quantity }, // Update quantity
       { new: true } // Return the updated document
     );
