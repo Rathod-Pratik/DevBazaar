@@ -17,7 +17,7 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
 
 
     const corsOptions = {
-        origin: ["https://dev-bazaar.vercel.app"],
+        origin: [process.env.FROUNTED],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true
     };
