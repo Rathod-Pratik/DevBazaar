@@ -17,11 +17,13 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
 
 
     const corsOptions = {
-        origin: [process.env.FROUNTED],
+        origin: [process.env.FRONTEND],
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true
     };
-app.use(cors(corsOptions));
+    
+    app.use(cors(corsOptions));
+    
 app.use(express.json());
 app.use(cookieParser());
 
