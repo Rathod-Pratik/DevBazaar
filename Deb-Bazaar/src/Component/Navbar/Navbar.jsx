@@ -157,7 +157,7 @@ const Navbar = () => {
 
           {/* Sliding Menu for small screen */}
           <div
-            className={`fixed top-0 right-0 w-full h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
+            className={`fixed top-0 right-0 w-[100vw] h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
           >
@@ -223,7 +223,7 @@ const Navbar = () => {
                 {/* Icons */}
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Link to={userInfo ? "/cart" : "/signup"}>
+                    <Link onClick={() => setIsMenuOpen(false)} to={userInfo ? "/cart" : "/signup"}>
                       <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {cartItems.length > 0 && (
@@ -233,7 +233,7 @@ const Navbar = () => {
                     )}
                   </div>
                   <div className="relative">
-                    <Link to={userInfo ? "/wishlist" : "/signup"}>
+                    <Link onClick={() => setIsMenuOpen(false)} to={userInfo ? "/wishlist" : "/signup"}>
                       <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {wishListItems.length > 0 && (
