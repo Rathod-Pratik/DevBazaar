@@ -27,8 +27,7 @@ const Cart = () => {
       </div>
 
       <div className="min-h-[40vh]" data-aos="fade-down">
-        {cartItems &&
-          cartItems.map((item) => (
+       {   cartItems.map((item) => (
             <div key={item.Product_name}>
               <CartItem data={item} />
             </div>
