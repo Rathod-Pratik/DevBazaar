@@ -221,12 +221,12 @@ const App = () => {
               <Contect setProgress={setProgress} ShowAlert={ShowAlert} />
             }
           />
-          <Route
+          {/* <Route
             path="/order"
             element={
               <Order />
             }
-          />
+          /> */}
           <Route
             path="/about"
             element={<About setProgress={setProgress} ShowAlert={ShowAlert} />}
