@@ -10,7 +10,7 @@ const Cart = () => {
 
   if (cartItems) {
     for (const item of Object.values(cartItems)) {
-      const price = Number(item.Price); // Convert to number
+      const price = Number(item.Price); 
       if (!isNaN(price)) {
         totalPrice += price;
       }
@@ -27,12 +27,18 @@ const Cart = () => {
       </div>
 
       <div className="min-h-[40vh]" data-aos="fade-down">
-       {   cartItems.map((item) => (
-            <div key={item.Product_name}>
-              <CartItem data={item} />
-            </div>
-          ))}
+  {cartItems && cartItems.length > 0 ? (
+    cartItems.map((item) => (
+      <div key={item.Product_name}>
+        <CartItem data={item} />
       </div>
+    ))
+  ) : (
+    <div className="text-center text-gray-500 text-lg mt-10">
+      Your cart is empty. <Link to="/" className="text-red-500">Go shopping!</Link>
+    </div>
+  )}
+</div>
 
       <div className="my-6 flex justify-between">
         <button

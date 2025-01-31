@@ -52,6 +52,31 @@ const Navbar = () => {
     };
   }, [openModal]);
 
+
+//Close Model when someone click outside
+const menuRef = useRef(null);
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMenuOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isMenuOpen]);
+  
+
   const { userInfo, wishListItems, cartItems } = useAppStore();
   return (
     <>
@@ -157,7 +182,8 @@ const Navbar = () => {
 
           {/* Sliding Menu for small screen */}
           <div
-            className={`fixed top-0 right-0 w-[100vw] h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
+          ref={menuRef}
+            className={`fixed top-0 right-0 h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
           >
