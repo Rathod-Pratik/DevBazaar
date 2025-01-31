@@ -5,7 +5,7 @@ import { apiClient } from "../../lib/api-Client";
 import { ADD_TO_CART, ADD_TO_WISHLIST } from "../../Utils/Constant";
 import { useAppStore } from "../../Store/index";
 import { toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ data }) => {
   const { userInfo, addWishListItem,addCartItem } = useAppStore();
@@ -18,11 +18,11 @@ const ProductCard = ({ data }) => {
     Price,
     Rating,
   } = data;
-
+  const navigate = useNavigate();
   const AddToCart = async () => {
 
     if(!userInfo){
-      Navigate('/signup');
+      navigate('/signup');
       return;
     }
 
@@ -57,7 +57,7 @@ const ProductCard = ({ data }) => {
   const AddToWishList = async () => {
 
     if(!userInfo){
-      Navigate('/signup');
+      navigate('/signup');
       return;
     }
 

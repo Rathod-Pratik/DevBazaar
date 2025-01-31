@@ -6,32 +6,34 @@ import { Link } from "react-router-dom";
 const Cart = () => {
   const { cartItems } = useAppStore();
 
-  let totalPrice = 0;
+  let totalPrice = 0; // Move this outside the if block
 
-  for (const item of cartItems) {
-    totalPrice += Number(item.Price); // Convert Price to a number
+  if (cartItems) {
+    for (const item of Object.values(cartItems)) {
+      const price = Number(item.Price); // Convert to number
+      if (!isNaN(price)) {
+        totalPrice += price;
+      }
+    }
   }
 
   return (
     <div className="mx-auto mt-12 w-[80%] min-h-[100vh] my-[30px]">
-          <div 
-            data-aos="fade-down"
-            className="hidden lg:grid grid-cols-4 gap-4 text-gray-500 "
-          >
-            <p>Product</p>
-            <p>Price</p>
-            <p>Quantity</p>
-            <p>Subtotal</p>
-          </div>
+      <div data-aos="fade-down" className="hidden lg:grid grid-cols-4 gap-4 text-gray-500">
+        <p>Product</p>
+        <p>Price</p>
+        <p>Quantity</p>
+        <p>Subtotal</p>
+      </div>
 
-          <div className="min-h-[40vh]" data-aos="fade-down">
-            {cartItems.map((item) => (
-              <div key={item.Product_name}>
-                <CartItem data={item} />
-              </div>
-            ))}
-          </div>
-  
+      <div className="min-h-[40vh]" data-aos="fade-down">
+        {cartItems &&
+          cartItems.map((item) => (
+            <div key={item.Product_name}>
+              <CartItem data={item} />
+            </div>
+          ))}
+      </div>
 
       <div className="my-6 flex justify-between">
         <button
@@ -42,7 +44,7 @@ const Cart = () => {
         </button>
         <button
           data-aos="fade-left"
-          className="py-3 px-4  border-[1px]  border-black hover:text-white hover:bg-red-500 transition-all duration-300 hover:border-none"
+          className="py-3 px-4 border-[1px] border-black hover:text-white hover:bg-red-500 transition-all duration-300 hover:border-none"
         >
           Update Cart
         </button>
@@ -58,11 +60,8 @@ const Cart = () => {
             Apply Coupon
           </button>
         </div>
-        <div
-          data-aos="fade-left"
-          className="border-2 border-gray-500 lg:w-[35%] h-[265px] p-2"
-        >
-          <p className="text-start p-2 font-medium text-[20px] ">Cart Total</p>
+        <div data-aos="fade-left" className="border-2 border-gray-500 lg:w-[35%] h-[265px] p-2">
+          <p className="text-start p-2 font-medium text-[20px]">Cart Total</p>
           <div className="flex flex-col gap-3">
             <div className="flex justify-between px-2">
               <p className="text-[16px]">Subtotal:</p>
@@ -83,7 +82,7 @@ const Cart = () => {
               to="/billing"
               className="py-3 px-4 text-white bg-red-500 hover:bg-red-600 transition-all duration-300 rounded-[5px] h-[45px] w-[200px] m-auto"
             >
-              Procees to checkout
+              Proceed to checkout
             </Link>
           </div>
         </div>

@@ -38,7 +38,7 @@ const Categories_section = () => {
       }, []);
     
   return (
-    <div className="flex flex-col-reverse md:flex-row items-center bg-black text-white p-4 md:p-8 min-h-screen md:min-h-[80vh] gap-8 md:gap-12">
+    <div className="flex flex-col-reverse md:flex-row items-center bg-black text-white p-4 md:p-8  md:min-h-[80vh] gap-8 md:gap-12">
     {/* Text Content */}
     <div data-aos="fade-right" className="flex flex-col justify-center text-start w-full md:w-1/2 p-4 space-y-6 md:space-y-8">
       <p className="text-[#00FF66] text-sm md:text-base font-semibold">Categories</p>

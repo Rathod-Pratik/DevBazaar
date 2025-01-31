@@ -6,7 +6,7 @@ import { FaApple } from "react-icons/fa";
 const Hero = () => {
   return (
     <div className="mt-4 rounded-md">
-    <div className="h-[70vh] flex flex-col-reverse md:flex-row items-center justify-evenly p-4 md:p-6 lg:p-8 rounded-[10px] shadow-md bg-black text-white">
+    <div className="flex flex-col-reverse md:flex-row items-center justify-evenly p-4 md:p-6 lg:p-8 rounded-[10px] shadow-md bg-black text-white">
       {/* Product Details */}
       <div data-aos="fade-right" className="text-center md:text-left gap-4 flex flex-col items-center md:items-start">
         <h3 className="font-bold mb-4 text-white flex flex-row gap-3 items-center">
