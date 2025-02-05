@@ -1,4 +1,4 @@
-export const  HOST="https://dev-bazaar-backend.vercel.app";
+export const  HOST= import.meta.env.VITE_API_HOST;
 
 export const GET_PRODUCT_DATA='/Product/getProduct';
 
