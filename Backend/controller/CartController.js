@@ -17,7 +17,7 @@ export const AddToCart = async (req, res) => {
     if (productExists) {
       return res
         .status(409)
-        .json({ error: "Product already exists in the wishlist" });
+        .json({ error: "Product already exists in the Cart" });
     }
     // Add product to cart
     const AddToCart = await CartModel.create({

@@ -5,10 +5,10 @@ const Alert = (props) => {
     <div>
       {props.alert && (
         <div
-          class={`p-4 mb-4 text-sm ${props.alert.color} rounded-lg ${props.alert.bgcolor}`}
+          className={`p-4 mb-4 text-sm ${props.alert.color} rounded-lg ${props.alert.bgcolor}`}
           role="alert"
         >
-          <span class="font-medium">{props.alert.message}</span>
+          <span className="font-medium">{props.alert.message}</span>
         </div>
       )}
     </div>

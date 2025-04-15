@@ -16,7 +16,7 @@ const WishList = () => {
     //Fetch Other Product Data
     const fetchProductData = async () => {
       try {
-        const response = await apiClient.get(GET_PRODUCT_DATA);
+        const response = await apiClient.get(GET_PRODUCT_DATA,{timeout: 10000});
         if (response.status === 200) {
           // Limit data to the first 6 objects
           const limitedData = response.data.slice(0, 5);

@@ -27,7 +27,7 @@ const Account = () => {
           Oldpassword: oldPassword,
           NewPassword: newPassword,
         },
-        { withCredentials: true }
+        { withCredentials: true },{timeout: 10000}
       );
       if (response.status == 200) {
         setUserInfo(response.data.user);
