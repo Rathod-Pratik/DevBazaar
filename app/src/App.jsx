@@ -35,7 +35,7 @@ import ProductDetail from "./Pages/ProductDetail/ProductDetail";
 //import animation libarary
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Order from "./Pages/order/Order";
+
 const App = () => {
   const {
     setOrderItem,
@@ -49,7 +49,7 @@ const App = () => {
   const [alert, setAlert] = useState("");
 
   const notifymessage = (message) => toast(message);
-
+  console.log(userInfo);
   //Function for showing alert
   const ShowAlert = async (color, message, bgcolor) => {
     setAlert({
@@ -100,7 +100,7 @@ const App = () => {
   useEffect(() => {
 
     const fetchOrder=async()=>{
-      const response=await apiClient.get(`${GET_ORDER}?user=${userInfo._id}`);
+      const response=await apiClient.get(`${GET_ORDER}?user=${userInfo._id}`,{timeout: 10000});
 
       if(response.status===200){
         setOrderItem(response.data.orders);
@@ -116,7 +116,7 @@ const App = () => {
         const response = await apiClient.post(
           GET_WISHLIST,
           { user: userInfo._id },
-          { withCredentials: true }
+          { withCredentials: true },{timeout: 10000}
         );
         if (response.status === 200) {
           setWishListItems(response.data.wishList);
@@ -131,7 +131,7 @@ const App = () => {
     const fetchCartList = async () => {
       try {
         const response = await apiClient.get(
-          `${GET_CART}?user=${userInfo._id}`
+          `${GET_CART}?user=${userInfo._id}`,{timeout: 10000}
         );
         if (response.status == 200) {
           setCartItems(response.data);
@@ -148,7 +148,7 @@ const App = () => {
     }
     const fetchProductData = async () => {
       try {
-        const response = await apiClient.get(GET_PRODUCT_DATA);
+        const response = await apiClient.get(GET_PRODUCT_DATA,{timeout: 10000});
         if (response.status === 200) {
           setproductData(response.data);
         } else {

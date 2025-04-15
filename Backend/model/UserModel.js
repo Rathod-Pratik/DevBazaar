@@ -20,10 +20,6 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
   },
-  access: {
-    type: String,
-    default: 'Grananted',
-  },
   status: {
     type: String,
     enum: ['active', 'blocked'],

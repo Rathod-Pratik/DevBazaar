@@ -35,7 +35,8 @@ const ProductCard = ({ data }) => {
         Price: Price,
         Original_Price: Original_Price,
       },
-      { withCredentials: true }
+      { withCredentials: true },
+      {timeout: 10000}
     );
 
     if (response.status == 201) {
@@ -73,7 +74,8 @@ const ProductCard = ({ data }) => {
           Original_Price: Original_Price,
           off: off,
         },
-        { withCredentials: true }
+        { withCredentials: true },
+        {timeout: 10000}
       );
   
       if (response.status == 201) {
@@ -102,7 +104,6 @@ const ProductCard = ({ data }) => {
         toast.error("Something went wrong. Please try again.");
       }
     }
-   
   };
 
   const maxStars = 5;

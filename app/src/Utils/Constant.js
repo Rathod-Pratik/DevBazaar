@@ -25,7 +25,7 @@ export const SEND_MESSAGE='Contect';
 
 export const ORDER='order';
 export const GET_ORDER=`${ORDER}/getorder`;
-export const ADD_ORDER=`${ORDER}/addtoorder`;
+export const CREATE_ORDER=`${ORDER}/CreateOrder`;
 export const CANCEL_ORDER=`${ORDER}/CancelOrder`;
 
 

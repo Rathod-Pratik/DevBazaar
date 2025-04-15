@@ -6,16 +6,18 @@ import { Link } from "react-router-dom";
 const Cart = () => {
   const { cartItems } = useAppStore();
 
-  let totalPrice = 0; // Move this outside the if block
+  let totalPrice = 0;
 
-  if (cartItems) {
-    for (const item of Object.values(cartItems)) {
-      const price = Number(item.Price); 
+  if (cartItems && cartItems.length > 0) {
+    for (const item of cartItems) {
+      const price = Number(item.Price);
+      const quantity = Number(item.quantity || 1); // default to 1 if missing
       if (!isNaN(price)) {
-        totalPrice += price;
+        totalPrice += price * quantity;
       }
     }
   }
+  console.log(cartItems)
 
   return (
     <div className="mx-auto mt-12 w-[80%] min-h-[100vh] my-[30px]">
