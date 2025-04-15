@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-function connectToMongo(url) {
+ export function connectToMongo(url) {
     return mongoose.connect(url, { // Return the promise from mongoose.connect
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
 }
 
-module.exports = { connectToMongo };
+

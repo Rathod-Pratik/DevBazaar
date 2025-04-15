@@ -1,6 +1,5 @@
-const OrderModel = require("../model/OrderModel.js");
-
-const CancelOrder = async (req, res) => {
+import OrderModel from "../model/OrderModel.js";
+export const CancelOrder = async (req, res) => {
   const { user, Product_name } = req.body; // Use correct field name
 
   if (!user || !Product_name) {
@@ -25,7 +24,7 @@ const CancelOrder = async (req, res) => {
   }
 };
 
-const GetOrder = async (req, res) => {
+export const GetOrder = async (req, res) => {
   const { user } = req.query;
 
   if (!user) {
@@ -45,5 +44,3 @@ const GetOrder = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-module.exports = { GetOrder, CancelOrder };

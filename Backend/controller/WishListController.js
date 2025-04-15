@@ -1,6 +1,5 @@
-const WishList = require("../model/wishListModel");
-
-async function RemoveItem(req, res) {
+import WishList from "../model/wishListModel.js";
+export async function RemoveItem(req, res) {
   // Change to DELETE for deleting data
   const { user, Product_name } = req.query;
 
@@ -28,7 +27,7 @@ async function RemoveItem(req, res) {
   }
 }
 
-async function AddToWishList(req, res) {
+export async function AddToWishList(req, res) {
   // Change to POST for creating data
   try {
     const { user, Product_name, Product_image, Price, Original_Price, off } =
@@ -75,7 +74,7 @@ async function AddToWishList(req, res) {
   }
 }
 
-async function getWishList(req, res) {
+export async function getWishList(req, res) {
   // Change to GET for reading data
   try {
     const { user } = req.body;
@@ -88,4 +87,3 @@ async function getWishList(req, res) {
     console.error("Error getting wishlist:", error.message); // Log the error for debugging
   }
 }
-module.exports = { RemoveItem, AddToWishList, getWishList };

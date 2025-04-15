@@ -1,5 +1,5 @@
-const express=require('express');
-const {AddToCart,RemoveItem,GetCart,UpdateQuantity}=require('../controller/CartController');
+import express from 'express'
+import {AddToCart,RemoveItem,GetCart,UpdateQuantity} from '../controller/CartController.js';
 
 const router=express.Router();
 
@@ -8,4 +8,4 @@ router.delete('/deleteFromCart',RemoveItem);
 router.get('/getCart',GetCart);
 router.post('/updateQuantity',UpdateQuantity)
 
-module.exports=router;
+export default router;

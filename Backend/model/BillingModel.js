@@ -1,4 +1,4 @@
-const mongoose=require('mongoose');
+import mongoose from "mongoose";
 
 const BillingSchema=mongoose.Schema({
     product_date:{
@@ -40,4 +40,4 @@ const BillingSchema=mongoose.Schema({
 
 const Billing = mongoose.model('Billing', BillingSchema);
 
-module.exports = Billing;
+export default Billing;

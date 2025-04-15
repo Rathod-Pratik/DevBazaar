@@ -1,7 +1,7 @@
-const express=require('express');
-const {  GetOrder, CancelOrder } = require('../controller/OrderController');
+import express from 'express'
+import {  GetOrder, CancelOrder }  from  '../controller/OrderController.js';
 const router=express.Router();
 router.post('/CancelOrder',CancelOrder);
 router.get('/getorder',GetOrder);
 
-module.exports=router;
+export default router;

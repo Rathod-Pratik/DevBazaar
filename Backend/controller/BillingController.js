@@ -1,8 +1,9 @@
-const Billing = require("../model/BillingModel");
-const CartModel = require("../model/CartModel");
-const OrderModel = require("../model/OrderModel");
+import Billing from "../model/BillingModel.js";
+import CartModel from "../model/CartModel.js";
+import OrderModel from "../model/OrderModel.js";
 
-async function AddToBilling(req, res) {
+
+export async function AddToBilling(req, res) {
   const {
     user,
     Name,
@@ -81,4 +82,3 @@ async function AddToBilling(req, res) {
   }
 }
 
-module.exports = { AddToBilling };

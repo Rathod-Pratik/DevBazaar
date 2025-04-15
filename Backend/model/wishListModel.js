@@ -1,4 +1,4 @@
-const mongoose =require('mongoose');
+import mongoose from "mongoose";
 
 const wishListSchema=new mongoose.Schema({
     Product_name:{
@@ -29,4 +29,4 @@ const wishListSchema=new mongoose.Schema({
 })
 
 const WishList=mongoose.model('WishList',wishListSchema);
-module.exports=WishList;
+export default WishList;

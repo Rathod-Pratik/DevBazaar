@@ -1,6 +1,5 @@
-const CartModel = require("../model/CartModel");
-
-const AddToCart = async (req, res) => {
+import CartModel from "../model/CartModel.js";
+export const AddToCart = async (req, res) => {
   try {
     const { user, Product_name, Product_image, Price ,Original_Price} = req.body;
 
@@ -41,7 +40,7 @@ const AddToCart = async (req, res) => {
   }
 };
 
-async function RemoveItem(req, res) {
+export async function RemoveItem(req, res) {
   // Change to DELETE for deleting data
   const { user, Product_name } = req.query;
 
@@ -65,7 +64,7 @@ async function RemoveItem(req, res) {
   }
 }
 
-async function GetCart(req, res) {
+export async function GetCart(req, res) {
   // Change to GET for reading data
 
   const { user } = req.query;
@@ -87,7 +86,7 @@ async function GetCart(req, res) {
     return res.status(500).json({ error: "Internal Server Error" }); // Handle unexpected errors
   }
 }
-async function UpdateQuantity(req, res) {
+export async function UpdateQuantity(req, res) {
   try {
     // Destructure data from the request body
     const { quantity, user, product_name } = req.body;
@@ -123,6 +122,3 @@ async function UpdateQuantity(req, res) {
     return res.status(500).json({ message: "Internal server error", error });
   }
 }
-
-
-module.exports = { AddToCart, RemoveItem, GetCart,UpdateQuantity };

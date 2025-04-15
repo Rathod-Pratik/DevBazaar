@@ -1,10 +1,29 @@
-const express=require('express');
+import express from 'express'
 const app=express();
-const cors=require('cors');
-const cookieParser=require('cookie-parser');
-const {connectToMongo}=require('./controller/Connection');
-require('dotenv').config();
+import cors from 'cors'
+import cookieParser from 'cookie-parser';
+import {connectToMongo} from './controller/Connection.js';
+import Razorpay from 'razorpay';
 
+import AuthRoutes from './routes/AuthRoutes.js'
+import WishListRoute from './routes/WishListRoute.js'
+import BillingRoutes from './routes/BillingRoutes.js'
+import ProductRoutes from './routes/ProductRoutes.js'
+import CartRoute from './routes/CartRoute.js'
+import ContectRoutes from './routes/ContectRoutes.js'
+import ProfileRoutes from './routes/ProductRoutes.js'
+import OrderRoutes from './routes/OrderRoutes.js'
+import paymentRoutes from './routes/PaymentRoutes.js'
+import CategoryRoutes from './routes/CategoryRoutes.js'
+import AdminRoutes from './routes/AdminRoutes.js'
+
+import dotenv from 'dotenv'
+dotenv.config()
+
+export const razorpayInstance =new Razorpay({
+    key_id:process.env.RAZERPAY_API_KEY,
+    key_secret:process.env.RAZERPAY_API_SECRET
+})
 
 connectToMongo(process.env.DB_CONNECTION_STRING)
     .then(() => {
@@ -32,14 +51,17 @@ app.get('/',(req,res)=>{
 });
 
 
-app.use('/api',require('./routes/AuthRoutes'));
-app.use('/wishList',require('./routes/WishListRoute'))
-app.use('/Billing',require('./routes/BillingRoutes'));
-app.use('/Product',require('./routes/ProductRoutes'));
-app.use('/Cart',require('./routes/CartRoute'));
-app.use('/Contect',require('./routes/ContectRoutes'));
-app.use('/Profile',require('./routes/ProfileRoutes'));
-app.use('/order',require('./routes/OrderRoutes'))
+app.use('/api',AuthRoutes);
+app.use('/wishList',WishListRoute)
+app.use('/Billing',BillingRoutes);
+app.use('/Product',ProductRoutes);
+app.use('/Cart',CartRoute);
+app.use('/Contect',ContectRoutes);
+app.use('/Profile',ProfileRoutes);
+app.use('/order',OrderRoutes)
+app.use('/payment',paymentRoutes)
+app.use('/category',CategoryRoutes)
+app.use('/Admin',AdminRoutes)
 
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');

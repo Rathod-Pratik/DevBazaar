@@ -1,7 +1,7 @@
-const User = require("../model/UserModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-async function UpdateProfile(req, res) {
+ import User from "../model/UserModel.js";
+import bcrypt from "bcryptjs/dist/bcrypt.js";
+
+export async function UpdateProfile(req, res) {
   try {
     const {address , Oldpassword, NewPassword, user,email } = req.body;
 
@@ -63,5 +63,3 @@ async function UpdateProfile(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-
-module.exports={UpdateProfile}
