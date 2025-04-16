@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { apiClient } from "../../lib/api-Client";
-import { SEND_MESSAGE } from "../../Utils/Constant";
-
+import { CREATE_CONTACT } from "../../Utils/Constant";
+import { useAppStore } from "../../Store";
+import {useNavigate} from 'react-router-dom'
 const Contect = () => {
+  const {userInfo}=useAppStore();
+  const navigate=useNavigate()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
@@ -12,7 +15,7 @@ const Contect = () => {
   const SendMessage=async()=>{
     if(validataion()){
       try {
-        const response=await apiClient.post(SEND_MESSAGE,{name,email,number,message});
+        const response=await apiClient.post(CREATE_CONTACT,{name,email,number,message,userInfo});
 
         if(response.status===200){
           toast.success("Message send Successfully");
@@ -45,6 +48,14 @@ const Contect = () => {
     }
     if(message.length<0){
       toast.error("Message is required");
+      return false
+    }
+    if(!userInfo){
+      toast.error("login is required");
+       navigate('/login')
+      return false
+
+    
     }
     return true;
   }

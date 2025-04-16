@@ -17,7 +17,6 @@ const Cart = () => {
       }
     }
   }
-  console.log(cartItems)
 
   return (
     <div className="mx-auto mt-12 w-[80%] min-h-[100vh] my-[30px]">

@@ -53,11 +53,11 @@ export async function CreateOrder(req, res) {
     Name,
     company_name,
     address,
-    apartment,
     city,
     phoneNumber,
     email,
     productData,
+    apartment,
   } = req.body;
 
   if (
@@ -74,37 +74,17 @@ export async function CreateOrder(req, res) {
     return res.status(400).json({ error: "All the Product data is required" });
   }
 
-  const alreadyExistInBilling = await Billing.findOne({
-    Name: Name,
-    email: email,
-    phoneNumber: phoneNumber,
-    productData: productData,
-  });
-  const alreadyExistInOrder = await OrderModel.findOne({
-    user,
-    product: productData,
-  });
-
-
-  if (alreadyExistInBilling && alreadyExistInOrder) {
-    res.status(200).json({ message: "Product already exists in Billing" });
-  }
   try {
-    const AddToBilling = await Billing.create({
+    const AddToOrder = await OrderModel.create({
+      user:user,
       name: Name,
       company_name: company_name,
       address: address,
-      apartment: apartment,
       city: city,
       phone_number: phoneNumber,
       email: email,
       productData: productData,
-    });
-
-    const newOrder = OrderModel.create({
-      user,
-      product: productData,
-      status: "Pending",
+      apartment: apartment,
     });
 
     // Remove product from CartModel
@@ -114,8 +94,8 @@ export async function CreateOrder(req, res) {
       return res.status(404).json({ message: "Product not found in the Cart" });
     }
 
-    if (AddToBilling || newOrder) {
-      return res.status(201).json({ message: "Product added to Billing" });
+    if (AddToOrder) {
+      return res.status(201).json({OrderData:AddToOrder, message: "Product added to Billing" });
     } else {
       return res
         .status(400)

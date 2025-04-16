@@ -23,6 +23,14 @@ const Billing = () => {
       toast.error("First Name is required");
       return;
     }
+    if (!formData.companyName.trim()) {
+      toast.error("First Name is required");
+      return;
+    }
+    if (!formData.apartment.trim()) {
+      toast.error("First Name is required");
+      return;
+    }
     if (!formData.streetAddress.trim()) {
       toast.error("Street Address is required");
       return;
@@ -44,11 +52,14 @@ const Billing = () => {
   };
   let totalPrice = 0;
 
-  if (Array.isArray(cartItems) && cartItems.length > 0) {
-    totalPrice = cartItems.reduce((acc, item) => {
+  if (cartItems && cartItems.length > 0) {
+    for (const item of cartItems) {
       const price = Number(item.Price);
-      return acc + (isNaN(price) ? 0 : price);
-    }, 0);
+      const quantity = Number(item.quantity); // default to 1 if missing
+      if (!isNaN(price)) {
+        totalPrice += price * quantity;
+      }
+    }
   }
 
   const handleChange = (e) => {
@@ -58,7 +69,6 @@ const Billing = () => {
       [name]: value,
     }));
   };
-  console.log(formData)
   return (
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto overflow-hidden">
       <h1
@@ -71,10 +81,10 @@ const Billing = () => {
         {/* Left Section */}
         <div data-aos="fade-right" className="flex flex-col gap-6">
           {[
-            { label: "First Name*", name: "firstName" },
-            { label: "Company Name", name: "companyName" },
+            { label: "Name*", name: "firstName" },
+            { label: "Company Name*", name: "companyName" },
             { label: "Street Address*", name: "streetAddress" },
-            { label: "Apartment, floor, etc. (optional)", name: "apartment" },
+            { label: "Apartment, floor, etc*", name: "apartment" },
             { label: "Town/City*", name: "townCity" },
             { label: "Phone Number*", name: "phoneNumber" },
             { label: "Email Address*", name: "emailAddress" },

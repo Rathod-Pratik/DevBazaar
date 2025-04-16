@@ -21,7 +21,7 @@ export const BILLING='Billing/getBilling';
 
 export const UPDATE_PROFILE=`Profile/updateProfile`
 
-export const SEND_MESSAGE='Contect';
+export const CREATE_CONTACT='Contect/createContact';
 
 export const ORDER='order';
 export const GET_ORDER=`${ORDER}/getorder`;

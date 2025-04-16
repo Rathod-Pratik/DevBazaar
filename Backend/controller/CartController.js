@@ -16,8 +16,8 @@ export const AddToCart = async (req, res) => {
 
     if (productExists) {
       return res
-        .status(409)
-        .json({ error: "Product already exists in the Cart" });
+        .status(200)
+        .json({AlreadyInCart:true, error: "Product already exists in the Cart" });
     }
     // Add product to cart
     const AddToCart = await CartModel.create({
@@ -30,7 +30,7 @@ export const AddToCart = async (req, res) => {
 
     // Check if the product was added successfully
     if (AddToCart) {
-      return res.status(201).json({ message: "Product added to Cart" });
+      return res.status(201).json({data:AddToCart, message: "Product added to Cart" });
     } else {
       return res.status(400).json({ message: "Product failed to add to Cart" });
     }

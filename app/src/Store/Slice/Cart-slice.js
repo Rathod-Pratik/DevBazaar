@@ -1,16 +1,38 @@
-export const createCartSlice=(set)=>({
-    cartItems:[],
-    setCartItems:(cartItems)=>set({cartItems}),
-    addCartItem:(cartItem)=>set((state)=>({
-        cartItems:[...state.cartItems,cartItem]
+export const createCartSlice = (set) => ({
+  cartItems: [],
+
+  // Replace entire cart safely
+  setCartItems: (items) => 
+    set({ cartItems: Array.isArray(items) ? items : [] }),
+
+  // Add a new item safely
+  addCartItem: (cartItem) =>
+    set((state) => ({
+      cartItems: Array.isArray(state.cartItems)
+        ? [...state.cartItems, cartItem]
+        : [cartItem],
     })),
-    removeCartItem:(cartItem)=>set((state)=>({
-        cartItems:state.cartItems.filter((item)=>item.Product_name!==cartItem.Product_name)
+
+  // Remove an item safely
+  removeCartItem: (cartItem) =>
+    set((state) => ({
+      cartItems: Array.isArray(state.cartItems)
+        ? state.cartItems.filter(
+            (item) => item.Product_name !== cartItem.Product_name
+          )
+        : [],
     })),
-    updateCartItem: (id, updatedFields) => set((state) => ({
-        cartItems: state.cartItems.map((item) =>
-          item._id === id ? { ...item, ...updatedFields } : item
-        ),
-      })),
-    clearCartItems:()=>set({cartItems:[]})
-})
+
+  // Update a cart item by id
+  updateCartItem: (id, updatedFields) =>
+    set((state) => ({
+      cartItems: Array.isArray(state.cartItems)
+        ? state.cartItems.map((item) =>
+            item._id === id ? { ...item, ...updatedFields } : item
+          )
+        : [],
+    })),
+
+  // Clear cart
+  clearCartItems: () => set({ cartItems: [] }),
+});

@@ -1,14 +1,26 @@
 import { toast } from "react-toastify";
 import { apiClient } from "../../lib/api-Client";
 import { useAppStore } from "../../Store";
-import { BILLING, CREATE_ORDER } from "../../Utils/Constant";
+import { CREATE_ORDER } from "../../Utils/Constant";
 
 const Payment = ({
   amount,
   validateCart,
   formData
 }) => {
-  const { userInfo,setCartItems } = useAppStore();
+  const { userInfo,setCartItems,cartItems } = useAppStore();
+
+  let totalPrice = 0;
+  console.log(cartItems)
+  if (cartItems && cartItems.length > 0) {
+    for (const item of cartItems) {
+      const price = Number(item.Price      );
+      const quantity = Number(item.quantity); // default to 1 if missing
+      if (!isNaN(price)) {
+        totalPrice += price * quantity;
+      }
+    }
+  }
 
   const loadScript = (src) => {
     if (!userInfo) {
@@ -46,7 +58,7 @@ const Payment = ({
 
       // ✅ Create Order on Backend
       const { data } = await apiClient.post("payment/create-order", {
-        amount: amount,
+        amount: totalPrice,
         currency: "INR",
         receipt: `receipt_${Date.now()}`,
         notes: {

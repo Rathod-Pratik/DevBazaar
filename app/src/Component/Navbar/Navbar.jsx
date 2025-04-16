@@ -100,12 +100,21 @@ useEffect(() => {
           </li>
           <li>
             <Link
+              to="/product"
+              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+            >
+              Product
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/contact"
               className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
             >
               Contact
             </Link>
           </li>
+          
           <li>
             <Link
               to="/about"

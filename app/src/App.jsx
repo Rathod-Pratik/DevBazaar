@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes,ScrollRestoration } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //Import Pages
 import Alert from "./Component/Alert/Alert";
@@ -23,18 +23,24 @@ import Navbar from "./Component/Navbar/Navbar";
 import Footer from "./Component/Footer/Footer";
 import LoadingBar from "react-top-loading-bar";
 
-
 import Cookies from "js-cookie";
 
 //import states and constants
 import { useAppStore } from "./Store";
-import { GET_CART, GET_ORDER, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
+import {
+  GET_CART,
+  GET_ORDER,
+  GET_PRODUCT_DATA,
+  GET_WISHLIST,
+} from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
 import ProductDetail from "./Pages/ProductDetail/ProductDetail";
 
 //import animation libarary
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Order from "./Pages/order/Order";
+import Product from "./Pages/Product/Product";
 
 const App = () => {
   const {
@@ -74,9 +80,9 @@ const App = () => {
   };
 
   //animation
-  useEffect(()=>{
+  useEffect(() => {
     AOS.init();
-  },[])
+  }, []);
   useEffect(() => {
     const jwt = Cookies.get("jwt");
     if (jwt) {
@@ -98,17 +104,18 @@ const App = () => {
 
   //Fetch WishList and Cart Data
   useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await apiClient.get(
+        `${GET_ORDER}?user=${userInfo._id}`,
+        { timeout: 10000 }
+      );
 
-    const fetchOrder=async()=>{
-      const response=await apiClient.get(`${GET_ORDER}?user=${userInfo._id}`,{timeout: 10000});
-
-      if(response.status===200){
+      if (response.status === 200) {
         setOrderItem(response.data.orders);
+      } else {
+        toast.error("Error while fatching orders");
       }
-      else{
-        toast.error("Error while fatching orders")
-      }
-    }
+    };
     fetchOrder();
 
     const fetchWishList = async () => {
@@ -116,7 +123,8 @@ const App = () => {
         const response = await apiClient.post(
           GET_WISHLIST,
           { user: userInfo._id },
-          { withCredentials: true },{timeout: 10000}
+          { withCredentials: true },
+          { timeout: 10000 }
         );
         if (response.status === 200) {
           setWishListItems(response.data.wishList);
@@ -131,7 +139,8 @@ const App = () => {
     const fetchCartList = async () => {
       try {
         const response = await apiClient.get(
-          `${GET_CART}?user=${userInfo._id}`,{timeout: 10000}
+          `${GET_CART}?user=${userInfo._id}`,
+          { timeout: 10000 }
         );
         if (response.status == 200) {
           setCartItems(response.data);
@@ -142,13 +151,15 @@ const App = () => {
         console.log(error);
       }
     };
-    if(userInfo){
+    if (userInfo) {
       fetchCartList();
       fetchWishList();
     }
     const fetchProductData = async () => {
       try {
-        const response = await apiClient.get(GET_PRODUCT_DATA,{timeout: 10000});
+        const response = await apiClient.get(GET_PRODUCT_DATA, {
+          timeout: 10000,
+        });
         if (response.status === 200) {
           setproductData(response.data);
         } else {
@@ -173,8 +184,9 @@ const App = () => {
           onLoaderFinished={() => setProgress(0)}
         />
         <Alert alert={alert} />
-        <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
+          <Route path="/product" element={<Product />}></Route>
           <Route
             path="/"
             element={
@@ -204,7 +216,7 @@ const App = () => {
             path="/signup"
             element={<SignUp setProgress={setProgress} ShowAlert={ShowAlert} />}
           />
-          <Route path="/Product/:ProductName" element={<ProductDetail/>} />
+          <Route path="/Product/:ProductName" element={<ProductDetail />} />
           <Route
             path="/wishlist"
             element={
@@ -221,12 +233,7 @@ const App = () => {
               <Contect setProgress={setProgress} ShowAlert={ShowAlert} />
             }
           />
-          {/* <Route
-            path="/order"
-            element={
-              <Order />
-            }
-          /> */}
+          <Route path="/order" element={<Order />} />
           <Route
             path="/about"
             element={<About setProgress={setProgress} ShowAlert={ShowAlert} />}

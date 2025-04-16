@@ -20,40 +20,38 @@ const ProductCard = ({ data }) => {
   } = data;
   const navigate = useNavigate();
   const AddToCart = async () => {
-
-    if(!userInfo){
+    if (!userInfo) {
       navigate('/signup');
       return;
     }
-
-    const response = await apiClient.post(
-      ADD_TO_CART,
-      {
-        Product_name: Product_name,
-        Product_image: product_image_url,
-        user: userInfo._id,
-        Price: Price,
-        Original_Price: Original_Price,
-      },
-      { withCredentials: true },
-      {timeout: 10000}
-    );
-
-    if (response.status == 201) {
-      const ProductItem = {
-        Product_name: Product_name,
-        Product_image: product_image_url,
-        Price: Price,
-        Original_Price: Original_Price,
-        off: off,
-      };
-      addCartItem(ProductItem);
-      toast.success("Product added to Cart");
-    } else {
-      toast.error("Product failed to add to Cart");
+  
+    try {
+      const response = await apiClient.post(
+        ADD_TO_CART,
+        {
+          Product_name: Product_name,
+          Product_image: product_image_url,
+          user: userInfo._id,
+          Price: Price,
+          Original_Price: Original_Price,
+        },
+        { withCredentials: true, timeout: 10000 }
+      );
+  
+      if (response.status === 201) {
+        addCartItem(response.data.data);
+        toast.success("Product added to Cart");
+      } else if (response.data.AlreadyInCart === true) {
+        toast.warning("Product already in the Cart");
+      } else {
+        toast.error("Product failed to add to Cart");
+      }
+  
+    } catch (error) {
+      console.error("AddToCart Error:", error);
+      toast.error("Something went wrong while adding to cart.");
     }
-  };
-
+  };  
   
   const AddToWishList = async () => {
 
