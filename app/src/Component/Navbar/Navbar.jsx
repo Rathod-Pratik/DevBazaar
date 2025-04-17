@@ -216,6 +216,33 @@ useEffect(() => {
                 </Link>
               </li>
               <li>
+            <Link
+              to="/product"
+              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Product
+            </Link>
+          </li>
+              <li>
+            <Link
+            onClick={() => setIsMenuOpen(false)}
+              to="/order"
+              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+            >
+              Order
+            </Link>
+          </li>
+          <li>
+            <Link
+            onClick={() => setIsMenuOpen(false)}
+              to="/cancelorder"
+              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+            >
+              Cancel Order
+            </Link>
+          </li>
+              <li>
                 <Link
                   to="/contact"
                   className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
@@ -328,7 +355,7 @@ useEffect(() => {
               <li className="py-2">
                 <Link
                   onClick={CloseModel}
-                  to="/account"
+                  to="/cancelorder"
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
                 >
                   <MdOutlineCancel />

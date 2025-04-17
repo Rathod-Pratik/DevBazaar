@@ -103,11 +103,6 @@ const ProductCard = ({ data }) => {
       }
     }
   };
-
-  const maxStars = 5;
-  const fullStars = Math.floor(Rating); // Number of full stars
-  const hasHalfStar = Rating % 1 !== 0; // Check if there's a half-star
-  const emptyStars = maxStars - Math.ceil(Rating); // Remaining empty stars
   return (
     <div className="w-[280px] !border-none bg-white rounded-lg group" data-aos="zoom-in" >
       {/* Product Image */}
@@ -152,27 +147,6 @@ const ProductCard = ({ data }) => {
             <p className="text-gray-500 line-through font-medium text-[16px]">
               ${Original_Price}
             </p>
-          </div>
-          <div className="flex items-center">
-            {/* Full Stars */}
-            {Array(fullStars)
-              .fill(0)
-              .map((_, index) => (
-                <FaStar key={`full-${index}`} className="text-yellow-500" />
-              ))}
-
-            {/* Half Star */}
-            {hasHalfStar && <FaStarHalfAlt className="text-yellow-500" />}
-
-            {/* Empty Stars */}
-            {Array(emptyStars)
-              .fill(0)
-              .map((_, index) => (
-                <FaRegStar key={`empty-${index}`} className="text-gray-300" />
-              ))}
-
-            {/* Show numeric rating */}
-            <p className="ml-2 text-sm text-gray-600">({Review})</p>
           </div>
         </div>
       </div>

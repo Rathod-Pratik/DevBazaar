@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const CartItem = ({ data }) => {
   const { Product_name, Price, Product_image } = data;
-  const [Quentity, setQuntity] = useState();
+  const [Quentity, setQuntity] = useState(1);
   const { removeCartItem,updateCartItem, userInfo } = useAppStore();
 
   const removeCartItems = async () => {

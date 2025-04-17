@@ -27,5 +27,10 @@ export const ORDER='order';
 export const GET_ORDER=`${ORDER}/getorder`;
 export const CREATE_ORDER=`${ORDER}/CreateOrder`;
 export const CANCEL_ORDER=`${ORDER}/CancelOrder`;
+export const GET_CANCEL_ORDER=`${ORDER}/GetCancelOrder`
 
+export const REFUNDPAYMENT='payment/refund'
 
+export const ADD_REVIEW='review/createreview'
+export const GET_REVIEW='review/getreview'
+export const DELETE_REVIEW='review/DeleteReview'

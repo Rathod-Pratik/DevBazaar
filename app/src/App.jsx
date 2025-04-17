@@ -41,6 +41,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Order from "./Pages/order/Order";
 import Product from "./Pages/Product/Product";
+import CancelOrder from "./Pages/order/CancelOrder";
 
 const App = () => {
   const {
@@ -55,7 +56,6 @@ const App = () => {
   const [alert, setAlert] = useState("");
 
   const notifymessage = (message) => toast(message);
-  console.log(userInfo);
   //Function for showing alert
   const ShowAlert = async (color, message, bgcolor) => {
     setAlert({
@@ -104,20 +104,6 @@ const App = () => {
 
   //Fetch WishList and Cart Data
   useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await apiClient.get(
-        `${GET_ORDER}?user=${userInfo._id}`,
-        { timeout: 10000 }
-      );
-
-      if (response.status === 200) {
-        setOrderItem(response.data.orders);
-      } else {
-        toast.error("Error while fatching orders");
-      }
-    };
-    fetchOrder();
-
     const fetchWishList = async () => {
       try {
         const response = await apiClient.post(
@@ -161,7 +147,7 @@ const App = () => {
           timeout: 10000,
         });
         if (response.status === 200) {
-          setproductData(response.data);
+          setproductData(response.data.Products);
         } else {
           toast.error(
             "An error occurred while loading products. Please try again later."
@@ -234,6 +220,7 @@ const App = () => {
             }
           />
           <Route path="/order" element={<Order />} />
+          <Route path="/cancelorder" element={<CancelOrder />} />
           <Route
             path="/about"
             element={<About setProgress={setProgress} ShowAlert={ShowAlert} />}

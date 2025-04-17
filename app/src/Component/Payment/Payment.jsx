@@ -94,9 +94,10 @@ const Payment = ({
             );
 
             try {
-              const response = await apiClient.post(
+              const createOrder = await apiClient.post(
                 CREATE_ORDER,
                 {
+                  paymentId: response.razorpay_payment_id,
                   user: userInfo._id,
                   Name: formData.firstName,
                   company_name: formData.companyName,
@@ -110,7 +111,7 @@ const Payment = ({
                 { withCredentials: true }
               );
         
-              if (response.status === 201) {
+              if (createOrder.status === 201) {
                 setCartItems([]);
                 toast.success("Billing Details Added");
                 // clear form states here

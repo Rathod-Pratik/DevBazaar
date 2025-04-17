@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useAppStore } from "../../Store";
 import { apiClient } from "../../lib/api-Client";
-import { CANCEL_ORDER, GET_ORDER, REFUNDPAYMENT } from "../../Utils/Constant";
+import { GET_CANCEL_ORDER } from "../../Utils/Constant";
 import { toast } from "react-toastify";
-import ReviewModel from "../../Component/Review/ReviewModel";
 
-const Order = () => {
+const CancelOrder = () => {
   const { userInfo } = useAppStore();
   const [orderData, setOrderData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await apiClient.get(`${GET_ORDER}/${userInfo._id}`);
+        const response = await apiClient.get(`${GET_CANCEL_ORDER}/${userInfo._id}`);
         if (response.status === 200) {
           setOrderData(response.data.data);
         }
@@ -34,57 +34,10 @@ const Order = () => {
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
-  const handleCancel = async (paymentId, totalPrice, _id) => {
-    try {
-      // First initiate the refund
-      const refundResponse = await apiClient.post(REFUNDPAYMENT, {
-        payment_id: paymentId,
-        amount: totalPrice * 100, // Convert to paise if using Indian currency
-      });
-
-      if (refundResponse.status === 200) {
-        // If refund succeeds, cancel the order
-        const cancelResponse = await apiClient.post(CANCEL_ORDER, { _id });
-
-        if (cancelResponse.status === 200) {
-          // Update the UI by removing the cancelled order
-          setOrderData((prevOrders) =>
-            prevOrders.filter((item) => item._id !== _id)
-          );
-
-          // Show success notifications
-          toast.success("Your order has been cancelled successfully");
-          toast.success(
-            "Refund initiated successfully! Amount will be transferred in 5-7 working days."
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Order cancellation failed:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to cancel order. Please try again later."
-      );
-    }
-  };
-
-  // Calculate total for an order
   const calculateOrderTotal = (products) => {
     return products.reduce((total, product) => {
       return total + Number(product.Price) * Number(product.quantity);
     }, 0);
-  };
-
-  const [showModel, setShowModel] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const handleShowModal = (product) => {
-    setSelectedProduct(product);
-    setShowModel(true);
-  };
-  const handleCloseModal = () => {
-    setShowModel(false);
-    setSelectedProduct(null);
   };
 
   if (isLoading) {
@@ -204,49 +157,15 @@ const Order = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center">
-                        <button
-                          onClick={() => handleShowModal(product)}
-                          className="px-4 py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium text-sm"
-                        >
-                          Add Review
-                        </button>
-                      </div>
                     </div>
                   ))}
                 </div>
-
-                {/* Review Modal */}
-                {showModel && selectedProduct && (
-                  <ReviewModel
-                    productId={selectedProduct.product}
-                    userId={userInfo}
-                    onClose={handleCloseModal}
-                  />
-                )}
               </div>
 
-              {/* Order Total */}
-
-              {/* Order Actions */}
-              <div className="p-6 border-t border-gray-200  sm:flex-row justify-end gap-3">
+              <div className="p-6 border-t border-gray-200 sm:flex-row justify-end gap-3">
                 <div className="flex flex-col sm:flex-row gap-2 justify-between items-center">
                   <span className="font-medium text-gray-700">
                     Order Total: ₹{orderTotal.toFixed(2)}
-                  </span>
-                  <span className="text-xl font-bold text-blue-600 ">
-                    <button
-                      onClick={() =>
-                        handleCancel(
-                          order.paymentId,
-                          orderTotal.toFixed(2),
-                          order._id
-                        )
-                      }
-                      className="px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors font-medium text-sm"
-                    >
-                      Cancel Order
-                    </button>
                   </span>
                 </div>
               </div>
@@ -255,11 +174,11 @@ const Order = () => {
         })
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">You don't have any orders yet.</p>
+          <p className="text-gray-500">You don't have any Canceled orders yet.</p>
         </div>
       )}
     </div>
   );
 };
 
-export default Order;
+export default CancelOrder;
