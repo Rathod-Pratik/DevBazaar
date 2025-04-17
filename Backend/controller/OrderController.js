@@ -1,47 +1,57 @@
-import Billing from "../model/BillingModel.js";
 import CartModel from "../model/CartModel.js";
 import OrderModel from "../model/OrderModel.js";
 
 export const CancelOrder = async (req, res) => {
-  const { user, Product_name } = req.body; // Use correct field name
+  const { _id } = req.body;
 
-  if (!user || !Product_name) {
-    return res.status(400).json({ error: "User and Product name are required" });
+  if (!_id) {
+    return res.status(400).json({ error: "_id is required" });
   }
 
   try {
+    // Issue 1: findOneAndUpdate requires a query object as first parameter
     const updatedOrder = await OrderModel.findOneAndUpdate(
-      { user, Product_name }, // Ensure this matches your schema
-      { status: "Cancelled" },
-      { new: true } // Returns the updated document
+      { _id }, // Corrected: Wrap _id in a query object
+      { status: "cancelled" }, // Changed to "cancelled" (more standard)
+      { new: true }
     );
 
-    if (updatedOrder) {
-      return res.status(200).json({ message: "Order cancelled successfully", updatedOrder });
-    } else {
-      return res.status(404).json({ message: "Product not found in orders" });
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
     }
+
+    return res.status(200).json({ 
+      message: "Order cancelled successfully", 
+      updatedOrder 
+    });
+
   } catch (error) {
     console.error("Error cancelling order:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ 
+      error: "Internal Server Error",
+      details: error.message // Added error details for debugging
+    });
   }
 };
 
 export const GetOrder = async (req, res) => {
-  const { user } = req.query;
+  const { user } = req.params;
 
   if (!user) {
     return res.status(400).json({ error: "User ID is required" });
   }
 
   try {
-    const orders = await OrderModel.find({ user }); // Use find() to get multiple orders
+    const orders = await OrderModel.find({
+      user,status:'cancelled'
+    }); 
 
-    if (orders.length > 0) {
-      return res.status(200).json({ orders });
-    } else {
-      return res.status(200).json({ message: "No orders found" });
+    if (!orders) {
+      return res
+        .status(200)
+        .json({ success: false, message: "No orders found" });
     }
+    return res.status(200).json({ success: true, data: orders });
   } catch (error) {
     console.error("Error fetching orders:", error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -49,6 +59,7 @@ export const GetOrder = async (req, res) => {
 };
 export async function CreateOrder(req, res) {
   const {
+    paymentId,
     user,
     Name,
     company_name,
@@ -61,7 +72,8 @@ export async function CreateOrder(req, res) {
   } = req.body;
 
   if (
-    !user||
+    !paymentId ||
+    !user ||
     !Name ||
     !company_name ||
     !address ||
@@ -69,14 +81,15 @@ export async function CreateOrder(req, res) {
     !phoneNumber ||
     !email ||
     !productData ||
-    !apartment 
+    !apartment
   ) {
     return res.status(400).json({ error: "All the Product data is required" });
   }
 
   try {
     const AddToOrder = await OrderModel.create({
-      user:user,
+      paymentId:paymentId,
+      user: user,
       name: Name,
       company_name: company_name,
       address: address,
@@ -95,7 +108,9 @@ export async function CreateOrder(req, res) {
     }
 
     if (AddToOrder) {
-      return res.status(201).json({OrderData:AddToOrder, message: "Product added to Billing" });
+      return res
+        .status(201)
+        .json({ OrderData: AddToOrder, message: "Product added to Billing" });
     } else {
       return res
         .status(400)
@@ -103,5 +118,29 @@ export async function CreateOrder(req, res) {
     }
   } catch (error) {
     console.log("Error adding to Billing:", error.message);
+  }
+}
+
+export const GetCancelOrder=async(req,res)=>{
+  const { user } = req.params;
+
+  if (!user) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    const orders = await OrderModel.find({
+      user,status:'cancelled'
+    }); 
+
+    if (!orders) {
+      return res
+        .status(200)
+        .json({ success: false, message: "No orders found" });
+    }
+    return res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

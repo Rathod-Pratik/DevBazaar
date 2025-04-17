@@ -41,6 +41,15 @@ const orderSchema = mongoose.Schema(
       type: Object,
       required: true,
     },
+    status:{
+      type:String,
+      enum:['success','cancelled'],
+      default:'success'
+    },
+    paymentId:{
+      type:String,
+      required:true
+    }
   },
   { Timestamp: true }
 );

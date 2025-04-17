@@ -1,20 +1,21 @@
 import ReviewModel from "../model/ReviewModel.js";
 
 export const GetReview=async(req,res)=>{
-    const {_id}=req.params;
-    if(!_id){
+    const {Productid}=req.params;
+    if(!Productid){
         return res.status(400).send("_id is required")
     }
 
     try {
-        const Review=await ReviewModel.findById(_id);
-        if(Review.length <0){
+        const Review=await ReviewModel.find({Productid});
+        if(!Review){
             return res.status(200).send("No Review found");
         }
         else{
             return res.status(200).json({Review})
         }
     } catch (error) {
+        console.log(error)
         return res.status(400).json({"Message":error})
     }
 }

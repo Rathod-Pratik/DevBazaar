@@ -112,8 +112,6 @@ export const Refund = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid payment details or missing amount" });
     }
 
-    console.log("Payment Details:", payment);
-
     // If custom refund amount provided
     const refundAmount = amount || payment.amount;
 

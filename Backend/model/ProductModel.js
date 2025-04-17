@@ -15,16 +15,16 @@ const ProductShema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
-    required: true,
+     required: true,
   },
   Price: {
     type: Number,
     required: true,
   },
-  category: {
-    type: Number,
+  Description: {
+    type: String,
     required: true,
-  },
+  }
 });
 const ProductModel = mongoose.model("product", ProductShema);
 

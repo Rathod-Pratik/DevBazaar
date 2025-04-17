@@ -1,10 +1,10 @@
 import CartModel from "../model/CartModel.js";
 export const AddToCart = async (req, res) => {
   try {
-    const { user, Product_name, Product_image, Price ,Original_Price} = req.body;
+    const { user, Product_name, Product_image, Price ,Original_Price, product} = req.body;
 
     // Validate required fields
-    if (!user || !Product_name || !Product_image || !Price  || !Original_Price) {
+    if (!product || !user || !Product_name || !Product_image || !Price  || !Original_Price) {
       return res
         .status(400)
         .json({ error: "All the Product data is required" });
@@ -21,6 +21,7 @@ export const AddToCart = async (req, res) => {
     }
     // Add product to cart
     const AddToCart = await CartModel.create({
+      product,
       Original_Price,
       user,
       Product_name,
