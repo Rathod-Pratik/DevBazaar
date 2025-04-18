@@ -42,27 +42,38 @@ export const getCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   const { name, description, _id } = req.body;
-try {
-    
 
-const UpdateData = {};
-if (name) UpdateData.name = name;
-if (description) UpdateData.description = description;
+  try {
+    // Build update object dynamically
+    const UpdateData = {};
+    if (name) UpdateData.name = name;
+    if (description) UpdateData.description = description;
 
-const update = await Category.findByIdAndUpdate(
-    _id,
-    { UpdateData },
-    {
-        new: true,
+    // Perform update
+    const update = await Category.findByIdAndUpdate(
+      _id,
+      UpdateData,  // <-- directly pass update fields here
+      {
+        new: true,  // Return the updated document
+      }
+    );
+
+    if (!update) {
+      return res.status(404).json({ success: false, message: "Category not found" });
     }
-);
-} catch (error) {
+
+    // Success response
+    return res.status(200).json({ success: true, update });
+
+  } catch (error) {
+    // Error handling
     return res.status(500).json({
-        success: false,
-        message: error.message || "Something went wrong while updating categories"
-      });
+      success: false,
+      message: error.message || "Something went wrong while updating categories"
+    });
+  }
 };
-}
+
 
 export const DeleteCategory = async (req, res) => {
   const { _id } = req.params;

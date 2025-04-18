@@ -4,6 +4,6 @@ import {CreateContect, DeleteContact, GetContact} from '../controller/ContectCon
 
 router.post('/createContact',CreateContect);
 router.get('/getContact',GetContact);
-router.delete('/deleteContact',DeleteContact)
+router.delete('/deleteContact/:_id',DeleteContact)
 
 export default router

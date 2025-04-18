@@ -19,6 +19,20 @@ export const GetReview=async(req,res)=>{
         return res.status(400).json({"Message":error})
     }
 }
+export const GetAllReview=async(req,res)=>{
+    try {
+        const Review=await ReviewModel.find();
+        if(!Review){
+            return res.status(200).send("No Review found");
+        }
+        else{
+            return res.status(200).json({Review})
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({"Message":error})
+    }
+}
 
 export const CreateReview=async(req,res)=>{
     const {Productid,UserInfo,reviewText,reviewStar}=req.body;

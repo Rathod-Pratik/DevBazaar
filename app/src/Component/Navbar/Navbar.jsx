@@ -3,7 +3,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
 import { IoMenu } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import style from "./Navbar.module.css";
 import { useAppStore } from "../../Store";
 import Cookies from "js-cookie";
@@ -13,6 +13,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { TiStarOutline } from "react-icons/ti";
 import { BiLogOut } from "react-icons/bi";
 const Navbar = () => {
+  const navigate=useNavigate();
   const isLoggedIn = () => {
     const jwt = Cookies.get("jwt"); // Get the JWT cookie
     return jwt !== undefined; // Returns true if the cookie exists
@@ -34,6 +35,7 @@ const Navbar = () => {
 
   const Logout = () => {
     localStorage.removeItem("auth-storage");
+    navigate('/login');
   };
   const modalRef = useRef(null);
   useEffect(() => {
@@ -123,7 +125,7 @@ useEffect(() => {
               About
             </Link>
           </li>
-          {!userInfo && isLoggedIn && (
+          {typeof userInfo=='undefined' && isLoggedIn && (
             <li>
               <Link
                 to="/signup"

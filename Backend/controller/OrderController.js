@@ -43,7 +43,7 @@ export const GetOrder = async (req, res) => {
 
   try {
     const orders = await OrderModel.find({
-      user,status:'cancelled'
+      user,status:'success'
     }); 
 
     if (!orders) {

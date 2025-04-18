@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 //Import Pages
 import Alert from "./Component/Alert/Alert";
@@ -29,7 +29,6 @@ import Cookies from "js-cookie";
 import { useAppStore } from "./Store";
 import {
   GET_CART,
-  GET_ORDER,
   GET_PRODUCT_DATA,
   GET_WISHLIST,
 } from "./Utils/Constant";
@@ -42,10 +41,18 @@ import "aos/dist/aos.css";
 import Order from "./Pages/order/Order";
 import Product from "./Pages/Product/Product";
 import CancelOrder from "./Pages/order/CancelOrder";
+import DashBoard from "./Pages/Admin/DashBoard";
+import AdminLayout from "./Pages/Admin/AdminLayout";
+import Categories from "./Pages/Admin/Categories";
+import Products from "./Pages/Admin/Products";
+import Users from "./Pages/Admin/Users";
+import Reviews from "./Pages/Admin/Reviews";
+import Contacts from "./Pages/Admin/Contacts";
+import Profile from "./Pages/Admin/Profile";
+import AdminNavbar from "./Component/Navbar/AdminNavbar";
 
 const App = () => {
   const {
-    setOrderItem,
     setWishListItems,
     setCartItems,
     userInfo,
@@ -79,6 +86,8 @@ const App = () => {
     }
   };
 
+  const location=useLocation();
+  const isAdminPage=location.pathname.startsWith('/admin')
   //animation
   useEffect(() => {
     AOS.init();
@@ -162,8 +171,8 @@ const App = () => {
 
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
+       {!isAdminPage &&  <Navbar />}
+       {isAdminPage &&  <AdminNavbar />}
         <LoadingBar
           color="#f11946"
           progress={progress}
@@ -232,10 +241,19 @@ const App = () => {
             }
           />
           <Route path="*" element={<NotFound />} />
+
+          <Route path="/admin" element={<AdminLayout/>}>
+          <Route index element={<DashBoard/>}/>
+          <Route path="category" element={<Categories/>}/>
+          <Route path="product" element={<Products/>}/>
+          <Route path="user" element={<Users/>} />
+          <Route path="review" element={<Reviews/>} />
+          <Route path="contact" element={<Contacts/>} />
+          <Route path="profile" element={<Profile/>} />
+          </Route>
         </Routes>
         <ToastContainer position="bottom-right" />
         <Footer />
-      </BrowserRouter>
     </>
   );
 };

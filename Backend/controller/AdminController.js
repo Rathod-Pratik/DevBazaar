@@ -1,3 +1,4 @@
+import axios from "axios";
 import OrderModel from "../model/OrderModel.js";
 import User from "../model/UserModel.js";
 
@@ -18,14 +19,13 @@ export const Stats = async (req, res) => {
         .reduce((sum, payment) => sum + payment.amount / 100, 0);
   
       const users = await User.find();
-      const booking = await OrderModel.find();
+      const order = await OrderModel.find({status:"success"});
   
       res.status(200).json({
         totalRevenue,
         totalUsers: users.length - 1,
-        totalBookings: booking.length,
         users,
-        booking,
+        order:order.length,
         payments // ✅ Send payment history here
       });
       

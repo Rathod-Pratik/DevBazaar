@@ -35,7 +35,7 @@ export async function CreateContect(req, res) {
   export const DeleteContact=async(req,res)=>{
     const {_id}=req.params;
 
-    if(_id){
+    if(!_id){
       return res.status(400).send("_id is required")
     }
     try {

@@ -1,62 +1,56 @@
- import User from "../model/UserModel.js";
+import User from "../model/UserModel.js";
 import bcrypt from "bcryptjs/dist/bcrypt.js";
+import jwt from "jsonwebtoken";
 
 export async function UpdateProfile(req, res) {
   try {
-    const {address , Oldpassword, NewPassword, user,email } = req.body;
+    const { address, Oldpassword, NewPassword, email } = req.body;
 
-    // Check if required fields are present
-    if (!Oldpassword || !NewPassword || !user) {
+    if (!Oldpassword || !NewPassword || !email) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Find user in the database
     const userName = await User.findOne({ email });
     if (!userName) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Validate old password
     const isMatch = await bcrypt.compare(Oldpassword, userName.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(NewPassword, 10);
 
-    const updateFields = { password: hashedPassword }; // Always update password
+    const updateFields = { password: hashedPassword };
     if (address && address.length > 0) {
-      updateFields.address = address; // Add address only if provided
+      updateFields.address = address;
     }
-    
-    const updateData = await User.updateOne(
-      { email: email },
+
+    const { modifiedCount } = await User.updateOne(
+      { email },
       { $set: updateFields }
     );
-    
 
-    // Check if the update was successful
-    if (updateData.modifiedCount > 0) {
-      // Create JWT token
-      const tokenPayload = { id: userName.id }; // Minimal payload for security
+    if (modifiedCount > 0) {
+      const tokenPayload = { id: userName.id };
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-        expiresIn: "1d", // Matches cookie lifetime
+        expiresIn: "1d",
       });
 
-      // Set the token in a secure cookie
       res.cookie("jwt", token, {
         httpOnly: true,
-        secure: true, // Use HTTPS in production
+        secure: true,
         sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        maxAge: 24 * 60 * 60 * 1000,
       });
 
       const data = await User.findOne({ email });
+      const { password, ...safeUserData } = data._doc;
 
-      res.status(200).json({user:data, message: "Profile updated successfully" });
+      res.status(200).json({ user: safeUserData, message: "Profile updated successfully" });
     } else {
-      res.status(400).json({ message: "Profile update failed" });
+      res.status(400).json({ message: "No changes detected or invalid update request" });
     }
   } catch (error) {
     console.error("Error during profile update:", error.message);

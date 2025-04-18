@@ -39,7 +39,11 @@ const Login = (props) => {
 
       const {data,status}=response;
       props.setProgress(50);
+      console.log(data)
       if(status==200){
+        if(data.user.role=='admin'){
+          navigate('/admin')
+        }
         props.ShowAlert('text-green-800','Login Successfully','bg-green-50')
         setUserInfo(data.user);
         navigate('/');

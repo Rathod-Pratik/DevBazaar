@@ -56,7 +56,7 @@ export const Login = async (req, res) => {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "User not found" });
+      return res.status(400).json({ error: "Invalid credentials" }); // Generic message for security
     }
 
     // Validate password
@@ -66,20 +66,33 @@ export const Login = async (req, res) => {
     }
 
     // Create JWT token
-    const tokenPayload = { id: user.id }; // Minimal payload for security
+    const tokenPayload = {
+      id: user.id,
+      role: user.role, // Include role in token
+    };
+
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Matches cookie lifetime
+      expiresIn: "1d",
     });
 
-    // Set the token in a secure cookie
-    res.cookie("jwt", token, {
+    // Common cookie options
+    const cookieOptions = {
       httpOnly: true,
-      secure: true, // Use HTTPS in production
+      secure: process.env.NODE_ENV === "production", // HTTPS only in production
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-    });
+      path: "/", // Accessible across all routes
+    };
 
-    return res.status(200).json({ user });
+    // Set cookie based on role
+    if (user.role === "admin") {
+      res.cookie("adminToken", token, cookieOptions);
+      return res.status(200).json({ user, message: "Admin login successful" });
+    }
+
+    // Regular user login
+    res.cookie("userToken", token, cookieOptions);
+    return res.status(200).json({ user, message: "Login successful" });
   } catch (error) {
     console.error("Error during login:", error.message);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -88,19 +101,40 @@ export const Login = async (req, res) => {
 
 export const GetUser = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find({role:'user'});
     if (users.length < 0) {
       return res.status(200).send("No user found");
     } else {
-      return res.status(200).json("users");
+      return res.status(200).json({users});
     }
   } catch (error) {
     return res.status(400).json({ error });
   }
 };
 
+export const UnblockUser = async (req, res) => {
+  const { _id } = req.params;
+
+  if (!_id) {
+    return res.status(400).send("_id is required");
+  }
+
+  try {
+    const Block = await User.findByIdAndUpdate(
+      _id,
+      { status: "active" },
+      { new: true }
+    );
+    if (!Block) {
+      return res.status(404).send("User is not found");
+    }
+    return res.status(200).send("User Blocked successfully");
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+};
 export const BlockUser = async (req, res) => {
-  const { _id } = req.body;
+  const { _id } = req.params;
 
   if (!_id) {
     return res.status(400).send("_id is required");

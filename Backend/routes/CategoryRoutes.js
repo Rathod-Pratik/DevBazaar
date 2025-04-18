@@ -5,7 +5,7 @@ const routes=express.Router();
 
 routes.get('/GetCategory',getCategory);
 routes.post('/CreateCategory',CreateCategory);
-routes.put('/EditCategory',updateCategory)
-routes.delete('/EditCategory/:_id',DeleteCategory)
+routes.post('/EditCategory',updateCategory)
+routes.delete('/deleteCategory/:_id',DeleteCategory)
 
 export default routes;

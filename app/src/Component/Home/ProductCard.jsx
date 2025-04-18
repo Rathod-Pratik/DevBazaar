@@ -14,12 +14,11 @@ const ProductCard = ({ data }) => {
     product_image_url,
     Product_name,
     Original_Price,
-    Review,
     Price,
-    Rating,
+    _id
   } = data;
   const navigate = useNavigate();
-  const AddToCart = async () => {
+  const AddToCart = async (_id) => {
     if (!userInfo) {
       navigate('/signup');
       return;
@@ -29,6 +28,7 @@ const ProductCard = ({ data }) => {
       const response = await apiClient.post(
         ADD_TO_CART,
         {
+          product:_id,
           Product_name: Product_name,
           Product_image: product_image_url,
           user: userInfo._id,
@@ -129,7 +129,7 @@ const ProductCard = ({ data }) => {
 
           {/* Add to Cart Button */}
           <button
-            onClick={AddToCart}
+            onClick={()=>AddToCart(_id)}
             className="bg-black text-white h-[40px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           >
             Add to Cart
