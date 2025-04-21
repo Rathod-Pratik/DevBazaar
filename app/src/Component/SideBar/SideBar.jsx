@@ -16,6 +16,7 @@ function Sidebar() {
     { to: "/admin", icon: <FaHome />, label: "Dashboard" },
     { to: "/admin/category", icon: <IoLocationOutline />, label: "Categories" },
     { to: "/admin/product", icon: <FaRegAddressBook />, label: "Prducts" },
+    { to: "/admin/order", icon: <IoSettings />, label: "Order" },
     { to: "/admin/user", icon: <FaUser />, label: "Users" },
     { to: "/admin/contact", icon: <FaMessage />, label: "Contacts" },
     { to: "/admin/review", icon: <FaStar />, label: "review" },
@@ -36,7 +37,7 @@ function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-[71px] left-0 h-[calc(100vh-71px)] bg-white shadow-md transition-transform duration-300 xl:translate-x-0
+        className={`fixed top-[71px] left-0 h-[calc(100vh-71px)] z-50 bg-white shadow-md transition-transform duration-300 xl:translate-x-0
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
          w-[250px]`}
       >

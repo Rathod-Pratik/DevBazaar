@@ -1,6 +1,7 @@
 import express from 'express'
 import { Get_Product, Delete_Product, Update_Product, Create_Product } from "../controller/Products.js";
-import { upload, UploadToCloudinary, UpdateImages, DeleteImage } from "../middleware/File.middleware.js";
+import { UploadToCloudinary, UpdateImages, DeleteImage } from "../middleware/File.middleware.js";
+import upload from '../middleware/multerMiddleware.js';
 
 const router = express.Router();
 

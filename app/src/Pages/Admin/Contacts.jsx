@@ -125,7 +125,7 @@ const Contacts = () => {
 
         {/* Delete confirmation modal */}
         {show && (
-          <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/40 z-150">
+          <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/40 ">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
               <h2 className="text-2xl font-bold text-gray-800">Are you sure?</h2>
               <p className="text-gray-600 mt-2">Do you really want to delete this contact?</p>

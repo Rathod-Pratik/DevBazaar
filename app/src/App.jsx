@@ -50,6 +50,7 @@ import Reviews from "./Pages/Admin/Reviews";
 import Contacts from "./Pages/Admin/Contacts";
 import Profile from "./Pages/Admin/Profile";
 import AdminNavbar from "./Component/Navbar/AdminNavbar";
+import Orders from "./Pages/Admin/Order";
 
 const App = () => {
   const {
@@ -245,6 +246,7 @@ const App = () => {
           <Route path="/admin" element={<AdminLayout/>}>
           <Route index element={<DashBoard/>}/>
           <Route path="category" element={<Categories/>}/>
+          <Route path="order" element={<Orders/>}/>
           <Route path="product" element={<Products/>}/>
           <Route path="user" element={<Users/>} />
           <Route path="review" element={<Reviews/>} />

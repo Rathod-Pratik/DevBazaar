@@ -144,3 +144,21 @@ export const GetCancelOrder=async(req,res)=>{
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+export const GetAllOrder=async(req,res)=>{
+
+  try {
+    const orders = await OrderModel.find(); 
+
+    console.log(orders)
+    if (!orders) {
+      return res
+        .status(200)
+        .json({ success: false, message: "No orders found" });
+    }
+    return res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}

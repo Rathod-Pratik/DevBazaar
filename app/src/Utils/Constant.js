@@ -34,6 +34,7 @@ export const GET_ORDER=`${ORDER}/getorder`;
 export const CREATE_ORDER=`${ORDER}/CreateOrder`;
 export const CANCEL_ORDER=`${ORDER}/CancelOrder`;
 export const GET_CANCEL_ORDER=`${ORDER}/GetCancelOrder`
+export const GET_ALL_ORDER=`${ORDER}/getallorder`
 
 export const REFUNDPAYMENT='payment/refund'
 
