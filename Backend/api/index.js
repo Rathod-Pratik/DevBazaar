@@ -2,22 +2,22 @@ import express from 'express';
 import serverless from 'serverless-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { connectToMongo } from './controller/Connection.js';
+import { connectToMongo } from '../controller/Connection.js';
 import Razorpay from 'razorpay';
 
 // Routes
-import AuthRoutes from './routes/AuthRoutes.js';
-import WishListRoute from './routes/WishListRoute.js';
-import BillingRoutes from './routes/BillingRoutes.js';
-import ProductRoutes from './routes/ProductRoutes.js';
-import CartRoute from './routes/CartRoute.js';
-import ContectRoutes from './routes/ContectRoutes.js';
-import ProfileRoutes from './routes/ProfileRoutes.js';
-import OrderRoutes from './routes/OrderRoutes.js';
-import paymentRoutes from './routes/PaymentRoutes.js';
-import CategoryRoutes from './routes/CategoryRoutes.js';
-import AdminRoutes from './routes/AdminRoutes.js';
-import ReviewRoutes from './routes/ReviewRoutes.js';
+import AuthRoutes from '../routes/AuthRoutes.js';
+import WishListRoute from '../routes/WishListRoute.js';
+import BillingRoutes from '../routes/BillingRoutes.js';
+import ProductRoutes from '../routes/ProductRoutes.js';
+import CartRoute from '../routes/CartRoute.js';
+import ContectRoutes from '../routes/ContectRoutes.js';
+import ProfileRoutes from '../routes/ProfileRoutes.js';
+import OrderRoutes from '../routes/OrderRoutes.js';
+import paymentRoutes from '../routes/PaymentRoutes.js';
+import CategoryRoutes from '../routes/CategoryRoutes.js';
+import AdminRoutes from '../routes/AdminRoutes.js';
+import ReviewRoutes from '../routes/ReviewRoutes.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -69,4 +69,4 @@ app.use('/Admin', AdminRoutes);
 app.use('/review', ReviewRoutes);
 
 // Export the app wrapped with serverless-http
-export default serverless(app);
+export default app
