@@ -159,7 +159,6 @@ const App = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <Alert alert={alert} />
       <ScrollToTop />
       <Routes>
         <Route path="/product" element={<Product />}></Route>
