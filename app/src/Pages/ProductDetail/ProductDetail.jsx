@@ -145,10 +145,10 @@ console.log(product)
       </div>
 
       <p className="text-2xl font-semibold text-gray-900 mb-6">
-        ${product.Price || "N/A"}
+        ${product.Price - product.Price * product.off/100|| "N/A"}
         {product.Original_Price && (
           <span className="text-lg text-gray-500 line-through ml-2">
-            ${product.Original_Price}
+            ${product.Price}
           </span>
         )}
       </p>

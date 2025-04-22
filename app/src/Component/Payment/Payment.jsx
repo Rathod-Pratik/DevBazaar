@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { apiClient } from "../../lib/api-Client";
 import { useAppStore } from "../../Store";
 import { CREATE_ORDER } from "../../Utils/Constant";
+import { useNavigate } from "react-router-dom";
 
 const Payment = ({
   amount,
@@ -9,7 +10,7 @@ const Payment = ({
   formData
 }) => {
   const { userInfo,setCartItems,cartItems } = useAppStore();
-
+const navigate=useNavigate();
   let totalPrice = 0;
   console.log(cartItems)
   if (cartItems && cartItems.length > 0) {
@@ -29,8 +30,9 @@ const Payment = ({
     }
 
     if (!validateCart()) {
-      return;
+      return toast.error("Please Enter Valide details");
     }
+
     return new Promise((resolve) => {
       const script = document.createElement("script");
       script.src = src;
@@ -114,7 +116,7 @@ const Payment = ({
               if (createOrder.status === 201) {
                 setCartItems([]);
                 toast.success("Billing Details Added");
-                // clear form states here
+                navigate('/order')
               } else {
                 toast.error("Failed to add Billing Details");
               }

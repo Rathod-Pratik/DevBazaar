@@ -13,7 +13,6 @@ const ProductCard = ({ data }) => {
     off,
     product_image_url,
     Product_name,
-    Original_Price,
     Price,
     _id
   } = data;
@@ -33,7 +32,6 @@ const ProductCard = ({ data }) => {
           Product_image: product_image_url,
           user: userInfo._id,
           Price: Price,
-          Original_Price: Original_Price,
         },
         { withCredentials: true, timeout: 10000 }
       );
@@ -69,7 +67,6 @@ const ProductCard = ({ data }) => {
           Product_name: Product_name,
           Product_image: product_image_url,
           Price: Price,
-          Original_Price: Original_Price,
           off: off,
         },
         { withCredentials: true },
@@ -81,7 +78,6 @@ const ProductCard = ({ data }) => {
           Product_name: Product_name,
           Product_image: product_image_url,
           Price: Price,
-          Original_Price: Original_Price,
           off: off,
         };
         addWishListItem(ProductItem);
@@ -145,7 +141,7 @@ const ProductCard = ({ data }) => {
           <div className="flex flex-row items-center gap-2">
             <p className="font-medium text-red-500 text-[16px]">${Price}</p>
             <p className="text-gray-500 line-through font-medium text-[16px]">
-              ${Original_Price}
+              ${Price - Price*off/100}
             </p>
           </div>
         </div>

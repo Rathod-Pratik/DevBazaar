@@ -18,7 +18,6 @@ const Products = () => {
   const [editData, setEditData] = useState({
     Product_name: "",
     Price: "",
-    Original_Price: "",
     Description: "",
     category: "",
     off: "",
@@ -75,7 +74,6 @@ const Products = () => {
     formData.append("Product_name", editData.Product_name);
     formData.append("off", editData.off);
     formData.append("Price", editData.Price);
-    formData.append("Original_Price", editData.Original_Price);
     formData.append("Description", editData.Description);
     formData.append("category", editData.category);
     if (SelectFile) {
@@ -242,9 +240,15 @@ const Products = () => {
                 {product.Product_name}
               </h2>
               <p className="text-gray-600">{product.Description}</p>
-              <p className="mt-1">Price: ₹{product.Price}</p>
+              <p className="mt-1">
+                Price: ₹
+                {(product.Price - (product.Price * product.off) / 100).toFixed(
+                  0
+                )}
+              </p>
+
               <p className="text-sm text-gray-500">
-                Original: ₹{product.Original_Price} | {product.off}% off
+                Original: ₹{product.Price} | {product.off}% off
               </p>
               <p className="text-sm text-gray-500">
                 Category: {product.category}
@@ -363,15 +367,6 @@ const Products = () => {
                 value={editData?.Price || ""}
                 onChange={(e) =>
                   setEditData({ ...editData, Price: e.target.value })
-                }
-                className="w-full p-2 border mb-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Original Price"
-                value={editData?.Original_Price || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, Original_Price: e.target.value })
                 }
                 className="w-full p-2 border mb-2 rounded"
               />
