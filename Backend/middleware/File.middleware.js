@@ -1,35 +1,17 @@
-import fs from "fs";
 import cloudinary from "./cloudinaryConfig.js";
 
-console.log(process.env.CLOUDINARY_CLOUD_NAME)
-console.log(process.env.CLOUDINARY_API_KEY)
-console.log(process.env.CLOUDINARY_SECRET_KEY)
-
-// Upload image to Cloudinary
+// Upload image to Cloudinary (multer already uploads it there)
 export const UploadToCloudinary = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).send("No file uploaded");
     }
 
-    const localFilePath = req.file.path;
-
-    const uploadedUrl = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
-      folder: "DavBazzar",
-    });
-
-    if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
-    }
-
-    req.imageUrl = uploadedUrl.secure_url;
+    // The uploaded image URL is directly available in req.file.path
+    req.imageUrl = req.file.path;
     next();
   } catch (error) {
     console.error("Upload error:", error);
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
     return res.status(400).send("Failed to upload image");
   }
 };
@@ -50,22 +32,12 @@ export const UpdateImages = async (req, res, next) => {
     const deleted = await cloudinary.uploader.destroy(`DavBazzar/${ImageId}`);
     console.log("Cloudinary delete response:", deleted);
 
-    // Upload new image
-    const uploaded = await cloudinary.uploader.upload(req.file.path, {
-      folder: "DavBazzar",
-      public_id: ImageId,
-    });
+    // Since multer already uploaded the new image — just pick its URL
+    req.newImage = req.file.path;
 
-    fs.unlinkSync(req.file.path);
-
-    req.newImage = uploaded.secure_url;
     next();
   } catch (error) {
     console.error("Update Image failed:", error);
-
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
     return res.status(400).json({
       message: "Image update failed",
       error: error.message,
