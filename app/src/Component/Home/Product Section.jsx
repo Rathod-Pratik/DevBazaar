@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useAppStore } from "../../Store";
+import { Link } from "react-router-dom";
 
 const Product = () => {
   const [data, setData] = useState([]); // Initialize as an empty array
@@ -17,12 +18,12 @@ const {productData}=useAppStore();
           <span className="bg-red-600  px-2 rounded py-1">A</span>
          Our Products
         </div>
-        <div className="text-3xl font-medium"> Explore Our Products</div>
+        <Link to={'/product'} className="text-3xl font-medium"> Explore Our Products</Link>
       </div>
 
-       <div className=" flex flex-wrap justify-center">
+       <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data.map((product,index) => (
-            <div key={index} className="rounded-lg mb-6 mx-3">
+            <div key={index} className="rounded-lg mb-6 mx-3 flex justify-center">
               <ProductCard data={product} />
             </div>
           ))}

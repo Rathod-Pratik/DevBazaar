@@ -1,5 +1,6 @@
-import { v2 as cloudinary } from "cloudinary";
+
 import streamifier from "streamifier";
+import cloudinary from "./cloudinaryConfig.js";
 
 // Upload image to Cloudinary (from in-memory buffer)
 export const UploadToCloudinary = async (req, res, next) => {

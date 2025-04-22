@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useAppStore } from "../../Store";
+import { Link } from "react-router-dom";
 
 const Sale = () => {
   const {productData}=useAppStore();
@@ -15,7 +16,7 @@ const Sale = () => {
   return (
 <div className="p-4 mt-4">
   {/* Header Section */}
-  <div data-aos="fade-right" className="flex flex-col pl-1 lg:pl-20 gap-5 mx-3 mb-[30px]">
+  <div data-aos="fade-right" className="flex flex-col pl-1 gap-5 mx-3 mb-[30px]">
     <div className="flex flex-row gap-3 items-center text-lg font-semibold text-red-600">
       <span className="bg-red-600 px-2 rounded py-1">A</span>
       Today's
@@ -24,11 +25,11 @@ const Sale = () => {
   </div>
 
   {/* Product Cards Section */}
-  <div className="flex flex-wrap justify-center gap-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {data.map((product, index) => (
       <div
         key={index}
-        className="rounded-lg mb-6 mx-3 max-w-[300px] md:max-w-[250px] lg:max-w-[300px] w-full"
+        className="rounded-lg mb-6 mx-3 flex justify-center md:max-w-[250px] lg:max-w-[300px] w-full"
       >
         <ProductCard data={product} />
       </div>
@@ -37,9 +38,9 @@ const Sale = () => {
 
   {/* View All Products Button */}
   <div className="flex justify-center mt-6">
-    <button className="bg-[#DB4444] hover:bg-[#E07575] text-white px-6 py-3 rounded transition-all duration-300">
+    <Link to={'/product'} className="bg-[#DB4444] hover:bg-[#E07575] text-white px-6 py-3 rounded transition-all duration-300">
       View All Products
-    </button>
+    </Link>
   </div>
 </div>
 

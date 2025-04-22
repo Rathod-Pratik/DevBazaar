@@ -27,11 +27,7 @@ import Cookies from "js-cookie";
 
 //import states and constants
 import { useAppStore } from "./Store";
-import {
-  GET_CART,
-  GET_PRODUCT_DATA,
-  GET_WISHLIST,
-} from "./Utils/Constant";
+import { GET_CART, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
 import ProductDetail from "./Pages/ProductDetail/ProductDetail";
 
@@ -59,23 +55,9 @@ const App = () => {
     userInfo,
     setproductData,
     setLoggedIn,
+    progress,
+    setProgress
   } = useAppStore();
-  const [progress, setProgress] = useState();
-  const [alert, setAlert] = useState("");
-
-  const notifymessage = (message) => toast(message);
-  //Function for showing alert
-  const ShowAlert = async (color, message, bgcolor) => {
-    setAlert({
-      color: color,
-      message: message,
-      bgcolor: bgcolor,
-    });
-
-    setTimeout(() => {
-      setAlert(null);
-    }, 1500);
-  };
   const decodeJWT = (token) => {
     try {
       const payload = token.split(".")[1]; // The payload is the second part of the JWT
@@ -87,8 +69,8 @@ const App = () => {
     }
   };
 
-  const location=useLocation();
-  const isAdminPage=location.pathname.startsWith('/admin')
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith("/admin");
   //animation
   useEffect(() => {
     AOS.init();
@@ -153,9 +135,7 @@ const App = () => {
     }
     const fetchProductData = async () => {
       try {
-        const response = await apiClient.get(GET_PRODUCT_DATA, {
-          timeout: 10000,
-        });
+        const response = await apiClient.get(GET_PRODUCT_DATA);
         if (response.status === 200) {
           setproductData(response.data.Products);
         } else {
@@ -172,90 +152,44 @@ const App = () => {
 
   return (
     <>
-       {!isAdminPage &&  <Navbar />}
-       {isAdminPage &&  <AdminNavbar />}
-        <LoadingBar
-          color="#f11946"
-          progress={progress}
-          onLoaderFinished={() => setProgress(0)}
-        />
-        <Alert alert={alert} />
-        <ScrollToTop />
-        <Routes>
-          <Route path="/product" element={<Product />}></Route>
-          <Route
-            path="/"
-            element={
-              <Home
-                setProgress={setProgress}
-                notifymessage={notifymessage}
-                ShowAlert={ShowAlert}
-              />
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <Cart
-                setProgress={setProgress}
-                notifymessage={notifymessage}
-                ShowAlert={ShowAlert}
-              />
-            }
-          />
-          <Route path="/billing" element={<Billing />} />
-          <Route
-            path="/login"
-            element={<Login setProgress={setProgress} ShowAlert={ShowAlert} />}
-          />
-          <Route
-            path="/signup"
-            element={<SignUp setProgress={setProgress} ShowAlert={ShowAlert} />}
-          />
-          <Route path="/Product/:ProductName" element={<ProductDetail />} />
-          <Route
-            path="/wishlist"
-            element={
-              <WishList
-                setProgress={setProgress}
-                notifymessage={notifymessage}
-                ShowAlert={ShowAlert}
-              />
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <Contect setProgress={setProgress} ShowAlert={ShowAlert} />
-            }
-          />
-          <Route path="/order" element={<Order />} />
-          <Route path="/cancelorder" element={<CancelOrder />} />
-          <Route
-            path="/about"
-            element={<About setProgress={setProgress} ShowAlert={ShowAlert} />}
-          />
-          <Route
-            path="/account"
-            element={
-              <Account setProgress={setProgress} ShowAlert={ShowAlert} />
-            }
-          />
-          <Route path="*" element={<NotFound />} />
+      {!isAdminPage && <Navbar />}
+      {isAdminPage && <AdminNavbar />}
+      <LoadingBar
+        color="#f11946"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
+      <Alert alert={alert} />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/product" element={<Product />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/billing" element={<Billing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/Product/:ProductName" element={<ProductDetail />} />
+        <Route path="/wishlist" element={<WishList />} />
+        <Route path="/contact" element={<Contect />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/cancelorder" element={<CancelOrder />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="*" element={<NotFound />} />
 
-          <Route path="/admin" element={<AdminLayout/>}>
-          <Route index element={<DashBoard/>}/>
-          <Route path="category" element={<Categories/>}/>
-          <Route path="order" element={<Orders/>}/>
-          <Route path="product" element={<Products/>}/>
-          <Route path="user" element={<Users/>} />
-          <Route path="review" element={<Reviews/>} />
-          <Route path="contact" element={<Contacts/>} />
-          <Route path="profile" element={<Profile/>} />
-          </Route>
-        </Routes>
-        <ToastContainer position="bottom-right" />
-        <Footer />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<DashBoard />} />
+          <Route path="category" element={<Categories />} />
+          <Route path="order" element={<Orders />} />
+          <Route path="product" element={<Products />} />
+          <Route path="user" element={<Users />} />
+          <Route path="review" element={<Reviews />} />
+          <Route path="contact" element={<Contacts />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      </Routes>
+      <ToastContainer position="bottom-right" />
+      {!isAdminPage && <Footer />}
     </>
   );
 };

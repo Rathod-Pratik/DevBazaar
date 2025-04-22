@@ -5,10 +5,12 @@ import { createWishListSlice } from "./Slice/WishList-slice";
 import { createCartSlice } from "./Slice/Cart-slice";
 import { createProductDataSlice } from "./Slice/Product-slice";
 import { createOrderSlice } from "./Slice/Order-slice";
+import { createProcessSlice } from "./Slice/Process-slice";
 
 export const useAppStore = create(
   persist(
     (set, get) => ({
+      ...createProcessSlice(set,get),
       ...createOrderSlice(set,get),
       ...createProductDataSlice(set,get), // Include the productData slice logic
       ...createAuthSlice(set, get), // Include the auth slice logic

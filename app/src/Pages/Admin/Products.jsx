@@ -9,12 +9,12 @@ import {
 } from "../../Utils/Constant";
 import { apiClient } from "../../lib/api-Client";
 import { toast } from "react-toastify";
-import { data } from "autoprefixer";
 
 const Products = () => {
   const { productData, setproductData } = useAppStore();
   const [FilterProductData, SetFilterProductData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, SetLoading] = useState();
   const [editData, setEditData] = useState({
     Product_name: "",
     Price: "",
@@ -63,16 +63,14 @@ const Products = () => {
     if (
       !editData.Product_name ||
       !editData.Price ||
-      !Price ||
-      !Description ||
-      !Description ||
-      !category ||
+      !editData.Description ||
+      !editData.category ||
       !SelectFile
     ) {
       toast.error("All Fields are required");
       return;
     }
-
+    SetLoading(true);
     const formData = new FormData();
     formData.append("Product_name", editData.Product_name);
     formData.append("off", editData.off);
@@ -110,11 +108,14 @@ const Products = () => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to add product");
+    } finally {
+      SetLoading(false);
     }
   };
 
   const handleUpdate = async (_id) => {
     try {
+      SetLoading(true);
       const formData = new FormData();
       formData.append("Product_name", editData.Product_name);
       formData.append("off", editData.off);
@@ -157,6 +158,8 @@ const Products = () => {
       setPreview("");
     } catch (error) {
       toast.error("some error occured try again after some time");
+    } finally {
+      SetLoading(false);
     }
   };
 
@@ -168,22 +171,27 @@ const Products = () => {
     }
   };
 
-  const handledelete=async(_id,Product_name,category)=>{
+  const handledelete = async (_id, Product_name, category) => {
+    try {
+      SetLoading(true);
+      const response = await apiClient.post(`${DELETE_PRODUCT}/${_id}`, {
+        Product_name,
+        category,
+      });
 
-try {
-  const response=await apiClient.post(`${DELETE_PRODUCT}/${_id}`,{
-    Product_name,category
-  });
-
-  if(response.status===200){
-    toast.success("Product Deleted successfully");
-    setproductData(prevdata=>prevdata.filter(data=>data._id !==_id))
-  }
-} catch (error) {
-  console.log(error)
-  toast.error("Some error occured try again after sometime")
-}
-  }
+      if (response.status === 200) {
+        toast.success("Product Deleted successfully");
+        setproductData((prevdata) =>
+          prevdata.filter((data) => data._id !== _id)
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Some error occured try again after sometime");
+    } finally {
+      SetLoading(false);
+    }
+  };
   const openEditModal = (product) => {
     setEditData(product);
     setPreview(product.product_image_url || "");
@@ -249,7 +257,13 @@ try {
                   <FaEdit />
                 </button>
                 <button
-                  onClick={() => handledelete(product._id,product.Product_name,product.category)}
+                  onClick={() =>
+                    handledelete(
+                      product._id,
+                      product.Product_name,
+                      product.category
+                    )
+                  }
                   className="text-red-600"
                 >
                   <FaTrash />
@@ -409,10 +423,13 @@ try {
                   Cancel
                 </button>
                 <button
-                  onClick={()=>editData?._id ? handleUpdate(editData._id) : handleCreate}
+                  disabled={loading}
+                  onClick={() =>
+                    editData?._id ? handleUpdate(editData._id) : handleCreate()
+                  }
                   className="px-4 py-2 bg-blue-600 text-white rounded"
                 >
-                  Save
+                  {loading ? "Saving" : "save"}
                 </button>
               </div>
             </div>

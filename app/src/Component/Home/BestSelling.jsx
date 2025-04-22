@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useAppStore } from "../../Store";
+import { Link } from "react-router-dom";
 
 const BestSelling = () => {
   const [data, setData] = useState([]); // Initialize as an empty array
@@ -22,9 +23,9 @@ const BestSelling = () => {
 
       {/* View All Button */}
       <div data-aos="fade-left" className="flex h-[40px] sm:h-[45px] items-center">
-        <button className="bg-[#DB4444] hover:bg-[#E07575] text-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border-none rounded-[5px]">
+        <Link to={'/product'} className="bg-[#DB4444] hover:bg-[#E07575] text-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border-none rounded-[5px]">
           View All
-        </button>
+        </Link>
       </div>
     </div>
 
@@ -33,9 +34,9 @@ const BestSelling = () => {
   </div>
 
   {/* Product Cards Section */}
-  <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
     {data.map((product, index) => (
-      <div key={index} className="rounded-lg mb-4 sm:mb-6 mx-2 sm:mx-3  sm:w-auto">
+      <div key={index} className="rounded-lg mb-4 sm:mb-6 mx-2 sm:mx-3 flex justify-center  sm:w-auto">
         <ProductCard data={product} />
       </div>
     ))}

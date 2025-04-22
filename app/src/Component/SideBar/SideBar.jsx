@@ -48,13 +48,13 @@ function Sidebar() {
               key={item.to}
               to={item.to}
               onClick={toggleSidebar} // close sidebar on link click
-              className={`flex items-center gap-4 py-3 px-3 rounded-md transition-all duration-150
+              className={`flex items-center gap-4 py-3 px-3 rounded-md transition-all duration-150 
                 ${
                   location.pathname === item.to
-                    ? "bg-orange-500 text-white"
+                    ? "bg-[#ff0000] text-white "
                     : "text-gray-800"
                 }
-                hover:bg-orange-400 hover:text-white`}
+                hover:bg-[#ff1919] hover:text-white`}
             >
               <div
                 className={`text-xl shrink-0 ${

@@ -62,7 +62,7 @@ const Contacts = () => {
   const [show, setShow] = useState(false);
   const HideDeleteModel = () => [setShow(!show)];
   return (
-    <div>
+    <div >
       <div className="flex justify-evenly gap-3 py-5">
           <input
           onChange={(e) => filterSearch(e.target.value)}

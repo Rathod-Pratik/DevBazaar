@@ -13,7 +13,7 @@ const Categories = () => {
   const [name, setName] = useState();
   const [description, SetDescription] = useState();
   const [categories, setCategories] = useState();
-  const [FilterReviewData, SetFilterReviewData] = useState([]);
+  const [FilterCategoriesData, SetFilterCategoriesData] = useState([]);
 
   const [model, setShowModel] = useState(false);
   const ShowModel = () => {
@@ -29,7 +29,7 @@ const Categories = () => {
       if (response.status === 200) {
         const newCategory = response.data.data;
 
-        setCategories((prev) => [...prev, newCategory]);
+        SetFilterCategoriesData((prev) => [...prev, newCategory]);
         setName("");
         SetDescription("");
         toast.success("Category created successfully");
@@ -48,7 +48,7 @@ const Categories = () => {
       const response = await apiClient.get(GET_CATEGORY);
       if (response.status === 200) {
         setCategories(response.data.data);
-        SetFilterReviewData(response.data.data);
+        SetFilterCategoriesData(response.data.data);
       }
     } catch (error) {
       toast.error("Failed to Fetch category");
@@ -75,7 +75,7 @@ const Categories = () => {
 
       if (response.status === 200) {
         toast.success("Category deleted successfully");
-        setCategories((prevCategories) =>
+        SetFilterCategoriesData((prevCategories) =>
           prevCategories.filter((category) => category._id !== categoryId)
         );
       } else {
@@ -133,12 +133,12 @@ const Categories = () => {
   const filterSearch = (searchValue) => {
     const lowerValue = searchValue.toLowerCase();
     if (lowerValue === "") {
-      SetFilterReviewData(categories);
+      SetFilterCategoriesData(categories);
     } else {
       const filtered = categories.filter((category) =>
         category.name.toLowerCase().includes(lowerValue)
       );
-      SetFilterReviewData(filtered);
+      SetFilterCategoriesData(filtered);
     }
   };
   return (
@@ -264,8 +264,8 @@ const Categories = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {FilterReviewData &&
-                FilterReviewData.map((category) => (
+              {FilterCategoriesData &&
+                FilterCategoriesData.map((category) => (
                   <tr key={category._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {category.name}

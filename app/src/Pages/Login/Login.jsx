@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiClient } from "../../lib/api-Client";
 import { LOGIN_ROUTES } from "../../Utils/Constant";
 import { useAppStore } from "../../Store";
+import { toast } from "react-toastify";
 
-const Login = (props) => {
+const Login = () => {
   const {setUserInfo}=useAppStore();
   const navigate=useNavigate();
   const [email,setEmail]=useState("");
@@ -14,17 +15,17 @@ const Login = (props) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating email
   
     if (!email.length) {
-      props.ShowAlert('text-red-800', "Email is required", 'bg-red-50');
+      toast.error("Email is required")
       return false;
     }
     
     if (!emailPattern.test(email)) {
-      props.ShowAlert('text-red-800', "Please enter a valid email address", 'bg-red-50');
+      toast.error("Please enter a valid email address")
       return false;
     }
-  
+    
     if (!password.length) {
-      props.ShowAlert('text-red-800', "Password is required", 'bg-red-50');
+      toast.error("Password is required")
       return false;
     }
   
@@ -32,27 +33,22 @@ const Login = (props) => {
   };
   
   const handleLogin=async()=>{
-    props.setProgress(10);
     if(validateLogin()){
     try {
       const response=await apiClient.post(LOGIN_ROUTES,{email,password},{withCredentials:true});
 
       const {data,status}=response;
-      props.setProgress(50);
       console.log(data)
       if(status==200){
         if(data.user.role=='admin'){
           navigate('/admin')
         }
-        props.ShowAlert('text-green-800','Login Successfully','bg-green-50')
         setUserInfo(data.user);
         navigate('/');
-        props.setProgress(100);
       }
     } catch (error) {
       console.log(error);
-      props.ShowAlert('text-red-800','Please enter valid email and Password','bg-red-50');
-      props.setProgress(100);
+      toast.error("Please enter valid email and Password")
     }
   }
   }

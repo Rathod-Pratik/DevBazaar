@@ -110,7 +110,7 @@ const Users = () => {
     }
   };
   return (
-    <div>
+    <div >
       <div className="flex justify-evenly gap-3 py-5">
         <input
           onChange={(e) => filterSearch(e.target.value)}

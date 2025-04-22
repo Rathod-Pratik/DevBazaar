@@ -1,36 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { GET_PRODUCT_DATA } from "../../Utils/Constant";
 import { useAppStore } from "../../Store";
-import { toast } from "react-toastify";
-import { apiClient } from "../../lib/api-Client";
 import WishListCard from "../../Component/WishList/WishListCard";
 import ProductCard from "../../Component/Home/ProductCard";
 
 const WishList = () => {
  
- const { wishListItems } = useAppStore();
-
+ const { wishListItems,productData } = useAppStore();
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    //Fetch Other Product Data
-    const fetchProductData = async () => {
-      try {
-        const response = await apiClient.get(GET_PRODUCT_DATA,{timeout: 10000});
-        if (response.status === 200) {
-          // Limit data to the first 6 objects
-          const limitedData = response.data.slice(0, 5);
-          setData(limitedData);
-        } else {
-          toast.error(
-            "An error occurred while loading products. Please try again later."
-          );
-        }
-      } catch (error) {
-        toast.error("Failed to fetch products. Check your connection.");
-      }
-    };
-    fetchProductData();
+        const limitedData = productData.slice(0, 5);
+         setData(limitedData);
   }, []);
 
   return (

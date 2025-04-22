@@ -10,10 +10,9 @@ import Cookies from "js-cookie";
 import { LuUser } from "react-icons/lu";
 import { FiShoppingBag } from "react-icons/fi";
 import { MdOutlineCancel } from "react-icons/md";
-import { TiStarOutline } from "react-icons/ti";
 import { BiLogOut } from "react-icons/bi";
 const Navbar = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const isLoggedIn = () => {
     const jwt = Cookies.get("jwt"); // Get the JWT cookie
     return jwt !== undefined; // Returns true if the cookie exists
@@ -35,7 +34,7 @@ const Navbar = () => {
 
   const Logout = () => {
     localStorage.removeItem("auth-storage");
-    navigate('/login');
+    navigate("/login");
   };
   const modalRef = useRef(null);
   useEffect(() => {
@@ -54,21 +53,19 @@ const Navbar = () => {
     };
   }, [openModal]);
 
-
-//Close Model when someone click outside
-const menuRef = useRef(null);
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsMenuOpen(false);
-    }
-  };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
-
+  //Close Model when someone click outside
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -77,7 +74,6 @@ useEffect(() => {
       document.body.style.overflow = "auto";
     }
   }, [isMenuOpen]);
-  
 
   const { userInfo, wishListItems, cartItems } = useAppStore();
   return (
@@ -116,7 +112,7 @@ useEffect(() => {
               Contact
             </Link>
           </li>
-          
+
           <li>
             <Link
               to="/about"
@@ -125,7 +121,7 @@ useEffect(() => {
               About
             </Link>
           </li>
-          {typeof userInfo=='undefined' && isLoggedIn && (
+          {typeof userInfo == "undefined" && isLoggedIn && (
             <li>
               <Link
                 to="/signup"
@@ -179,6 +175,7 @@ useEffect(() => {
                 onClick={toggleModal}
               />
             )}
+            {userInfo && userInfo.role === "admin" && <Link to={'/admin'} className="p-2 rounded-full text-white cursor-pointers bg-orange-500 transition">Admin</Link>}
           </div>
         </div>
 
@@ -193,7 +190,7 @@ useEffect(() => {
 
           {/* Sliding Menu for small screen */}
           <div
-          ref={menuRef}
+            ref={menuRef}
             className={`fixed top-0 right-0 h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}
@@ -218,32 +215,32 @@ useEffect(() => {
                 </Link>
               </li>
               <li>
-            <Link
-              to="/product"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Product
-            </Link>
-          </li>
+                <Link
+                  to="/product"
+                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Product
+                </Link>
+              </li>
               <li>
-            <Link
-            onClick={() => setIsMenuOpen(false)}
-              to="/order"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-            >
-              Order
-            </Link>
-          </li>
-          <li>
-            <Link
-            onClick={() => setIsMenuOpen(false)}
-              to="/cancelorder"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-            >
-              Cancel Order
-            </Link>
-          </li>
+                <Link
+                  onClick={() => setIsMenuOpen(false)}
+                  to="/order"
+                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+                >
+                  Order
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setIsMenuOpen(false)}
+                  to="/cancelorder"
+                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+                >
+                  Cancel Order
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/contact"
@@ -287,7 +284,10 @@ useEffect(() => {
                 {/* Icons */}
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Link onClick={() => setIsMenuOpen(false)} to={userInfo ? "/cart" : "/signup"}>
+                    <Link
+                      onClick={() => setIsMenuOpen(false)}
+                      to={userInfo ? "/cart" : "/signup"}
+                    >
                       <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {cartItems.length > 0 && (
@@ -297,7 +297,10 @@ useEffect(() => {
                     )}
                   </div>
                   <div className="relative">
-                    <Link onClick={() => setIsMenuOpen(false)} to={userInfo ? "/wishlist" : "/signup"}>
+                    <Link
+                      onClick={() => setIsMenuOpen(false)}
+                      to={userInfo ? "/wishlist" : "/signup"}
+                    >
                       <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
                     {wishListItems.length > 0 && (
@@ -320,6 +323,7 @@ useEffect(() => {
                     </p>
                   )}
                 </div>
+                <button className="bg-red-600 text-white border-none rounded-l-md px-3 py-2 m-auto " onClick={()=>{Logout() ,setIsMenuOpen(false)}}>Logout</button>
               </div>
             </ul>
           </div>
