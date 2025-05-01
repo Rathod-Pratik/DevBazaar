@@ -303,8 +303,8 @@ const fetchProductData = async () => {
           ))}
 
         {showModal && (
-          <div className="fixed z-[100] inset-0 flex  justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-xl w-96">
+          <div className="fixed z-[100] inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-xl h-[92%] overflow-y-auto w-96">
               {editData?._id ? "Edit Product" : "Add Product"}
               <div className="relative group">
                 {preview ? (

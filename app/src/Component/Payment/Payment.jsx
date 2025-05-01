@@ -3,13 +3,14 @@ import { apiClient } from "../../lib/api-Client";
 import { useAppStore } from "../../Store";
 import { CREATE_ORDER } from "../../Utils/Constant";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Payment = ({
-  amount,
   validateCart,
   formData
 }) => {
   const { userInfo,setCartItems,cartItems } = useAppStore();
+  const [loading,SetLoading]=useState(false)
 const navigate=useNavigate();
   let totalPrice = 0;
   console.log(cartItems)
@@ -47,17 +48,20 @@ const navigate=useNavigate();
   };
 
   const handlePayment = async () => {
+    if (!validateCart()) {
+      return toast.error("Please Enter Valide details");
+    }
     try {
       // ✅ Load Razorpay Script Dynamically
       const res = await loadScript(
         "https://checkout.razorpay.com/v1/checkout.js"
       );
       if (!res) {
-        return toast.error(
+        return console.error(
           "Razorpay SDK failed to load. Please check your network."
         );
       }
-
+      SetLoading(true)
       // ✅ Create Order on Backend
       const { data } = await apiClient.post("payment/create-order", {
         amount: totalPrice,
@@ -124,7 +128,7 @@ const navigate=useNavigate();
               console.log(error);
               toast.error("An error occurred while adding billing details.");
             }
-          
+            SetLoading(false)
           } catch (error) {
             console.error("Error in payment processing:", error);
             toast.error("Something went wrong. Please try again.");
@@ -159,8 +163,8 @@ const navigate=useNavigate();
         //  disabled={loading}
         className="pay-button py-3 px-4 mb-3 text-white bg-red-500 hover:bg-red-600 transition-all duration-300 rounded-[5px] h-[45px] w-[200px] self-center"
       >
-        Place Order
-        {/* {loading ? 'Processing...' : `Pay ₹${amount}`} */}
+        {/* Place Order */}
+        {loading ? 'Processing...' : `Pay ₹${totalPrice}`}
       </button>
     </div>
   );

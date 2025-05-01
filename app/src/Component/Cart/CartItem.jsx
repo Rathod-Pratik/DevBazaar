@@ -39,7 +39,7 @@ const CartItem = ({ data }) => {
             />
             <p>{Product_name}</p>
           </div>
-          <p className="text-gray-700">${Price}</p>
+          <p className="text-gray-700">₹{Price}</p>
           <div>
             <input
               type="number"
@@ -57,7 +57,7 @@ const CartItem = ({ data }) => {
             />
           </div>
           <p className="flex justify-between">
-            ${Price * Quentity}
+          ₹{Price * Quentity}
             <button onClick={removeCartItems}>
               <MdDelete className="text-red-600 text-2xl" />
             </button>
@@ -74,7 +74,7 @@ const CartItem = ({ data }) => {
             />
             <div>
               <p className="text-lg font-semibold">{Product_name}</p>
-              <p className="text-gray-600">${Price * Quentity}</p>
+              <p className="text-gray-600">₹{Price * Quentity}</p>
             </div>
           </div>
 

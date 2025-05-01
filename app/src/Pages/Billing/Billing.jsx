@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Payment from "../../Component/Payment/Payment";
 
 const Billing = () => {
-  const { cartItems, userInfo, setCartItems } = useAppStore();
+  const { cartItems } = useAppStore();
   const [formData, setFormData] = useState({
     firstName: "",
     companyName: "",
@@ -115,7 +115,7 @@ const Billing = () => {
                     />
                     <p className="text-gray-500">{product.Product_name}</p>
                   </div>
-                  <p>${product.Price}</p>
+                  <p>₹{product.Price}</p>
                 </div>
               ))
             ) : (
@@ -127,7 +127,7 @@ const Billing = () => {
             <div className="flex flex-col gap-3">
               <div className="flex justify-between px-2">
                 <p className="text-[16px]">Subtotal:</p>
-                <p>${totalPrice} </p>
+                <p>₹{totalPrice} </p>
               </div>
               <hr />
               <div className="flex justify-between px-2">
@@ -137,37 +137,9 @@ const Billing = () => {
               <hr />
               <div className="flex justify-between px-2">
                 <p className="text-[16px]">Total:</p>
-                <p>${totalPrice}</p>
+                <p>₹{totalPrice}</p>
               </div>
             </div>
-
-            {/* Payment Methods */}
-            {/* <div className="mt-6">
-            <div className="flex justify-between gap-3 py-3">
-              <div className="flex gap-2">
-                <input required type="radio" name="PaymentMethod" />
-                Bank
-              </div>
-              <img src="/Frame 834.png" className="w-[170px] h-auto object-contain" alt="Bank" />
-            </div>
-            <div className="flex gap-2">
-              <input required type="radio" name="PaymentMethod" />
-              Cash on delivery
-            </div>
-          </div> */}
-
-            {/* Coupon & Order Button */}
-            {/* <div className="flex flex-col lg:flex-row justify-between gap-3">
-            <input
-              required
-              type="text"
-              className="py-3 px-4 w-full lg:w-[60%] border-2 border-gray-500 outline-none rounded-[5px] h-[45px]"
-            />
-            <button className="py-3 px-4 text-white bg-red-500 hover:bg-red-600 transition-all duration-300 rounded-[5px] text-[14px] h-[45px]">
-              Apply Coupon
-            </button>
-          </div> */}
-
             <Payment
               formData={formData}
               validateCart={validateCart}

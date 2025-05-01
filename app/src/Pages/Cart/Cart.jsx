@@ -71,17 +71,17 @@ console.log(cartItems)
           <div className="flex flex-col gap-3">
             <div className="flex justify-between px-2">
               <p className="text-[16px]">Subtotal:</p>
-              <p>${totalPrice} </p>
+              <p>₹{totalPrice} </p>
             </div>
             <hr />
             <div className="flex justify-between px-2">
               <p className="text-[16px]">Shipping:</p>
-              <p>$0</p>
+              <p>₹0</p>
             </div>
             <hr />
             <div className="flex justify-between px-2">
               <p className="text-[16px]">Total:</p>
-              <p>${totalPrice}</p>
+              <p>₹{totalPrice}</p>
             </div>
             <hr />
             <Link

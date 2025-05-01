@@ -29,7 +29,7 @@ const Product = () => {
         <select
           id="category-select"
           value={category || "all"}
-          onChange={(e) => setCategory(e.target.value === "all" ? null : e.target.value)}
+          onChange={(e) => setCategory(e.target.value)}
           className="p-2 border rounded-md w-full md:w-64"
         >
           <option value="all">All Categories</option>

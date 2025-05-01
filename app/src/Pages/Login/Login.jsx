@@ -32,26 +32,53 @@ const Login = () => {
     return true;
   };
   
-  const handleLogin=async()=>{
-    if(validateLogin()){
+  const handleLogin = async () => {
+    // Client-side validation first
+    if (!email || !password) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+  
     try {
-      const response=await apiClient.post(LOGIN_ROUTES,{email,password},{withCredentials:true});
-
-      const {data,status}=response;
-      console.log(data)
-      if(status==200){
-        if(data.user.role=='admin'){
-          navigate('/admin')
+      const response = await apiClient.post(
+        LOGIN_ROUTES,
+        { email, password },
+        { withCredentials: true }
+      );
+  
+      const { data, status } = response;
+      if (status === 200) {
+        if (data.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          setUserInfo(data.user);
+          navigate('/');
         }
-        setUserInfo(data.user);
-        navigate('/');
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Please enter valid email and Password")
+      const backendError = error.response?.data;
+      
+      // Handle specific error cases from backend
+      if (backendError?.NotFound) {
+        toast.error("Account not found. Please check your email");
+      } 
+      else if (backendError?.blocked) {
+        toast.error("Your account has been blocked. Contact support");
+      }
+      else if (backendError?.WrongPassword) {
+        toast.error("Incorrect password. Please try again");
+      }
+      else if (error.response?.status === 400) {
+        // Generic 400 error (fallback)
+        toast.error(backendError?.error || "Invalid credentials");
+      }
+      else {
+        // Network errors or server issues
+        toast.error("Login failed. Please try again later");
+        console.error("Login error:", error);
+      }
     }
-  }
-  }
+  };
   return (
     <div className="flex flex-col md:flex-row items-center justify-evenly w-4/5 mx-auto gap-8 py-12 md:py-16">
       {/* Image Section */}

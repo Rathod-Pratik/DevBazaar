@@ -139,9 +139,9 @@ const ProductCard = ({ data }) => {
             {Product_name}
           </h1>
           <div className="flex flex-row items-center gap-2">
-            <p className="font-medium text-red-500 text-[16px]">${Price}</p>
+            <p className="font-medium text-red-500  text-[16px]">₹{Price - Price*off/100}</p>
             <p className="text-gray-500 line-through font-medium text-[16px]">
-              ${Price - Price*off/100}
+            ₹{Price}
             </p>
           </div>
         </div>

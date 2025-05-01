@@ -108,10 +108,10 @@ const WishListCard = ({ data }) => {
           </h1>
           <div className="flex flex-row items-center gap-2">
             <p className="font-medium text-red-500 text-[16px]">
-              ${data?.Price}
+            ₹{data?.Price}
             </p>
             <p className="text-gray-500 line-through font-medium text-[16px]">
-              ${data?.Original_Price}
+            ₹{data?.Original_Price}
             </p>
           </div>
         </div>
