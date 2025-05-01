@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
-import { GET_USER, DELETE_USER, BLOCK_USER, UNBLOCK_USER } from "../../Utils/Constant";
+import {
+  GET_USER,
+  DELETE_USER,
+  BLOCK_USER,
+  UNBLOCK_USER,
+} from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const Users = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [userData, SetUserData] = useState();
   const [FilterUserData, SetFilterUserData] = useState([]);
   const FetchUser = async () => {
     try {
-      const response = await apiClient.get(GET_USER,{withCredentials:true});
+      const response = await apiClient.get(GET_USER, { withCredentials: true });
       if (response.status === 200) {
         SetFilterUserData(response.data.users);
         SetUserData(response.data.users);
@@ -48,7 +53,9 @@ const Users = () => {
 
   const DeleteUser = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_USER}/${_id}`,{withCredentials:true});
+      const response = await apiClient.delete(`${DELETE_USER}/${_id}`, {
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         toast.success("User Deleted successfully");
@@ -64,7 +71,7 @@ const Users = () => {
       if (error.response && error.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
-      }
+      }
       // Handle errors, log them for debugging
       console.error("Error deleting contact:", error);
       toast.error("Some error occurred. Please try again later.");
@@ -73,7 +80,7 @@ const Users = () => {
 
   const BlockUser = async (_id) => {
     try {
-      const response = await apiClient.post(`${BLOCK_USER}/${_id}`,{withCredentials:true});
+      const response = await apiClient.post(`${BLOCK_USER}/${_id}`, {},{withCredentials:true});
 
       if (response.status === 200) {
         toast.success("User blocked successfully");
@@ -91,24 +98,24 @@ const Users = () => {
       if (error.response && error.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
-      }
+      }
       console.error("Error blocking user:", error);
       toast.error("Some error occurred. Please try again later.");
     }
   };
   const UnblockUser = async (_id) => {
     try {
-      const response = await apiClient.post(`${UNBLOCK_USER}/${_id}`,{withCredentials:true});
+      const response = await apiClient.post(`${UNBLOCK_USER}/${_id}`,{}, {
+       withCredentials:true
+      });
 
       if (response.status === 200) {
         toast.success("User unblocked successfully");
 
         // Update the user's status in state
-        SetFilterUserData(prevUsers =>
-          prevUsers.map(user =>
-            user._id === _id
-              ? { ...user, status: 'active' }
-              : user
+        SetFilterUserData((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === _id ? { ...user, status: "active" } : user
           )
         );
       } else {
@@ -118,13 +125,13 @@ const Users = () => {
       if (error.response && error.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
-      }
+      }
       console.error("Error unblocking user:", error);
       toast.error("Some error occurred. Please try again later.");
     }
   };
   return (
-    <div >
+    <div>
       <div className="flex justify-evenly gap-3 py-5">
         <input
           onChange={(e) => filterSearch(e.target.value)}
@@ -241,7 +248,9 @@ const Users = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center gap-3">
                     <button
                       onClick={() =>
-                        data.status === "active" ? BlockUser(data._id) : UnblockUser(data._id)
+                        data.status === "active"
+                          ? BlockUser(data._id)
+                          : UnblockUser(data._id)
                       }
                       className={`px-3 py-1 rounded-md text-xs ${
                         data.status === "active"
