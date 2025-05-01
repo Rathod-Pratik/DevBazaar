@@ -47,7 +47,6 @@ export const UpdateImages = async (req, res, next) => {
 
     // Delete existing image from Cloudinary
     const deleted = await cloudinary.uploader.destroy(`DavBazzar/${ImageId}`);
-    console.log("Cloudinary delete response:", deleted);
 
     // Upload the new image
     const stream = cloudinary.uploader.upload_stream(
@@ -91,7 +90,6 @@ export const DeleteImage = async (req, res, next) => {
     }
 
     const deleted = await cloudinary.uploader.destroy(`DavBazzar/${ImageId}`);
-    console.log("Cloudinary delete response:", deleted);
 
     next();
   } catch (error) {

@@ -117,7 +117,7 @@ export async function CreateOrder(req, res) {
         .json({ message: "Product failed to add to Billing" });
     }
   } catch (error) {
-    console.log("Error adding to Billing:", error.message);
+    res.status(400).json({messge: error.message});
   }
 }
 
@@ -150,7 +150,6 @@ export const GetAllOrder=async(req,res)=>{
   try {
     const orders = await OrderModel.find(); 
 
-    console.log(orders)
     if (!orders) {
       return res
         .status(200)

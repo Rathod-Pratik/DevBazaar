@@ -78,7 +78,7 @@ export async function AddToBilling(req, res) {
         .json({ message: "Product failed to add to Billing" });
     }
   } catch (error) {
-    console.log("Error adding to Billing:", error.message);
+    res.status(400).json({message: error.message});
   }
 }
 

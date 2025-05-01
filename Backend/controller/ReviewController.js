@@ -15,8 +15,7 @@ export const GetReview=async(req,res)=>{
             return res.status(200).json({Review})
         }
     } catch (error) {
-        console.log(error)
-        return res.status(400).json({"Message":error})
+        return res.status(400).json({"Message":error.message})
     }
 }
 export const GetAllReview=async(req,res)=>{
@@ -29,8 +28,7 @@ export const GetAllReview=async(req,res)=>{
             return res.status(200).json({Review})
         }
     } catch (error) {
-        console.log(error)
-        return res.status(400).json({"Message":error})
+        return res.status(400).json({"Message":error.message})
     }
 }
 
