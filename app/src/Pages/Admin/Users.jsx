@@ -3,13 +3,15 @@ import { apiClient } from "../../lib/api-Client";
 import { GET_USER, DELETE_USER, BLOCK_USER, UNBLOCK_USER } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
+  const navigate=useNavigate()
   const [userData, SetUserData] = useState();
   const [FilterUserData, SetFilterUserData] = useState([]);
   const FetchUser = async () => {
     try {
-      const response = await apiClient.get(GET_USER);
+      const response = await apiClient.get(GET_USER,{withCredentials:true});
       if (response.status === 200) {
         SetFilterUserData(response.data.users);
         SetUserData(response.data.users);
@@ -46,7 +48,7 @@ const Users = () => {
 
   const DeleteUser = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_USER}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_USER}/${_id}`,{withCredentials:true});
 
       if (response.status === 200) {
         toast.success("User Deleted successfully");
@@ -59,6 +61,10 @@ const Users = () => {
         toast.error("Failed to delete User");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       // Handle errors, log them for debugging
       console.error("Error deleting contact:", error);
       toast.error("Some error occurred. Please try again later.");
@@ -67,7 +73,7 @@ const Users = () => {
 
   const BlockUser = async (_id) => {
     try {
-      const response = await apiClient.post(`${BLOCK_USER}/${_id}`);
+      const response = await apiClient.post(`${BLOCK_USER}/${_id}`,{withCredentials:true});
 
       if (response.status === 200) {
         toast.success("User blocked successfully");
@@ -82,13 +88,17 @@ const Users = () => {
         toast.error("Failed to block user");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Error blocking user:", error);
       toast.error("Some error occurred. Please try again later.");
     }
   };
   const UnblockUser = async (_id) => {
     try {
-      const response = await apiClient.post(`${UNBLOCK_USER}/${_id}`);
+      const response = await apiClient.post(`${UNBLOCK_USER}/${_id}`,{withCredentials:true});
 
       if (response.status === 200) {
         toast.success("User unblocked successfully");
@@ -105,6 +115,10 @@ const Users = () => {
         toast.error("Failed to unblock user");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Error unblocking user:", error);
       toast.error("Some error occurred. Please try again later.");
     }

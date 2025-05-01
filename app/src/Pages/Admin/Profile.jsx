@@ -3,8 +3,10 @@ import { useAppStore } from "../../Store";
 import { apiClient } from "../../lib/api-Client";
 import { UPDATE_PROFILE } from "../../Utils/Constant";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate=useNavigate()
   const { userInfo,setUserInfo } = useAppStore();
    const [address, setAddress] = useState("");
    const [oldPassword, setOldPassword] = useState("");

@@ -32,7 +32,23 @@ export const signup = async (req, res) => {
       email: email,
       password: hashPassword,
     });
+    const tokenPayload = {
+      id: user._id,
+      role: user.role,
+    };
 
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Set to true only if using HTTPS
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    };
+    res.cookie("userToken", token, cookieOptions);
     return res.status(201).send({ user });
   } catch (err) {
     res.status(403).json({ error: err.message });
@@ -48,40 +64,36 @@ export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate email and password presence
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
-    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" }); // Generic message for security
+      return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Create JWT token
+    // Prepare token payload
     const tokenPayload = {
       id: user.id,
-      role: user.role, // Include role in token
+      role: user.role,
     };
 
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    // Common cookie options
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // HTTPS only in production
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      path: "/", // Accessible across all routes
+      secure: process.env.NODE_ENV === "production", // Set to true only if using HTTPS
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
     };
 
     // Set cookie based on role
@@ -90,9 +102,9 @@ export const Login = async (req, res) => {
       return res.status(200).json({ user, message: "Admin login successful" });
     }
 
-    // Regular user login
     res.cookie("userToken", token, cookieOptions);
     return res.status(200).json({ user, message: "Login successful" });
+
   } catch (error) {
     console.error("Error during login:", error.message);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -171,4 +183,10 @@ export const DeleteUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error });
   }
+};
+
+export const Logout = (req, res) => {
+  res.clearCookie("adminToken", { httpOnly: true, secure: true, sameSite: "None" });
+  res.clearCookie("userToken", { httpOnly: true, secure: true, sameSite: "None" });
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 };

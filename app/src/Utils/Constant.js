@@ -9,6 +9,7 @@ export const UPDATE_PROFILE=`Profile/updateProfile`
 export const AUTH_ROUTES='/api/auth';
 export const SIGNUP_ROUTES=`${AUTH_ROUTES}/signup`;
 export const LOGIN_ROUTES=`${AUTH_ROUTES}/login`;
+export const LOGOUT='api/logout'
 export const GET_USER=`api/getUser`
 export const DELETE_USER=`api/deleteUser`
 export const BLOCK_USER=`api/blockUser`

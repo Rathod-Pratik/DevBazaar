@@ -3,13 +3,17 @@ import { apiClient } from "../../lib/api-Client";
 import { DELETE_CONTACT, GET_CONTACT } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Contacts = () => {
+  const navigate=useNavigate();
   const [contact, setContact] = useState();
       const [FilterContactData, SetFilterContactData] = useState([]);
   const FetchContect = async () => {
     try {
-      const response = await apiClient.get(GET_CONTACT);
+      const response = await apiClient.get(GET_CONTACT,{
+        withCredentials:true
+      });
       if (response.status === 200) {
         SetFilterContactData(response.data.Contect)
         setContact(response.data.Contect);
@@ -17,6 +21,10 @@ const Contacts = () => {
         toast.error("Failed to fetch Contact");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error(error);
     }
   };
@@ -38,7 +46,9 @@ const Contacts = () => {
 
   const DeleteContect = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_CONTACT}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_CONTACT}/${_id}`,{
+        withCredentials:true
+      });
   
       if (response.status === 200) {
         toast.success("Contact deleted successfully");

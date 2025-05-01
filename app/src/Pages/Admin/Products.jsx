@@ -5,13 +5,16 @@ import {
   CREATE_PRODUCT,
   DELETE_PRODUCT,
   GET_CATEGORY,
+  GET_PRODUCT_DATA,
   UPDATE_PRODUCT,
 } from "../../Utils/Constant";
 import { apiClient } from "../../lib/api-Client";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
-  const { productData, setproductData } = useAppStore();
+  const navigate=useNavigate()
+  const { productData, setProductData,deleteProduct,editProduct,addProduct } = useAppStore();
   const [FilterProductData, SetFilterProductData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, SetLoading] = useState();
@@ -42,7 +45,23 @@ const Products = () => {
     }
   };
 
+const fetchProductData = async () => {
+      try {
+        const response = await apiClient.get(GET_PRODUCT_DATA);
+        if (response.status === 200) {
+          setProductData(response.data.Products);
+        } else {
+          toast.error(
+            "An error occurred while loading products. Please try again later."
+          );
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error("Failed to fetch products. Check your connection.");
+      }
+    };
   useEffect(() => {
+    fetchProductData()
     fetchCategory();
   }, []);
 
@@ -85,12 +104,12 @@ const Products = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials:true
       });
 
       if (response.status === 201) {
         toast.success("Product Added successfully");
-        const newProduct = response.data.data;
-        setproductData((prev) => [...prev, newProduct]);
+        addProduct(response.data.data)
         setShowModal(false);
         setEditData({
           Product_name: "",
@@ -104,6 +123,10 @@ const Products = () => {
         setPreview("");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error(error);
       toast.error("Failed to add product");
     } finally {
@@ -133,15 +156,12 @@ const Products = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials:true
         }
       );
       if (response.status === 200) {
         toast.success("Product Updated successfully");
-        setproductData((prev) =>
-          prev.map((product) =>
-            product._id === editData._id ? response.data.data : product
-          )
-        );
+        editProduct(_id,response.data.data)
       }
       setShowModal(false);
       setEditData({
@@ -155,6 +175,10 @@ const Products = () => {
       setSelectedFile(null);
       setPreview("");
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error("some error occured try again after some time");
     } finally {
       SetLoading(false);
@@ -175,15 +199,17 @@ const Products = () => {
       const response = await apiClient.post(`${DELETE_PRODUCT}/${_id}`, {
         Product_name,
         category,
-      });
+      },{withCredentials:true});
 
       if (response.status === 200) {
         toast.success("Product Deleted successfully");
-        setproductData((prevdata) =>
-          prevdata.filter((data) => data._id !== _id)
-        );
+        deleteProduct(_id)
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error occured try again after sometime");
     } finally {

@@ -8,10 +8,13 @@ import {
 } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState();
   const [description, SetDescription] = useState();
+  const [iconName, SeticonName] = useState();
   const [categories, setCategories] = useState();
   const [FilterCategoriesData, SetFilterCategoriesData] = useState([]);
 
@@ -21,10 +24,17 @@ const Categories = () => {
   };
   const createCategory = async () => {
     try {
-      const response = await apiClient.post(CREATE_CATEGORY, {
-        name,
-        description,
-      });
+      const response = await apiClient.post(
+        CREATE_CATEGORY,
+        {
+          name,
+          description,
+          iconName
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 200) {
         const newCategory = response.data.data;
@@ -38,6 +48,10 @@ const Categories = () => {
         toast.error("Failed to create category. Please try again.");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error("Some error occurred, try again after some time.");
       console.error("Create category error:", error);
     }
@@ -70,7 +84,10 @@ const Categories = () => {
   const handleDelete = async (categoryId) => {
     try {
       const response = await apiClient.delete(
-        `${DELETE_CATEGORY}/${categoryId}`
+        `${DELETE_CATEGORY}/${categoryId}`,
+        {
+          withCredentials: true,
+        }
       );
 
       if (response.status === 200) {
@@ -83,6 +100,10 @@ const Categories = () => {
         toast.error(response.data?.message || "Failed to delete category");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Delete category error:", error);
 
       // Show appropriate error message
@@ -110,14 +131,21 @@ const Categories = () => {
   // Handle save edited category
   const updatecategory = async (_id) => {
     try {
-      const response = await apiClient.post(UPDATE_CATEGORY, {
-        name,
-        description,
-        _id,
-      });
+      const response = await apiClient.post(
+        UPDATE_CATEGORY,
+        {
+          iconName,
+          name,
+          description,
+          _id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         toast.success("Categary Updated successfully");
-        const updatedCategory=response.data.update;
+        const updatedCategory = response.data.update;
         SetFilterReviewData((prevCategories) =>
           prevCategories.map((category) =>
             category._id === _id
@@ -128,7 +156,13 @@ const Categories = () => {
       }
       setIsModalOpen(false);
       setEditingCategory(null);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
+      toast.error("Failed to delete categoty");
+    }
   };
   const filterSearch = (searchValue) => {
     const lowerValue = searchValue.toLowerCase();
@@ -200,6 +234,23 @@ const Categories = () => {
                       onChange={(e) => setName(e.target.value)}
                       type="text"
                       id="category-name"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter category name"
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="category-name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Icon name
+                    </label>
+                    <input
+                      value={iconName}
+                      onChange={(e) => SeticonName(e.target.value)}
+                      type="text"
+                      id="Icon-name"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter category name"
                       required
@@ -347,6 +398,24 @@ const Categories = () => {
                       name="name"
                       onChange={(e) => setName(e.target.value)}
                       defaultValue={editingCategory?.name}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label
+                      htmlhtmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Icon name
+                    </label>
+                    <input
+                      type="text"
+                      id="iconName"
+                      name="iconName"
+                      onChange={(e) => SeticonName(e.target.value)}
+                      defaultValue={editingCategory?.iconName}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     />

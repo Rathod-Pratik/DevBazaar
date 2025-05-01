@@ -6,10 +6,12 @@ import { createCartSlice } from "./Slice/Cart-slice";
 import { createProductDataSlice } from "./Slice/Product-slice";
 import { createOrderSlice } from "./Slice/Order-slice";
 import { createProcessSlice } from "./Slice/Process-slice";
+import { createCategorySlice } from "./Slice/category.slice";
 
 export const useAppStore = create(
   persist(
     (set, get) => ({
+      ...createCategorySlice(set,get),
       ...createProcessSlice(set,get),
       ...createOrderSlice(set,get),
       ...createProductDataSlice(set,get), // Include the productData slice logic

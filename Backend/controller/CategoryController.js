@@ -1,14 +1,14 @@
 import Category from "../model/CategoryModel.js";
 
 export const CreateCategory = async (req, res) => {
-  const { name, description } = req.body;
+  const { name, description,iconName } = req.body;
 
-  if (!name || !description) {
+  if (!name || !description || !iconName) {
     return res.status(400).send("All field are required");
   }
 
   try {
-    const category = await Category.create({ name, description });
+    const category = await Category.create({ name, description,iconName });
     if (!category) {
       return res.status(400).send("Failed to category");
     }
@@ -41,13 +41,14 @@ export const getCategory = async (req, res) => {
 };
 
 export const updateCategory = async (req, res) => {
-  const { name, description, _id } = req.body;
+  const { name, description, _id,iconName } = req.body;
 
   try {
     // Build update object dynamically
     const UpdateData = {};
     if (name) UpdateData.name = name;
     if (description) UpdateData.description = description;
+    if (iconName) UpdateData.iconName = iconName;
 
     // Perform update
     const update = await Category.findByIdAndUpdate(

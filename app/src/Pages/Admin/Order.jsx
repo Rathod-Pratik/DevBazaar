@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import { toast } from "react-toastify";
 import { GET_ALL_ORDER } from "../../Utils/Constant";
+import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
+  const navigate=useNavigate()
   const [orders, setOrders] = useState([]);
   const [FilterOrder,SetFilterOrder]=useState();
   const fetchOrderData = async () => {
     try {
-      const response = await apiClient.get(GET_ALL_ORDER);
+      const response = await apiClient.get(GET_ALL_ORDER,{withCredentials:true});
       if (response.data.success) {
         setOrders(response.data.data);
         SetFilterOrder(response.data.data);
@@ -16,6 +18,10 @@ const Orders = () => {
         toast.info("No orders found");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error occurred, try again later.");
     }

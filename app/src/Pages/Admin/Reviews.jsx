@@ -5,15 +5,19 @@ import { toast } from "react-toastify";
 import { IoStar } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useAppStore } from "../../Store";
+import { useNavigate } from "react-router-dom";
 
 const Reviews = () => {
+  const navigate=useNavigate()
   const [Review, SetReview] = useState();
   const { productData } = useAppStore();
 
   // Delete a review
   const DeleteReview = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_REVIEW}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_REVIEW}/${_id}`,{
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         toast.success("Review removed successfully");
@@ -26,6 +30,10 @@ const Reviews = () => {
         toast.error("Failed to delete review");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error("Something went wrong. Please try again.");
       console.error(error);
     }
@@ -34,7 +42,9 @@ const Reviews = () => {
   // Fetch all reviews
   const fetchReview = async () => {
     try {
-      const response = await apiClient.get(GET_ALL_REVIEW);
+      const response = await apiClient.get(GET_ALL_REVIEW,{
+        withCredentials:true
+      });
       if (response.status === 200) {
         SetReview(response.data.Review);
       }

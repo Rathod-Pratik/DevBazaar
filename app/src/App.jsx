@@ -53,7 +53,7 @@ const App = () => {
     setWishListItems,
     setCartItems,
     userInfo,
-    setproductData,
+    setProductData,
     setLoggedIn,
     progress,
     setProgress
@@ -129,7 +129,7 @@ const App = () => {
         console.log(error);
       }
     };
-    if (userInfo) {
+    if (typeof userInfo !=='undefined') {
       fetchCartList();
       fetchWishList();
     }
@@ -137,7 +137,7 @@ const App = () => {
       try {
         const response = await apiClient.get(GET_PRODUCT_DATA);
         if (response.status === 200) {
-          setproductData(response.data.Products);
+          setProductData(response.data.Products);
         } else {
           toast.error(
             "An error occurred while loading products. Please try again later."

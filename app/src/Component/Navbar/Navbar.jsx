@@ -11,6 +11,9 @@ import { LuUser } from "react-icons/lu";
 import { FiShoppingBag } from "react-icons/fi";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
+import { apiClient } from "../../lib/api-Client";
+import { LOGOUT } from "../../Utils/Constant";
+import { toast } from "react-toastify";
 const Navbar = () => {
   const navigate = useNavigate();
   const isLoggedIn = () => {
@@ -32,9 +35,17 @@ const Navbar = () => {
     setOpenModal(false);
   };
 
-  const Logout = () => {
-    localStorage.removeItem("auth-storage");
-    navigate("/login");
+  const Logout =async () => {
+    try {
+    const response =await apiClient.get(LOGOUT,{withCredentials:true})
+    if(response.status==200){
+      localStorage.removeItem("auth-storage");
+      navigate("/login");
+    }
+  } catch (error) {
+      console.log(error)
+      toast.error("Logout Failed")
+  }
   };
   const modalRef = useRef(null);
   useEffect(() => {
@@ -175,7 +186,7 @@ const Navbar = () => {
                 onClick={toggleModal}
               />
             )}
-            {userInfo && userInfo.role === "admin" && <Link to={'/admin'} className="p-2 rounded-full text-white cursor-pointers bg-orange-500 transition">Admin</Link>}
+            {/* {userInfo && userInfo.role === "admin" && <Link to={'/admin'} className="p-2 rounded-full text-white cursor-pointers bg-orange-500 transition">Admin</Link>} */}
           </div>
         </div>
 
@@ -323,7 +334,7 @@ const Navbar = () => {
                     </p>
                   )}
                 </div>
-                <button className="bg-red-600 text-white border-none rounded-l-md px-3 py-2 m-auto " onClick={()=>{Logout() ,setIsMenuOpen(false)}}>Logout</button>
+              {typeof userInfo !== 'undefined' &&  <button className="bg-red-600 text-white border-none rounded-l-md px-3 py-2 m-auto " onClick={()=>{Logout() ,setIsMenuOpen(false)}}>Logout</button>}
               </div>
             </ul>
           </div>
@@ -368,7 +379,7 @@ const Navbar = () => {
                   My Cancellations
                 </Link>
               </li>
-              <li className="py-2">
+           {typeof userInfo !== 'undefined' && <li className="py-2">
                 <Link
                   to="/"
                   onClick={() => {
@@ -379,7 +390,7 @@ const Navbar = () => {
                   <BiLogOut />
                   Logout
                 </Link>
-              </li>
+              </li>}
             </ul>
           </div>
         )}

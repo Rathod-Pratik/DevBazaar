@@ -10,7 +10,7 @@ const DashBoard = () => {
   const {userInfo}=useAppStore();
   const FetchData = async () => {
     try {
-      const response = await apiClient.get(GET_ALL_STATE);
+      const response = await apiClient.get(GET_ALL_STATE,{withCredentials:true});
 
       if (response.status === 200) {
         SetStat(response.data);
@@ -19,6 +19,10 @@ const DashBoard = () => {
         toast.error("Failed to Fetch Data");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error("Some error occurred");
       console.log(error);
     }

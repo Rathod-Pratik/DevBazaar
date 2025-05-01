@@ -22,10 +22,6 @@ const CartSchema = new mongoose.Schema({
     Product_name:{
         type:String,
         required:true
-    },
-    Original_Price:{
-        type:String,
-        required:true
     }
 })
 
