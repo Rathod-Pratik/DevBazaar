@@ -56,7 +56,6 @@ const Orders = () => {
           new
         </button>
       </div>
-  <h2 className="text-2xl font-bold mb-4">Orders</h2>
   <div className="overflow-x-auto">
     <table className="w-full border border-gray-300 text-sm">
       <thead>
