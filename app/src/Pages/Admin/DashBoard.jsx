@@ -14,7 +14,6 @@ const DashBoard = () => {
 
       if (response.status === 200) {
         SetStat(response.data);
-        console.log(response.data);
       } else {
         toast.error("Failed to Fetch Data");
       }
