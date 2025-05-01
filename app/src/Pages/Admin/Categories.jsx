@@ -149,7 +149,7 @@ const Categories = () => {
         SetFilterReviewData((prevCategories) =>
           prevCategories.map((category) =>
             category._id === _id
-              ? { ...category, ...updatedCategory }
+              ? response.data.update
               : category
           )
         );
@@ -161,7 +161,7 @@ const Categories = () => {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
       }
-      toast.error("Failed to delete categoty");
+      toast.error("Failed to update categoty");
     }
   };
   const filterSearch = (searchValue) => {
