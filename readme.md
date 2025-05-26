@@ -1,3 +1,6 @@
+
+**Frontend Live:** https://dev-bazaar.vercel.app/
+
 # DevBazaar – E-Commerce Platform
 
 DevBazaar is a full-stack e-commerce web application with a modern React + Vite frontend and a Node.js/Express/MongoDB backend. It supports user and admin roles, product management, cart, wishlist, order processing, payment integration (Razorpay), reviews, and more.
@@ -95,18 +98,6 @@ DevBazaar/
 └── ...
 ```
 
----
-
-## Screenshots
-
-- Home page with hero, categories, best sellers, new arrivals
-- Product details, cart, wishlist, checkout
-- Admin dashboard, product/category/user management
-- Order and payment flow
-
-*(Add screenshots here if desired)*
-
----
 
 ## Getting Started
 
