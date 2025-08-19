@@ -30,11 +30,11 @@ export async function RemoveItem(req, res) {
 export async function AddToWishList(req, res) {
   // Change to POST for creating data
   try {
-    const { user, Product_name, Product_image, Price, Original_Price, off } =
+    const { user, Product_name, Product_image, Price, off } =
       req.body;
 
     // Validate required fields
-    if (!user || !Product_name || !Product_image || !Price || !off || !Original_Price) {
+    if (!user || !Product_name || !Product_image || !Price || !off ) {
       return res
         .status(400)
         .json({ error: "All the Product data is required" });
@@ -50,6 +50,8 @@ export async function AddToWishList(req, res) {
         .status(409)
         .json({ error: "Product already exists in the wishlist" });
     }
+
+    const Original_Price = Price + (Price * off) / 100;
     // Add product to wishlist
     const AddToWishList = await WishList.create({
       user: user,
