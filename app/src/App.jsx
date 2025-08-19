@@ -1,5 +1,11 @@
 import React, { useState, useEffect, Children } from "react";
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 //Import Pages
 import Home from "./Pages/Home/Home";
@@ -44,18 +50,7 @@ import Contacts from "./Pages/Admin/Contacts";
 import Profile from "./Pages/Admin/Profile";
 import AdminNavbar from "./Component/Navbar/AdminNavbar";
 import Orders from "./Pages/Admin/Order";
-
-const PriveteRoute = ({ Children }) => {
-  const { userInfo } = useAppStore();
-  const AdminAccess = userInfo?.role === "admin";
-  useEffect(() => {
-    if (!AdminAccess) {
-      toast.warning("Oops! You need admin superpowers to enter this secret lair! 🦸‍♂️");
-      toast.warning("You are Already under my Genjutsu.");
-    }
-  }, [AdminAccess]);
-  return AdminAccess ? Children : <Navigate to={'/'} />;
-};
+import PrivateRoute from "./Component/PrivateRoute/PrivateRoute";
 
 const App = () => {
   const {
@@ -64,7 +59,7 @@ const App = () => {
     userInfo,
     setProductData,
     progress,
-    setProgress
+    setProgress,
   } = useAppStore();
 
   const location = useLocation();
@@ -109,7 +104,7 @@ const App = () => {
         console.log(error);
       }
     };
-    if (typeof userInfo !=='undefined') {
+    if (typeof userInfo !== "undefined") {
       fetchCartList();
       fetchWishList();
     }
@@ -156,51 +151,17 @@ const App = () => {
         <Route path="/account" element={<Account />} />
         <Route path="*" element={<NotFound />} />
 
-        <Route path="/admin" element={
-          <PriveteRoute>
-            <AdminLayout />
-          </PriveteRoute>
-        }>
-          <Route index element={
-            <PriveteRoute>
-              <DashBoard />
-            </PriveteRoute>
-          } />
-          <Route path="category" element={
-            <PriveteRoute>
-              <Categories />
-            </PriveteRoute>
-          } />
-          <Route path="order" element={
-            <PriveteRoute>
-              <Orders />
-            </PriveteRoute>
-          } />
-          <Route path="product" element={
-            <PriveteRoute>
-              <Products />
-            </PriveteRoute>
-          } />
-          <Route path="user" element={
-            <PriveteRoute>
-              <Users />
-            </PriveteRoute>
-          } />
-          <Route path="review" element={
-            <PriveteRoute>
-              <Reviews />
-            </PriveteRoute>
-          } />
-          <Route path="contact" element={
-            <PriveteRoute>
-              <Contacts />
-            </PriveteRoute>
-          } />
-          <Route path="profile" element={
-            <PriveteRoute>
-              <Profile />
-            </PriveteRoute>
-          } />
+        <Route element={<PrivateRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<DashBoard />} />
+            <Route path="category" element={<Categories />} />
+            <Route path="order" element={<Orders />} />
+            <Route path="product" element={<Products />} />
+            <Route path="user" element={<Users />} />
+            <Route path="review" element={<Reviews />} />
+            <Route path="contact" element={<Contacts />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" />

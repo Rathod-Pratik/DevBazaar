@@ -1,9 +1,9 @@
 import express from 'express';
-import serverless from 'serverless-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectToMongo } from '../controller/Connection.js';
 import Razorpay from 'razorpay';
+import jwt from "jsonwebtoken";
 
 // Routes
 import AuthRoutes from '../routes/AuthRoutes.js';
@@ -18,7 +18,6 @@ import paymentRoutes from '../routes/PaymentRoutes.js';
 import CategoryRoutes from '../routes/CategoryRoutes.js';
 import AdminRoutes from '../routes/AdminRoutes.js';
 import ReviewRoutes from '../routes/ReviewRoutes.js';
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -37,6 +36,7 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
   });
 
 const app = express();
+app.use(cookieParser());
 
 // CORS options
 const corsOptions = {
@@ -68,5 +68,26 @@ app.use('/category', CategoryRoutes);
 app.use('/Admin', AdminRoutes);
 app.use('/review', ReviewRoutes);
 
-// Export the app wrapped with serverless-http
+app.get("/auth/check", (req, res) => {
+  const token = req.cookies.adminToken;
+
+  if (!token) {
+    return res.status(200).json({ isAuth: false });
+  }
+
+  try {
+    // verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role === "admin") {
+      return res.status(200).json({ isAuth: true, role: "admin" });
+    } else {
+      return res.status(200).json({ isAuth: false, role: decoded.role });
+    }
+  } catch (err) {
+    console.error("Invalid token:", err.message);
+    return res.status(200).json({ isAuth: false });
+  }
+});
+
 export default app
