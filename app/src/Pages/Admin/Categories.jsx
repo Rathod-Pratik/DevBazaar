@@ -182,7 +182,7 @@ const Categories = () => {
           onChange={(e) => filterSearch(e.target.value)}
           className="border-[orange] border-2 outline-none rounded-md px-4 py-2 w-[90%]"
           type="text"
-          placeholder="Search Contacts"
+          placeholder="Search Categories"
         />
         <button
           onClick={ShowModel}

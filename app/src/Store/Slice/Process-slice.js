@@ -1,4 +1,4 @@
 export const createProcessSlice=(set)=>({
-    progress:undefined,
-    setProgress:(userInfo)=>set({userInfo}),
+    progress:0,
+    setProgress:(progress)=>set({progress}),
 })

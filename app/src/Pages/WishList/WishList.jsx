@@ -42,7 +42,7 @@ const WishList = () => {
             See All
           </button>
         </div>
-        <div className="flex flex-wrap justify-center gap-5 m-auto my-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-[90%] m-auto">
           {data.map((product, index) => (
             <div key={index}>
               <ProductCard data={product} />

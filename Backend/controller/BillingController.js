@@ -24,7 +24,6 @@ export async function AddToBilling(req, res) {
     !phoneNumber ||
     !email ||
     !productData ||
-    !apartment ||
     !user
   ) {
     return res.status(400).json({ error: "All the Product data is required" });

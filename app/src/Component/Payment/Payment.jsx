@@ -4,7 +4,6 @@ import { useAppStore } from "../../Store";
 import { CREATE_ORDER } from "../../Utils/Constant";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
 const Payment = ({
   validateCart,
   formData

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import React, { useState, useEffect, Children } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 //Import Pages
-import Alert from "./Component/Alert/Alert";
 import Home from "./Pages/Home/Home";
 import About from "./Pages/About/About";
 import Cart from "./Pages/Cart/Cart";
@@ -22,8 +21,6 @@ import { ToastContainer, toast } from "react-toastify";
 import Navbar from "./Component/Navbar/Navbar";
 import Footer from "./Component/Footer/Footer";
 import LoadingBar from "react-top-loading-bar";
-
-import Cookies from "js-cookie";
 
 //import states and constants
 import { useAppStore } from "./Store";
@@ -48,26 +45,27 @@ import Profile from "./Pages/Admin/Profile";
 import AdminNavbar from "./Component/Navbar/AdminNavbar";
 import Orders from "./Pages/Admin/Order";
 
+const PriveteRoute = ({ Children }) => {
+  const { userInfo } = useAppStore();
+  const AdminAccess = userInfo?.role === "admin";
+  useEffect(() => {
+    if (!AdminAccess) {
+      toast.warning("Oops! You need admin superpowers to enter this secret lair! 🦸‍♂️");
+      toast.warning("You are Already under my Genjutsu.");
+    }
+  }, [AdminAccess]);
+  return AdminAccess ? Children : <Navigate to={'/'} />;
+};
+
 const App = () => {
   const {
     setWishListItems,
     setCartItems,
     userInfo,
     setProductData,
-    setLoggedIn,
     progress,
     setProgress
   } = useAppStore();
-  const decodeJWT = (token) => {
-    try {
-      const payload = token.split(".")[1]; // The payload is the second part of the JWT
-      const decodedPayload = JSON.parse(atob(payload)); // Decode from Base64
-      return decodedPayload;
-    } catch (error) {
-      console.error("Invalid JWT:", error);
-      return null;
-    }
-  };
 
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
@@ -75,24 +73,6 @@ const App = () => {
   useEffect(() => {
     AOS.init();
   }, []);
-  useEffect(() => {
-    const jwt = Cookies.get("jwt");
-    if (jwt) {
-      const decoded = decodeJWT(jwt); // Decode the JWT
-      if (decoded) {
-        const isExpired = decoded.exp * 1000 < Date.now(); // Check expiration
-        if (isExpired) {
-          Cookies.remove("jwt"); // Remove expired cookie
-          setLoggedIn(false); // Update Zustand state
-        } else {
-          setLoggedIn(true); // JWT is valid
-        }
-      } else {
-        Cookies.remove("jwt"); // Remove invalid JWT
-        setLoggedIn(false);
-      }
-    }
-  }, [setLoggedIn]);
 
   //Fetch WishList and Cart Data
   useEffect(() => {
@@ -176,15 +156,51 @@ const App = () => {
         <Route path="/account" element={<Account />} />
         <Route path="*" element={<NotFound />} />
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<DashBoard />} />
-          <Route path="category" element={<Categories />} />
-          <Route path="order" element={<Orders />} />
-          <Route path="product" element={<Products />} />
-          <Route path="user" element={<Users />} />
-          <Route path="review" element={<Reviews />} />
-          <Route path="contact" element={<Contacts />} />
-          <Route path="profile" element={<Profile />} />
+        <Route path="/admin" element={
+          <PriveteRoute>
+            <AdminLayout />
+          </PriveteRoute>
+        }>
+          <Route index element={
+            <PriveteRoute>
+              <DashBoard />
+            </PriveteRoute>
+          } />
+          <Route path="category" element={
+            <PriveteRoute>
+              <Categories />
+            </PriveteRoute>
+          } />
+          <Route path="order" element={
+            <PriveteRoute>
+              <Orders />
+            </PriveteRoute>
+          } />
+          <Route path="product" element={
+            <PriveteRoute>
+              <Products />
+            </PriveteRoute>
+          } />
+          <Route path="user" element={
+            <PriveteRoute>
+              <Users />
+            </PriveteRoute>
+          } />
+          <Route path="review" element={
+            <PriveteRoute>
+              <Reviews />
+            </PriveteRoute>
+          } />
+          <Route path="contact" element={
+            <PriveteRoute>
+              <Contacts />
+            </PriveteRoute>
+          } />
+          <Route path="profile" element={
+            <PriveteRoute>
+              <Profile />
+            </PriveteRoute>
+          } />
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" />

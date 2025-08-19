@@ -7,7 +7,6 @@ const Cart = () => {
   const { cartItems } = useAppStore();
 
   let totalPrice = 0;
-console.log(cartItems)
   if (cartItems && cartItems.length > 0) {
     for (const item of cartItems) {
       const price = Number(item.Price);

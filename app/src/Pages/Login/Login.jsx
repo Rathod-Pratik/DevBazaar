@@ -6,40 +6,25 @@ import { useAppStore } from "../../Store";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const {setUserInfo}=useAppStore();
+  const {setUserInfo,setProgress}=useAppStore();
   const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
-
-  const validateLogin = () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating email
   
-    if (!email.length) {
+  const handleLogin = async () => {
+    setProgress(30)
+    if (!email) {
       toast.error("Email is required")
       return false;
     }
     
-    if (!emailPattern.test(email)) {
-      toast.error("Please enter a valid email address")
-      return false;
-    }
-    
-    if (!password.length) {
+    if (!password) {
       toast.error("Password is required")
       return false;
     }
   
-    return true;
-  };
-  
-  const handleLogin = async () => {
-    // Client-side validation first
-    if (!email || !password) {
-      toast.error("Please fill all the fields");
-      return;
-    }
-  
     try {
+      setProgress(50)
       const response = await apiClient.post(
         LOGIN_ROUTES,
         { email, password },
@@ -49,6 +34,7 @@ const Login = () => {
       const { data, status } = response;
       if (status === 200) {
         if (data.user.role === 'admin') {
+          setUserInfo(data.user)
           navigate('/admin');
         } else {
           setUserInfo(data.user);
@@ -68,15 +54,13 @@ const Login = () => {
       else if (backendError?.WrongPassword) {
         toast.error("Incorrect password. Please try again");
       }
-      else if (error.response?.status === 400) {
-        // Generic 400 error (fallback)
-        toast.error(backendError?.error || "Invalid credentials");
-      }
       else {
         // Network errors or server issues
         toast.error("Login failed. Please try again later");
         console.error("Login error:", error);
       }
+    }finally{
+      setProgress(100)
     }
   };
   return (

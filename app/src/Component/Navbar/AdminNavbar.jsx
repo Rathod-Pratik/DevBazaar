@@ -16,7 +16,7 @@ const AdminNavbar = () => {
           {/* User Section */}
           <div className="relative flex gap-2 items-center">
             <p className="rounded-full text-[orange] px-4 py-2 hidden md:block">
-              Welcome, {userInfo.FirstName} {userInfo.LastName}
+              Welcome, {userInfo?.FirstName} {userInfo?.LastName}
             </p>
             <Link to="/" className="p-2 rounded-full bg-red-500 hover:bg-orange-600 transition">
     <FaHome className="text-white text-2xl" />

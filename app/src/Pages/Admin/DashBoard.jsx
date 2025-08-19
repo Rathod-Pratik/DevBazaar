@@ -14,9 +14,7 @@ const DashBoard = () => {
 
       if (response.status === 200) {
         SetStat(response.data);
-      } else {
-        toast.error("Failed to Fetch Data");
-      }
+      } 
     } catch (error) {
       if (error.response && error.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
@@ -28,9 +26,6 @@ const DashBoard = () => {
   };
 
   useEffect(() => {
-    if(userInfo.role !=="admin"){
-      navigate('/')
-    }
     FetchData();
   }, []);
 

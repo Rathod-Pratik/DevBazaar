@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppStore } from "../../Store";
 import ProductCard from "../../Component/Home/ProductCard";
+import Loading from "../../Component/Loading/Loading";
 
 const Product = () => {
   const { productData, category, setCategory, categoryData } = useAppStore();
@@ -8,13 +9,11 @@ const Product = () => {
 
   useEffect(() => {
     if (!productData) return;
-    
+
     if (!category || category === "all") {
       setFilteredProducts(productData);
     } else {
-      const filtered = productData.filter(
-        (item) => item.category === category
-      );
+      const filtered = productData.filter((item) => item.category === category);
       setFilteredProducts(filtered);
     }
   }, [category, productData]);
@@ -34,7 +33,11 @@ const Product = () => {
         >
           <option value="all">All Categories</option>
           {categoryData?.map((item) => (
-            <option key={item._id} onClick={()=>setCategory(item.name)} value={item.name}>
+            <option
+              key={item._id}
+              onClick={() => setCategory(item.name)}
+              value={item.name}
+            >
               {item.name}
             </option>
           ))}
@@ -42,17 +45,28 @@ const Product = () => {
       </div>
 
       {/* Products Grid */}
-      {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredProducts.map((product) => (
-            <div key={product._id} className="flex justify-center">
-              <ProductCard data={product} />
-            </div>
-          ))}
+
+      {productData.length === 0 ? (
+        <div className="flex justify-center items-center h-[45vh]">
+          <Loading />
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-lg text-gray-600">No products found in this category</p>
+        <div>
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredProducts.map((product) => (
+                <div key={product._id} className="flex justify-center">
+                  <ProductCard data={product} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-600">
+                No products found in this category
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

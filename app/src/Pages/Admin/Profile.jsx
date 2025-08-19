@@ -53,10 +53,6 @@ const Profile = () => {
    }
    return (
      <div className="min-h-[100vh] w-full md:w-[90%] lg:w-[80%] mt-10 mx-auto flex flex-col gap-8 p-4">
-   <p data-aos="fade-left" className="flex justify-center lg:justify-end gap-2 text-red-600 text-lg">
-     <span className="text-black">Welcome</span> {userInfo.FirstName} {userInfo.LastName}
-   </p>
- 
    <section className="min-h-[80vh]">
      {/* Profile Update Form */}
      <div data-aos="zoom-in" className="flex flex-col w-full">

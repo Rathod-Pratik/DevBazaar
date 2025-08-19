@@ -17,31 +17,27 @@ const Billing = () => {
   });
 
   const validateCart = () => {
-    if (!formData.firstName.trim()) {
+    if (!formData.firstName) {
       toast.error("First Name is required");
       return;
     }
-    if (!formData.companyName.trim()) {
-      toast.error("First Name is required");
+    if (!formData.companyName) {
+      toast.error("company Name is required");
       return;
     }
-    if (!formData.apartment.trim()) {
-      toast.error("First Name is required");
-      return;
-    }
-    if (!formData.streetAddress.trim()) {
+    if (!formData.streetAddress) {
       toast.error("Street Address is required");
       return;
     }
-    if (!formData.townCity.trim()) {
+    if (!formData.townCity) {
       toast.error("City is required");
       return;
     }
-    if (!formData.phoneNumber.trim() || !/^\d{10}$/.test(formData.phoneNumber)) {
+    if (!formData.phoneNumber) {
       toast.error("Valid 10-digit Phone Number is required");
       return;
     }
-    if (!formData.emailAddress.trim() || !/^\S+@\S+\.\S+$/.test(formData.emailAddress)) {
+    if (!formData.emailAddress) {
       toast.error("Valid Email Address is required");
       return;
     }
@@ -71,13 +67,13 @@ const Billing = () => {
     <div className="min-h-[100vh] w-[98%] lg:w-[80%] mt-[40px] m-auto overflow-hidden">
       <h1
         data-aos="fade-down"
-        className="text-[28px] lg:text-[36px] font-medium my-6"
+        className="text-[28px] lg:text-[36px] font-medium my-6 text-center lg:text-start"
       >
         Billing Details
       </h1>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="flex flex-col lg:flex-row gap-6 lg:w-full  justify-center">
         {/* Left Section */}
-        <div data-aos="fade-right" className="flex flex-col gap-6">
+        <div data-aos="fade-right" className="w-[70%] m-auto lg:w-full gap-4 flex flex-col"  >
           {[
             { label: "Name*", name: "firstName" },
             { label: "Company Name*", name: "companyName" },
@@ -102,7 +98,7 @@ const Billing = () => {
         </div>
 
         {/* Right Section */}
-        <div data-aos="fade-left" className="flex flex-col gap-3 mt-6">
+        <div data-aos="fade-left" className="flex flex-col gap-3 mt-6 w-[70%] m-auto lg:w-full">
           <div className="flex flex-col gap-6 w-full lg:w-[90%] justify-between mx-auto">
             {cartItems && cartItems.length > 0 ? (
               cartItems.map((product, index) => (

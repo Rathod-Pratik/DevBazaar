@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useAppStore } from "../../Store";
 import { Link } from "react-router-dom";
+import Loading from "../Loading/Loading";
 
 const Sale = () => {
   const {productData}=useAppStore();
@@ -25,8 +26,15 @@ const Sale = () => {
   </div>
 
   {/* Product Cards Section */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    {data.map((product, index) => (
+  <div >
+    {
+      data.length ===0 ? (
+        <div className="flex justify-center items-center h-[45vh]">
+          <Loading/>
+        </div>
+      ): (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+{data.map((product, index) => (
       <div
         key={index}
         className="rounded-lg mb-6 mx-3 flex justify-center md:max-w-[250px] lg:max-w-[300px] w-full"
@@ -34,6 +42,10 @@ const Sale = () => {
         <ProductCard data={product} />
       </div>
     ))}
+        </div>
+      )
+    }
+    
   </div>
 
   {/* View All Products Button */}

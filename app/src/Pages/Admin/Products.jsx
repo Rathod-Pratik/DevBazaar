@@ -50,10 +50,6 @@ const fetchProductData = async () => {
         const response = await apiClient.get(GET_PRODUCT_DATA);
         if (response.status === 200) {
           setProductData(response.data.Products);
-        } else {
-          toast.error(
-            "An error occurred while loading products. Please try again later."
-          );
         }
       } catch (error) {
         console.log(error)
@@ -229,7 +225,7 @@ const fetchProductData = async () => {
           onChange={(e) => filterSearch(e.target.value)}
           className="border-[orange] border-2 outline-none rounded-md px-4 py-2 w-[90%]"
           type="text"
-          placeholder="Search Contacts"
+          placeholder="Search Products"
         />
         <button
           onClick={() => {
