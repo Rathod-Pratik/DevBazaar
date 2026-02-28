@@ -6,23 +6,23 @@ import { useAppStore } from "../../Store";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const {setUserInfo,setProgress}=useAppStore();
-  const navigate=useNavigate();
-  const [email,setEmail]=useState("");
-  const [password,setPassword]=useState("");
-  
+  const { setUserInfo, setProgress } = useAppStore();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleLogin = async () => {
     setProgress(30)
     if (!email) {
       toast.error("Email is required")
       return false;
     }
-    
+
     if (!password) {
       toast.error("Password is required")
       return false;
     }
-  
+
     try {
       setProgress(50)
       const response = await apiClient.post(
@@ -30,7 +30,7 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-  
+
       const { data, status } = response;
       if (status === 200) {
         if (data.user.role === 'admin') {
@@ -43,11 +43,11 @@ const Login = () => {
       }
     } catch (error) {
       const backendError = error.response?.data;
-      
+
       // Handle specific error cases from backend
       if (backendError?.NotFound) {
         toast.error("Account not found. Please check your email");
-      } 
+      }
       else if (backendError?.blocked) {
         toast.error("Your account has been blocked. Contact support");
       }
@@ -59,7 +59,7 @@ const Login = () => {
         toast.error("Login failed. Please try again later");
         console.error("Login error:", error);
       }
-    }finally{
+    } finally {
       setProgress(100)
     }
   };
@@ -77,16 +77,16 @@ const Login = () => {
         </div>
         <form className="flex flex-col gap-4">
           <input
-          value={email}
-          onChange={(e)=>{setEmail(e.target.value)}}
+            value={email}
+            onChange={(e) => { setEmail(e.target.value) }}
             type="email"
             placeholder="Email"
             aria-label="Email"
             className="border-b border-gray-400 outline-none focus:border-red-600 transition duration-300 px-2 py-2"
           />
           <input
-          value={password}
-          onChange={(e)=>{setPassword(e.target.value)}}
+            value={password}
+            onChange={(e) => { setPassword(e.target.value) }}
             type="password"
             placeholder="Password"
             aria-label="Password"
@@ -94,16 +94,17 @@ const Login = () => {
           />
         </form>
         <div className="flex flex-row justify-between items-center">
-          <button onClick={handleLogin} className="bg-red-600 text-white py-2 w-[130px] h-[45px] rounded-md transition duration-300 hover:bg-red-700 active:bg-red-800">
+          <button onClick={handleLogin} className="bg-red-600 text-white py-2 w-full h-[45px] rounded-md transition duration-300 hover:bg-red-700 active:bg-red-800">
             Login
           </button>
-          <div className="flex justify-center">
-            <span className="text-gray-600 hover:border-b-gray-500">
-              <Link to="/signup" className=" hover:text-gray-500 ">
-                Forget Password
-              </Link>
-            </span>
-          </div>
+        </div>
+        <div className="flex justify-center mt-4">
+          <span className="text-gray-600">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-red-600 hover:underline">
+              SignUp
+            </Link>
+          </span>
         </div>
       </div>
     </div>

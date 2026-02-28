@@ -24,6 +24,9 @@ const Navbar = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const toggleModal = () => {
+    if(!isLoggedIn()){
+      return toast.error("Please login to access account")
+    }
     setOpenModal(!openModal);
   };
 
@@ -164,7 +167,7 @@ const Navbar = () => {
               <Link to={userInfo ? "/cart" : "/signup"}>
                 <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
-              {cartItems.length > 0 && (
+              {isLoggedIn() && cartItems.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {cartItems.length}
                 </span>
@@ -174,7 +177,7 @@ const Navbar = () => {
               <Link to={userInfo ? "/wishlist" : "/signup"}>
                 <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
               </Link>
-              {wishListItems.length > 0 && (
+              {isLoggedIn() && wishListItems.length > 0> 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {wishListItems.length}
                 </span>
@@ -301,7 +304,7 @@ const Navbar = () => {
                     >
                       <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
-                    {cartItems.length > 0 && (
+                    {isLoggedIn() && cartItems.length > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                         {cartItems.length}
                       </span>
@@ -314,7 +317,7 @@ const Navbar = () => {
                     >
                       <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
                     </Link>
-                    {wishListItems.length > 0 && (
+                    {isLoggedIn() && wishListItems.length > 0> 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                         {wishListItems.length}
                       </span>
