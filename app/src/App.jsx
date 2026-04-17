@@ -1,11 +1,5 @@
-import React, { useState, useEffect, Children } from "react";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 //Import Pages
 import Home from "./Pages/Home/Home";
@@ -33,6 +27,9 @@ import { useAppStore } from "./Store";
 import { GET_CART, GET_PRODUCT_DATA, GET_WISHLIST } from "./Utils/Constant";
 import { apiClient } from "./lib/api-Client";
 import ProductDetail from "./Pages/ProductDetail/ProductDetail";
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import OTP from "./Pages/OTP/OTP";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
 //import animation libarary
 import AOS from "aos";
@@ -48,8 +45,8 @@ import Users from "./Pages/Admin/Users";
 import Reviews from "./Pages/Admin/Reviews";
 import Contacts from "./Pages/Admin/Contacts";
 import Profile from "./Pages/Admin/Profile";
-import AdminNavbar from "./Component/Navbar/AdminNavbar";
 import Orders from "./Pages/Admin/Order";
+import AboutUs from "./Pages/Admin/AboutUs";
 import PrivateRoute from "./Component/PrivateRoute/PrivateRoute";
 
 const App = () => {
@@ -64,13 +61,38 @@ const App = () => {
 
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
+  const isAuthPage = ["/forgot-password", "/otp", "/reset-password"].includes(location.pathname);
   //animation
   useEffect(() => {
     AOS.init();
   }, []);
 
-  //Fetch WishList and Cart Data
+  // Fetch product data once on app mount.
   useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const response = await apiClient.get(GET_PRODUCT_DATA);
+        if (response.status === 200) {
+          setProductData(response.data.Products);
+        } else {
+          toast.error(
+            "An error occurred while loading products. Please try again later."
+          );
+        }
+      } catch {
+        toast.error("Failed to fetch products. Check your connection.");
+      }
+    };
+
+    fetchProductData();
+  }, [setProductData]);
+
+  // Fetch user-specific lists only when user info is available.
+  useEffect(() => {
+    if (typeof userInfo === "undefined") {
+      return;
+    }
+
     const fetchWishList = async () => {
       try {
         const response = await apiClient.post(
@@ -95,7 +117,7 @@ const App = () => {
           `${GET_CART}?user=${userInfo._id}`,
           { timeout: 10000 }
         );
-        if (response.status == 200) {
+        if (response.status === 200) {
           setCartItems(response.data);
         } else {
           toast.error("Failed to fetch CartData");
@@ -104,31 +126,14 @@ const App = () => {
         console.log(error);
       }
     };
-    if (typeof userInfo !== "undefined") {
-      fetchCartList();
-      fetchWishList();
-    }
-    const fetchProductData = async () => {
-      try {
-        const response = await apiClient.get(GET_PRODUCT_DATA);
-        if (response.status === 200) {
-          setProductData(response.data.Products);
-        } else {
-          toast.error(
-            "An error occurred while loading products. Please try again later."
-          );
-        }
-      } catch (error) {
-        toast.error("Failed to fetch products. Check your connection.");
-      }
-    };
-    fetchProductData();
-  }, []);
+
+    fetchCartList();
+    fetchWishList();
+  }, [userInfo, setCartItems, setWishListItems]);
 
   return (
     <>
-      {!isAdminPage && <Navbar />}
-      {isAdminPage && <AdminNavbar />}
+      {!isAuthPage && <Navbar />}
       <LoadingBar
         color="#f11946"
         progress={progress}
@@ -142,7 +147,10 @@ const App = () => {
         <Route path="/billing" element={<Billing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/Product/:ProductName" element={<ProductDetail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/otp" element={<OTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/wishlist" element={<WishList />} />
         <Route path="/contact" element={<Contect />} />
         <Route path="/order" element={<Order />} />
@@ -160,12 +168,13 @@ const App = () => {
             <Route path="user" element={<Users />} />
             <Route path="review" element={<Reviews />} />
             <Route path="contact" element={<Contacts />} />
+            <Route path="about" element={<AboutUs />} />
             <Route path="profile" element={<Profile />} />
           </Route>
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" />
-      {!isAdminPage && <Footer />}
+      {!isAdminPage && !isAuthPage && <Footer />}
     </>
   );
 };

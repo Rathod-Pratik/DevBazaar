@@ -9,6 +9,9 @@ export const UPDATE_PROFILE=`Profile/updateProfile`
 export const AUTH_ROUTES='/api/auth';
 export const SIGNUP_ROUTES=`${AUTH_ROUTES}/signup`;
 export const LOGIN_ROUTES=`${AUTH_ROUTES}/login`;
+export const FORGOT_PASSWORD_ROUTES=`${AUTH_ROUTES}/forgot-password`;
+export const VERIFY_OTP_ROUTES=`${AUTH_ROUTES}/verify-otp`;
+export const RESET_PASSWORD_ROUTES=`${AUTH_ROUTES}/reset-password`;
 export const LOGOUT='api/logout'
 export const GET_USER=`api/getUser`
 export const DELETE_USER=`api/deleteUser`
@@ -41,10 +44,19 @@ export const REFUNDPAYMENT='payment/refund'
 
 export const ADD_REVIEW='review/createreview'
 export const GET_REVIEW='review/getreview'
+export const GET_REVIEW_BY_PRODUCTS='review/getreview-by-products'
 export const GET_ALL_REVIEW='review/getallreview'
 export const DELETE_REVIEW='review/DeleteReview'
 
 export const GET_ALL_STATE='Admin/getstats'
+export const GET_HOME_CONTENT='home/get-home-content'
+export const GET_HOME_CONTENT_ADMIN='Admin/home-content'
+export const CREATE_HOME_SECTION='Admin/home-content/create'
+export const UPDATE_HOME_SECTION='Admin/home-content/update'
+export const GET_ABOUT_CONTENT='about/get-about-content'
+export const GET_ABOUT_CONTENT_ADMIN='Admin/about-content'
+export const UPDATE_ABOUT_CONTENT='Admin/about-content'
+export const UPLOAD_ABOUT_IMAGE='Admin/about-content/upload-image'
 
 export const CREATE_CATEGORY='category/CreateCategory'
 export const DELETE_CATEGORY='category/deleteCategory'

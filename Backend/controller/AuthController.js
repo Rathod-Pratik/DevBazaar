@@ -2,6 +2,8 @@ import User from "../model/UserModel.js";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import OTP from "../model/OTPModel.js";
+import { sendOTPEmail } from "../middleware/emailConfig.js";
 
 //Write function to login
 export const signup = async (req, res) => {
@@ -193,4 +195,99 @@ export const Logout = (req, res) => {
   res.clearCookie("adminToken", { httpOnly: true, secure: true, sameSite: "None" });
   res.clearCookie("userToken", { httpOnly: true, secure: true, sameSite: "None" });
   res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+
+// Generate random OTP (6 digits)
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Forgot Password - Send OTP to email
+export const ForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ NotFound: true, error: "User not found" });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+
+    // Save OTP to database (delete old ones first)
+    await OTP.deleteMany({ email });
+    await OTP.create({ email, otp });
+
+    // Send OTP via email
+    const emailSent = await sendOTPEmail(email, otp);
+    if (!emailSent) {
+      return res.status(500).json({ error: "Failed to send OTP" });
+    }
+
+    return res.status(200).json({ message: "OTP sent to your email" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Verify OTP
+export const VerifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ error: "Email and OTP are required" });
+    }
+
+    // Check if OTP exists and matches
+    const otpRecord = await OTP.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({ InvalidOTP: true, error: "Invalid OTP" });
+    }
+
+    // OTP is valid (TTL index will auto-delete expired ones)
+    return res.status(200).json({ message: "OTP verified successfully" });
+  } catch (error) {
+    console.error("OTP verification error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Reset Password
+export const ResetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ InvalidEmail: true, error: "User not found" });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Update user password
+    await User.findByIdAndUpdate(user._id, { password: hashedPassword }, { new: true });
+
+    // Delete OTP after successful reset
+    await OTP.deleteMany({ email });
+
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };

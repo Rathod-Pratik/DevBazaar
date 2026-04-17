@@ -18,6 +18,31 @@ export const GetReview=async(req,res)=>{
         return res.status(400).json({"Message":error.message})
     }
 }
+
+export const GetReviewsByProducts = async (req, res) => {
+    const { productIds } = req.query;
+
+    if (!productIds) {
+        return res.status(400).json({ message: "productIds is required" });
+    }
+
+    const ids = String(productIds)
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+
+    if (ids.length === 0) {
+        return res.status(400).json({ message: "At least one product id is required" });
+    }
+
+    try {
+        const reviews = await ReviewModel.find({ Productid: { $in: ids } });
+        return res.status(200).json({ Review: reviews });
+    } catch (error) {
+        return res.status(400).json({ Message: error.message });
+    }
+}
+
 export const GetAllReview=async(req,res)=>{
     try {
         const Review=await ReviewModel.find();

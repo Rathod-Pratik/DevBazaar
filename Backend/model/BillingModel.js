@@ -33,7 +33,7 @@ const BillingSchema=mongoose.Schema({
         type:String
     },
     productData:{
-        type:Object,
+        type:[mongoose.Schema.Types.Mixed],
         required:true
     }
 });

@@ -1,107 +1,71 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaGooglePlay, FaApple } from "react-icons/fa";
 const Footer = () => {
   return (
-    
+    <footer className="mt-12 bg-[#111111] text-white">
+      <div className="mx-auto w-[92%] max-w-7xl py-12">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div>
+            <h2 className="mb-4 text-2xl font-bold tracking-wide text-white">
+              DevBazzar
+            </h2>
+            <p className="max-w-[280px] text-sm leading-6 text-gray-300">
+              Your one-stop shop for all your needs with trusted quality,
+              exciting offers, and fast delivery.
+            </p>
+          </div>
 
-<footer className="p-8 bg-gradient-to-r from-gray-900 via-gray-800 to-black text-white">
-  {/* Footer Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-    {/* Exclusive Section */}
-    <div>
-      <h2 className="text-xl font-bold mb-4">Exclusive</h2>
-      <p className="mb-2">Subscribe</p>
-      <p className="text-sm mb-4">Get 10% off your first order by subscribing to our newsletter.</p>
-      <input
-        type="email"
-        placeholder="Enter your email"
-        className="w-full px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 mb-4"
-      />
-      <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-sm font-semibold rounded transition">
-        Subscribe
-      </button>
-    </div>
+          <div>
+            <h2 className="mb-4 text-lg font-semibold text-[#DB4444]">Support</h2>
+            <p className="mb-2 text-sm text-gray-300">
+              111 Bijoy Sarani, Dhaka, DH 1515, Bangladesh
+            </p>
+            <p className="mb-2 text-sm text-gray-300">devbazzarofficial@gmail.com</p>
+            <p className="text-sm text-gray-300">+91 7202001502</p>
+          </div>
 
-    {/* Support Section */}
-    <div>
-      <h2 className="text-xl font-bold mb-4">Support</h2>
-      <p className="mb-2">111 Bijoy Sarani, Dhaka, DH 1515, Bangladesh</p>
-      <p className="mb-2">exclusive@gmail.com</p>
-      <p>+88015-88888-9999</p>
-    </div>
+          <div>
+            <h2 className="mb-4 text-lg font-semibold text-[#DB4444]">Account</h2>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li>
+                <Link to="/account" className="transition-colors hover:text-[#DB4444]">
+                  My Account
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="transition-colors hover:text-[#DB4444]">
+                  Login / Register
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" className="transition-colors hover:text-[#DB4444]">
+                  Cart
+                </Link>
+              </li>
+              <li>
+                <Link to="/product" className="transition-colors hover:text-[#DB4444]">
+                  Shop
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-    {/* Account Section */}
-    <div>
-      <h2 className="text-xl font-bold mb-4">Account</h2>
-      <ul className="space-y-2">
-        <li>
-          <Link to="/account" className="hover:underline">My Account</Link>
-        </li>
-        <li>
-          <Link to="/login" className="hover:underline">Login / Register</Link>
-        </li>
-        <li>
-          <Link to="/cart" className="hover:underline">Cart</Link>
-        </li>
-        <li>
-          <Link to="/shop" className="hover:underline">Shop</Link>
-        </li>
-      </ul>
-    </div>
+          <div>
+            <h2 className="mb-4 text-lg font-semibold text-[#DB4444]">Quick Links</h2>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li className="transition-colors hover:text-white">Privacy Policy</li>
+              <li className="transition-colors hover:text-white">Terms of Use</li>
+              <li className="transition-colors hover:text-white">FAQ</li>
+              <li className="transition-colors hover:text-white">Contact</li>
+            </ul>
+          </div>
+        </div>
 
-    {/* Quick Links Section */}
-    <div>
-      <h2 className="text-xl font-bold mb-4">Quick Links</h2>
-      <ul className="space-y-2">
-        <li>Privacy Policy</li>
-        <li>Terms of Use</li>
-        <li>FAQ</li>
-        <li>Contact</li>
-      </ul>
-    </div>
-
-    {/* Download App Section */}
-    <div>
-      <h2 className="text-xl font-bold mb-4">Download App</h2>
-      <p className="mb-4">Save $3 with our App for new users only.</p>
-      <div className="flex items-center space-x-4">
-        <button className="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">
-          <FaGooglePlay className="mr-2" />
-          Google Play
-        </button>
-        <button className="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">
-          <FaApple className="mr-2" />
-          App Store
-        </button>
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 sm:flex-row">
+          <p className="text-sm text-gray-400">© 2026 DevBazzar. All Rights Reserved.</p>
+          <p className="text-xs tracking-wide text-gray-500">Built for modern shopping experiences</p>
+        </div>
       </div>
-    </div>
-  </div>
-
-  {/* Footer Divider and Social Links */}
-  <div className="mt-8 border-t border-gray-700 pt-6 flex flex-col lg:flex-row items-center justify-between">
-    {/* Social Media Icons */}
-    <div className="flex space-x-4 mb-4 lg:mb-0">
-      <a href="#" className="text-gray-400 hover:text-white transition">
-        <FaFacebookF />
-      </a>
-      <a href="#" className="text-gray-400 hover:text-white transition">
-        <FaTwitter />
-      </a>
-      <a href="#" className="text-gray-400 hover:text-white transition">
-        <FaInstagram />
-      </a>
-      <a href="#" className="text-gray-400 hover:text-white transition">
-        <FaLinkedinIn />
-      </a>
-    </div>
-
-    {/* Footer Text */}
-    <p className="text-sm text-gray-400">
-      © 2025 Exclusive. All Rights Reserved.
-    </p>
-  </div>
-</footer>
+    </footer>
 
   );
 };

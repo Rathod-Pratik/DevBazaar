@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { apiClient } from "../../lib/api-Client";
@@ -117,7 +117,7 @@ const ProductCard = ({ data }) => {
 
           {/* Product Image */}
           <img
-          onClick={()=>window.location.href=`/product/${Product_name}`}
+          onClick={() => navigate(`/product/${_id}`)}
             className="m-auto w-[150px] h-[150px] object-contain rounded-lg cursor-pointer"
             src={product_image_url}
             alt={Product_name}
@@ -135,7 +135,7 @@ const ProductCard = ({ data }) => {
       {/* Product Details */}
       <div>
         <div className="flex flex-col gap-3 mt-1">
-          <h1 className="text-[16px] font-medium text-gray-900 dark:text-white cursor-pointer" onClick={()=>window.location.href=`/product/${Product_name}`}>
+          <h1 className="text-[16px] font-medium text-gray-900 dark:text-white cursor-pointer" onClick={() => navigate(`/product/${_id}`)}>
             {Product_name}
           </h1>
           <div className="flex flex-row items-center gap-2">

@@ -71,6 +71,10 @@ export async function CreateOrder(req, res) {
     apartment,
   } = req.body;
 
+  const hasProductData = Array.isArray(productData)
+    ? productData.length > 0
+    : Boolean(productData);
+
   if (
     !paymentId ||
     !user ||
@@ -80,8 +84,7 @@ export async function CreateOrder(req, res) {
     !city ||
     !phoneNumber ||
     !email ||
-    !productData ||
-    !apartment
+    !hasProductData
   ) {
     return res.status(400).json({ error: "All the Product data is required" });
   }
@@ -97,7 +100,7 @@ export async function CreateOrder(req, res) {
       phone_number: phoneNumber,
       email: email,
       productData: productData,
-      apartment: apartment,
+      apartment: apartment || "",
     });
 
     // Remove product from CartModel

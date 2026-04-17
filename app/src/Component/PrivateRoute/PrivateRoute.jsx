@@ -15,7 +15,6 @@ const PrivateRoute = () => {
         } else {
           setIsAuth(false);
           toast.warning("Oops! You need admin superpowers to enter this secret lair! 🦸‍♂️");
-          toast.warning("You are already under my Genjutsu.");
         }
       } catch (err) {
         console.error(err);

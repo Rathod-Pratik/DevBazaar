@@ -1,13 +1,11 @@
 import User from "../model/UserModel.js";
-import bcrypt from "bcryptjs/dist/bcrypt.js";
-import jwt from "jsonwebtoken";
 
 export async function UpdateProfile(req, res) {
   try {
-    const { address, Oldpassword, NewPassword, email } = req.body;
+    const { mobileNumber, address, town, city, companyName, email } = req.body;
 
-    if (!Oldpassword || !NewPassword || !email) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
     }
 
     const userName = await User.findOne({ email });
@@ -15,16 +13,25 @@ export async function UpdateProfile(req, res) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(Oldpassword, userName.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid credentials" });
+    const updateFields = {};
+    if (mobileNumber && mobileNumber.length > 0) {
+      updateFields.mobileNumber = mobileNumber;
+    }
+    if (address !== undefined) {
+      updateFields.address = address;
+    }
+    if (town !== undefined) {
+      updateFields.town = town;
+    }
+    if (city !== undefined) {
+      updateFields.city = city;
+    }
+    if (companyName !== undefined) {
+      updateFields.companyName = companyName;
     }
 
-    const hashedPassword = await bcrypt.hash(NewPassword, 10);
-
-    const updateFields = { password: hashedPassword };
-    if (address && address.length > 0) {
-      updateFields.address = address;
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: "No changes detected" });
     }
 
     const { modifiedCount } = await User.updateOne(
@@ -33,20 +40,8 @@ export async function UpdateProfile(req, res) {
     );
 
     if (modifiedCount > 0) {
-      const tokenPayload = { id: userName.id };
-      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
-
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
-      const data = await User.findOne({ email });
-      const { password, ...safeUserData } = data._doc;
+      const data = await User.findOne({ email }).lean();
+      const { password, ...safeUserData } = data;
 
       res.status(200).json({ user: safeUserData, message: "Profile updated successfully" });
     } else {

@@ -1,60 +1,75 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaRegHeart } from "react-icons/fa";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { IoIosSearch } from "react-icons/io";
-import { IoMenu } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
-import style from "./Navbar.module.css";
-import { useAppStore } from "../../Store";
-import Cookies from "js-cookie";
-import { LuUser } from "react-icons/lu";
-import { FiShoppingBag } from "react-icons/fi";
-import { MdOutlineCancel } from "react-icons/md";
+import { useEffect, useRef, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
+import { FaHome, FaRegHeart } from "react-icons/fa";
+import { FiShoppingBag } from "react-icons/fi";
+import { IoMenu } from "react-icons/io5";
+import { MdOutlineCancel, MdOutlineShoppingCart } from "react-icons/md";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAppStore } from "../../Store";
 import { apiClient } from "../../lib/api-Client";
 import { LOGOUT } from "../../Utils/Constant";
 import { toast } from "react-toastify";
+import { LuUser } from "react-icons/lu";
+
+const navLinkClass = ({ isActive }) =>
+  `inline-flex w-fit items-center justify-center rounded-lg px-3 py-2 font-medium transition-all ${isActive ? "bg-red-600 text-white shadow-sm" : "text-gray-800 hover:bg-red-50 hover:text-red-600"}`;
+
 const Navbar = () => {
   const navigate = useNavigate();
-  const isLoggedIn = () => {
-    const jwt = Cookies.get("jwt"); // Get the JWT cookie
-    return jwt !== undefined; // Returns true if the cookie exists
-  };
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith("/admin");
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const {
+    userInfo,
+    wishListItems,
+    cartItems,
+    setUserInfo,
+    clearCartItems,
+    clearWishListItems,
+    setLoggedIn,
+  } = useAppStore();
 
-  const toggleModal = () => {
-    if(!isLoggedIn()){
-      return toast.error("Please login to access account")
-    }
-    setOpenModal(!openModal);
-  };
+  const toggleModal = () => setOpenModal((prev) => !prev);
+  const closeModal = () => setOpenModal(false);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const closeMenu = () => setIsMenuOpen(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const CloseModel = () => {
-    setOpenModal(false);
-  };
-
-  const Logout =async () => {
+  const handleLogout = async () => {
     try {
-    const response =await apiClient.get(LOGOUT,{withCredentials:true})
-    if(response.status==200){
-      localStorage.removeItem("auth-storage");
-      navigate("/login");
+      const response = await apiClient.get(LOGOUT, { withCredentials: true });
+      if (response.status === 200) {
+        setUserInfo(undefined);
+        clearCartItems();
+        clearWishListItems();
+        setLoggedIn(false);
+        closeModal();
+        closeMenu();
+        localStorage.removeItem("auth-storage");
+        toast.success("Logged out successfully");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout Failed");
     }
-  } catch (error) {
-      console.log(error)
-      toast.error("Logout Failed")
-  }
   };
+
+  const requireLogin = (event, routeName) => {
+    if (userInfo) return;
+    event.preventDefault();
+    toast.warning(`Please login to access ${routeName}.`);
+    navigate("/login");
+  };
+
   const modalRef = useRef(null);
+  const menuRef = useRef(null);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setOpenModal(false); // Close modal when clicking outside
+        closeModal();
       }
     }
 
@@ -67,14 +82,13 @@ const Navbar = () => {
     };
   }, [openModal]);
 
-  //Close Model when someone click outside
-  const menuRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
+        closeMenu();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -82,266 +96,157 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
   }, [isMenuOpen]);
 
-  const { userInfo, wishListItems, cartItems } = useAppStore();
-  return (
-    <>
-      <header
-        className={`bg-white flex justify-between items-center px-8 py-4 border-b sticky top-0 z-30 ${style.container}`}
-      >
-        {/* Logo */}
-        <h2 className="text-2xl font-bold text-gray-800">DavBazzar</h2>
-
-        {/* Navigation Links */}
-        <ul
-          className={`list-none gap-6 m-0 p-0 md:flex text-base hidden ${style.responsive}`}
-        >
-          <li>
+  if (isAdminPage) {
+    return (
+      <header className="backdrop-blur-lg border-b border-gray-200 py-3 sticky top-0 z-50 bg-white/95">
+        <div className="flex justify-between items-center mx-auto w-[90vw]">
+          <Link to="/admin" className="text-2xl font-bold text-gray-800">
+            DevBazzar
+          </Link>
+          <div className="flex gap-2 items-center">
+            <p className="rounded-full text-orange-500 px-4 py-2 hidden md:block">
+              Welcome, {userInfo?.FirstName} {userInfo?.LastName}
+            </p>
             <Link
               to="/"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
+              className="p-2 rounded-full bg-red-500 hover:bg-orange-600 transition"
+              aria-label="Go to home"
             >
-              Home
+              <FaHome className="text-white text-2xl" />
             </Link>
-          </li>
-          <li>
-            <Link
-              to="/product"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-            >
-              Product
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/contact"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-            >
-              Contact
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/about"
-              className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-            >
-              About
-            </Link>
-          </li>
-          {typeof userInfo == "undefined" && isLoggedIn && (
-            <li>
-              <Link
-                to="/signup"
-                className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-              >
-                Sign up
-              </Link>
-            </li>
-          )}
-        </ul>
-
-        {/* Search and Icons */}
-        <div
-          className={`items-center gap-6 flex justify-end ${style.searchbar}`}
-        >
-          {/* Search Box */}
-          <div className="flex items-center border border-gray-300 rounded px-3 py-1 bg-gray-100">
-            <input
-              type="search"
-              placeholder="What are you looking for?"
-              className="border-none outline-none text-sm bg-gray-100 w-48"
-            />
-            <IoIosSearch className="text-gray-600 text-xl ml-2 cursor-pointer" />
           </div>
+        </div>
+      </header>
+    );
+  }
 
-          {/* Icons */}
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Link to={userInfo ? "/cart" : "/signup"}>
-                <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
-              </Link>
-              {isLoggedIn() && cartItems.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+  return (
+    <>
+      <header className="sticky top-0 z-30 border-b bg-white">
+        <div className="mx-auto flex w-[92%] max-w-7xl items-center justify-between py-4">
+          <Link to="/" className="text-2xl font-bold text-gray-800">
+            DevBazzar
+          </Link>
+
+          <nav className="hidden items-center gap-6 md:flex">
+            <NavLink to="/" end className={navLinkClass}>
+              Home
+            </NavLink>
+            <NavLink to="/product" className={navLinkClass}>
+              Product
+            </NavLink>
+            <NavLink to="/contact" className={navLinkClass}>
+              Contact
+            </NavLink>
+            <NavLink to="/about" className={navLinkClass}>
+              About
+            </NavLink>
+            {!userInfo && (
+              <NavLink to="/signup" className={navLinkClass}>
+                Sign up
+              </NavLink>
+            )}
+          </nav>
+
+          <div className="flex items-center gap-3 sm:gap-5">
+            <Link
+              to={userInfo ? "/cart" : "/login"}
+              onClick={(event) => requireLogin(event, "cart")}
+              className="relative"
+            >
+              <MdOutlineShoppingCart className="text-gray-600 text-xl hover:text-red-500 transition-all" />
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                   {cartItems.length}
                 </span>
               )}
-            </div>
-            <div className="relative">
-              <Link to={userInfo ? "/wishlist" : "/signup"}>
-                <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
-              </Link>
-              {isLoggedIn() && wishListItems.length > 0> 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+            </Link>
+            <Link
+              to={userInfo ? "/wishlist" : "/login"}
+              onClick={(event) => requireLogin(event, "wishlist")}
+              className="relative"
+            >
+              <FaRegHeart className="text-gray-600 text-xl hover:text-red-500 transition-all" />
+              {wishListItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                   {wishListItems.length}
                 </span>
               )}
-            </div>
+            </Link>
             {userInfo && (
               <LuUser
-                className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
+                className="rounded-full bg-red-600 p-1 text-2xl text-white cursor-pointer"
                 onClick={toggleModal}
               />
             )}
-            {/* {userInfo && userInfo.role === "admin" && <Link to={'/admin'} className="p-2 rounded-full text-white cursor-pointers bg-orange-500 transition">Admin</Link>} */}
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md p-2 text-black md:hidden"
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            >
+              <IoMenu className="text-[34px]" />
+            </button>
+          </div>
+
+          <div
+            className={`fixed inset-0 z-50 bg-black/45 transition-opacity duration-300 md:hidden ${
+              isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+            }`}
+            onClick={closeMenu}
+          >
+            <div
+              ref={menuRef}
+              className={`absolute right-0 top-0 h-full w-[86vw] max-w-[340px] overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ease-out ${
+                isMenuOpen ? "translate-x-0" : "translate-x-full"
+              }`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={toggleMenu}
+                  className="rounded-md p-2 text-black hover:bg-gray-100"
+                  aria-label="Close menu"
+                >
+                  <IoMenu className="text-[34px]" />
+                </button>
+              </div>
+              <div className="flex flex-col items-center gap-4 text-center">
+                <NavLink to="/" end onClick={closeMenu} className={navLinkClass}>
+                  Home
+                </NavLink>
+                <NavLink to="/product" onClick={closeMenu} className={navLinkClass}>
+                  Product
+                </NavLink>
+                <NavLink to="/contact" onClick={closeMenu} className={navLinkClass}>
+                  Contact
+                </NavLink>
+                <NavLink to="/about" onClick={closeMenu} className={navLinkClass}>
+                  About
+                </NavLink>
+                {!userInfo && (
+                  <NavLink to="/signup" onClick={closeMenu} className={navLinkClass}>
+                    Sign up
+                  </NavLink>
+                )}
+                {userInfo && (
+                  <NavLink to="/order" onClick={closeMenu} className={navLinkClass}>
+                    Order
+                  </NavLink>
+                )}
+                {userInfo && (
+                  <NavLink to="/cancelorder" onClick={closeMenu} className={navLinkClass}>
+                    Cancel Order
+                  </NavLink>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-
-        <nav className={`hidden relative  ${style.sidebar}`}>
-          {/* Toggle Button */}
-          <div className={`hidden relative  ${style.sidebar} `}>
-            <IoMenu
-              className="text-black text-[35px] cursor-pointer"
-              onClick={toggleMenu}
-            />
-          </div>
-
-          {/* Sliding Menu for small screen */}
-          <div
-            ref={menuRef}
-            className={`fixed top-0 right-0 h-full bg-white shadow-md z-50 py-4 px-6 transform transition-transform duration-300 ${
-              isMenuOpen ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
-            {/* Close Button */}
-            <div className="items-center gap-6 flex justify-end">
-              <IoMenu
-                className="text-black text-[35px] cursor-pointer"
-                onClick={toggleMenu}
-              />
-            </div>
-
-            {/* Menu Items */}
-            <ul className={`list-none gap-6 m-0 p-0 flex flex-col text-center`}>
-              <li>
-                <Link
-                  to="/"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/product"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Product
-                </Link>
-              </li>
-              <li>
-                <Link
-                  onClick={() => setIsMenuOpen(false)}
-                  to="/order"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                >
-                  Order
-                </Link>
-              </li>
-              <li>
-                <Link
-                  onClick={() => setIsMenuOpen(false)}
-                  to="/cancelorder"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                >
-                  Cancel Order
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About
-                </Link>
-              </li>
-              {!userInfo && (
-                <li>
-                  <Link
-                    to="/signup"
-                    className="text-gray-800 active:border-b-gray-500 font-medium px-2 py-1 hover:bg-blue-500 hover:text-white rounded transition-all"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign up
-                  </Link>
-                </li>
-              )}
-              <div className="items-center gap-6 flex flex-col">
-                {/* Search Box */}
-                <div className="flex items-center border border-gray-300 rounded px-3 py-1 bg-gray-100">
-                  <input
-                    type="search"
-                    placeholder="What are you looking for?"
-                    className="border-none outline-none text-sm bg-gray-100 w-48"
-                  />
-                  <IoIosSearch className="text-gray-600 text-xl ml-2 cursor-pointer" />
-                </div>
-
-                {/* Icons */}
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <Link
-                      onClick={() => setIsMenuOpen(false)}
-                      to={userInfo ? "/cart" : "/signup"}
-                    >
-                      <MdOutlineShoppingCart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
-                    </Link>
-                    {isLoggedIn() && cartItems.length > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                        {cartItems.length}
-                      </span>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <Link
-                      onClick={() => setIsMenuOpen(false)}
-                      to={userInfo ? "/wishlist" : "/signup"}
-                    >
-                      <FaRegHeart className="text-gray-600 text-xl cursor-pointer hover:text-blue-500 transition-all" />
-                    </Link>
-                    {isLoggedIn() && wishListItems.length > 0> 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                        {wishListItems.length}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className=" flex flex-col gap-2 items-center">
-                  {userInfo && (
-                    <LuUser
-                      className="text-white rounded-full text-2xl bg-red-600 p-1 cursor-pointer transition-all"
-                      onClick={() => (window.location.href = `/account`)}
-                    />
-                  )}
-                  {userInfo && (
-                    <p>
-                      {userInfo.FirstName} {userInfo.LastName}
-                    </p>
-                  )}
-                </div>
-              {typeof userInfo !== 'undefined' &&  <button className="bg-red-600 text-white border-none rounded-l-md px-3 py-2 m-auto " onClick={()=>{Logout() ,setIsMenuOpen(false)}}>Logout</button>}
-              </div>
-            </ul>
-          </div>
-        </nav>
       </header>
 
       {/* Model for account */}
@@ -354,7 +259,7 @@ const Navbar = () => {
             <ul className="list-none">
               <li className="py-2">
                 <Link
-                  onClick={CloseModel}
+                  onClick={closeModal}
                   to="/account"
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
                 >
@@ -364,7 +269,7 @@ const Navbar = () => {
               </li>
               <li className="py-2">
                 <Link
-                  onClick={CloseModel}
+                  onClick={closeModal}
                   to="/order"
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
                 >
@@ -374,7 +279,7 @@ const Navbar = () => {
               </li>
               <li className="py-2">
                 <Link
-                  onClick={CloseModel}
+                  onClick={closeModal}
                   to="/cancelorder"
                   className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm"
                 >
@@ -382,18 +287,21 @@ const Navbar = () => {
                   My Cancellations
                 </Link>
               </li>
-           {typeof userInfo !== 'undefined' && <li className="py-2">
-                <Link
-                  to="/"
-                  onClick={() => {
-                    CloseModel(), Logout();
-                  }}
-                  className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm cursor-pointer"
-                >
-                  <BiLogOut />
-                  Logout
-                </Link>
-              </li>}
+              {userInfo && (
+                <li className="py-2">
+                  <Link
+                    to="/"
+                    onClick={async () => {
+                      closeModal();
+                      await handleLogout();
+                    }}
+                    className="text-gray-700 hover:text-red-600 transition flex items-center gap-3 text-sm cursor-pointer"
+                  >
+                    <BiLogOut />
+                    Logout
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         )}

@@ -92,15 +92,21 @@ const Login = () => {
             aria-label="Password"
             className="border-b border-gray-400 outline-none focus:border-red-600 transition duration-300 px-2 py-2"
           />
+          <div className="flex justify-end">
+            <Link to="/forgot-password" className="text-gray-600 text-sm hover:text-red-600 transition duration-300">
+              Forget Password?
+            </Link>
+          </div>
         </form>
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col gap-3">
           <button onClick={handleLogin} className="bg-red-600 text-white py-2 w-full h-[45px] rounded-md transition duration-300 hover:bg-red-700 active:bg-red-800">
             Login
           </button>
+          
         </div>
         <div className="flex justify-center mt-4">
           <span className="text-gray-600">
-            Don't have an account?{" "}
+            Don&lsquo;t have an account?{" "}
             <Link to="/signup" className="text-red-600 hover:underline">
               SignUp
             </Link>

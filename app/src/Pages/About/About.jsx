@@ -1,277 +1,233 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { apiClient } from "../../lib/api-Client";
+import { GET_ABOUT_CONTENT } from "../../Utils/Constant";
+import { toast } from "react-toastify";
 
 const About = () => {
+  const [loading, setLoading] = useState(true);
+  const [aboutContent, setAboutContent] = useState({
+    title: "Our Story",
+    subtitle: "",
+    paragraphOne: "",
+    paragraphTwo: "",
+    imageUrl: "/About Image.png",
+    serviceCards: [
+      {
+        title: "FREE AND FAST DELIVERY",
+        description: "Free delivery for all orders over $140",
+        image: "/Services.png",
+      },
+      {
+        title: "24/7 CUSTOMER SERVICE",
+        description: "Friendly 24/7 customer support",
+        image: "/Services (1).png",
+      },
+      {
+        title: "MONEY BACK GUARANTEE",
+        description: "We return money within 30 days",
+        image: "/Services (2).png",
+      },
+    ],
+    splitSections: [
+      {
+        title: "Why Customers Choose Us",
+        subtitle: "Trusted quality, fast delivery, and seamless shopping every day.",
+        description:
+          "We focus on reliable service, curated products, and a smooth shopping experience from browse to delivery.",
+        image: "/About Image.png",
+        buttonEnabled: true,
+        buttonText: "Learn More",
+        buttonLink: "/about",
+      },
+      {
+        title: "Built Around Customer Experience",
+        subtitle: "From support to checkout, every detail is designed for convenience.",
+        description:
+          "Our team continuously improves speed, product quality, and post-purchase support so every customer stays confident and happy.",
+        image: "/hero.png",
+        buttonEnabled: true,
+        buttonText: "Explore Products",
+        buttonLink: "/product",
+      },
+    ],
+    stats: [
+      {
+        title: "Total Revenue",
+        value: "₹ 120M+",
+        description: "Revenue generated across all channels",
+        icon: "💰",
+      },
+      {
+        title: "Orders Completed",
+        value: "280K+",
+        description: "Successfully fulfilled orders",
+        icon: "📦",
+      },
+      {
+        title: "Total Customers",
+        value: "450K+",
+        description: "Happy customers shopping with us",
+        icon: "👥",
+      },
+      {
+        title: "Team Members",
+        value: "120+",
+        description: "People building DevBazaar daily",
+        icon: "🚀",
+      },
+    ],
+    teamMembers: [
+      {
+        name: "Tom Cruise",
+        role: "Founder & Chairman",
+        image: "/Frame 874.png",
+      },
+      {
+        name: "Emma Watson",
+        role: "Managing Director",
+        image: "/Frame 875.png",
+      },
+      {
+        name: "Will Smith",
+        role: "Product Designer",
+        image: "/Frame 876.png",
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const fetchAboutContent = async () => {
+      try {
+        const response = await apiClient.get(GET_ABOUT_CONTENT);
+        if (response.status === 200) {
+          setAboutContent(response.data.data || {});
+        }
+      } catch {
+        toast.error("Failed to load about content");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAboutContent();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[70vh] p-8 animate-pulse">
+        <div className="h-10 w-64 bg-gray-200 rounded mb-4"></div>
+        <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+        <div className="h-4 w-11/12 bg-gray-200 rounded mb-2"></div>
+        <div className="h-4 w-10/12 bg-gray-200 rounded mb-8"></div>
+        <div className="h-72 w-full bg-gray-200 rounded-2xl"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-[100vh] mt-10 flex flex-col gap-10">
-      <div className="flex flex-col-reverse lg:flex-row">
-        <div className="flex justify-center items-center ">
-          <div data-aos="fade-right" className=" lg:w-[70%]">
-            <h2 className="font-semibold text-[54px] px-8 my-5 ">Our Story</h2>
-            <p className="px-8 my-5">
-              Launced in 2015, Exclusive is South Asia’s premier online shopping
-              makterplace with an active presense in Bangladesh. Supported by
-              wide range of tailored marketing, data and service solutions,
-              Exclusive has 10,500 sallers and 300 brands and serves 3 millioons
-              customers across the region.
-            </p>
-            <p className="px-8 my-5 ">
-              Exclusive has more than 1 Million products to offer, growing at a
-              very fast. Exclusive offers a diverse assotment in categories
-              ranging from consumer.
-            </p>
+    <div className="mt-10 px-4 md:px-8 lg:px-14 pb-10 overflow-x-hidden">
+      <div className="mt-12 gap-12 flex flex-col items-center">
+        {(aboutContent.splitSections || []).map((section, index) => (
+          <div
+            key={section.title || index}
+            className={`flex flex-col md:items-center gap-8 w-full ${
+              index % 2 === 0 ? "md:flex-row-reverse" : "md:flex-row"
+            }`}
+          >
+            <div className="hidden md:block md:w-1/2 w-full min-w-0">
+              <img
+                src={section.image}
+                alt={section.title}
+                className="w-full max-h-[520px] object-cover rounded-2xl shadow"
+              />
+            </div>
+
+            <div className="space-y-5 min-w-0 w-full md:w-1/2">
+              <h2 className="font-semibold text-4xl md:text-5xl text-gray-900">
+                {section.title}
+              </h2>
+              {section.subtitle ? (
+                <p className="text-lg text-gray-700">{section.subtitle}</p>
+              ) : null}
+              <p className="text-gray-700 leading-8">{section.description}</p>
+              {section.buttonEnabled && section.buttonText && section.buttonLink ? (
+                <a
+                  href={section.buttonLink}
+                  className="inline-flex items-center rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-gray-800"
+                >
+                  {section.buttonText}
+                </a>
+              ) : null}
+            </div>
           </div>
-        </div>
-        <div
-          data-aos="fade-left"
-          className="flex lg:justify-end justify-center w-full"
-        >
-          <img src="/About Image.png" alt="" />
+        ))}
+      </div>
+
+      <div className="mt-12">
+        <h3  className="text-3xl font-semibold text-gray-900 text-center mb-8">
+          Our Growth at a Glance
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+          {(aboutContent.stats || []).map((item, index) => (
+            <div
+              key={item.title}
+              
+              data-aos-delay={index * 80}
+              className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 text-center hover:shadow-md transition-shadow"
+            >
+              <div className="text-3xl mb-3">{item.icon}</div>
+              <p className="text-sm text-gray-500 mb-1">{item.title}</p>
+              <p className="text-2xl font-bold text-gray-900">{item.value}</p>
+              <p className="text-sm text-gray-600 mt-2">{item.description}</p>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-evenly gap-6 w-[80%] mx-auto mt-10">
-        {/* Card 1 */}
-        <div
-          data-aos="fade-down"
-          className="border-[1px] border-gray-400 flex flex-col items-center p-4 text-center rounded-[6px] shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
-        >
-          <img
-            src="/About Services-1.png"
-            alt="Sellers Active"
-            className="w-16 h-16 mb-2"
-          />
-          <p className="text-xl font-semibold">10.5k</p>
-          <p className="text-gray-600">Sellers active on our site</p>
-        </div>
-
-        {/* Card 2 */}
-        <div
-          data-aos="fade-down"
-          className="bg-red-500 rounded-[6px] text-white flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
-        >
-          <img
-            src="/About Services-2.png"
-            alt="Monthly Product Sale"
-            className="w-16 h-16 mb-2"
-          />
-          <p className="text-xl font-semibold">33k</p>
-          <p>Monthly Product Sale</p>
-        </div>
-
-        {/* Card 3 */}
-        <div
-          data-aos="fade-down"
-          className=" border-[1px] border-gray-400  rounded-[6px]  flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
-        >
-          <img
-            src="/About Services-3.png"
-            alt="Customer Active"
-            className="w-16 h-16 mb-2"
-          />
-          <p className="text-xl font-semibold">45.5k</p>
-          <p className="text-gray-600">Customers active on our site</p>
-        </div>
-
-        {/* Card 4 */}
-        <div
-          data-aos="fade-down"
-          className="border-[1px] border-gray-400  rounded-[6px] flex flex-col items-center p-4 text-center shadow-md w-[200px] h-[210px] justify-center cursor-pointer"
-        >
-          <img
-            src="/About Services-4.png"
-            alt="Annual Gross Sale"
-            className="w-16 h-16 mb-2"
-          />
-          <p className="text-xl font-semibold">25k</p>
-          <p className="text-gray-600">Annual gross sale on our site</p>
-        </div>
-      </div>
-
-      <div className="w-[90%] mx-auto my-10">
-        {/* Section Heading */}
-        <h2
-          data-aos="fade-down"
-          className="text-3xl font-semibold text-center mb-10"
-        >
+      <div className="mt-12">
+        <h3  className="text-3xl font-semibold text-gray-900 text-center mb-8">
           Our Team
-        </h2>
-
-        {/* Team Members */}
-        <div
-          data-aos="fade-down"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
-            <img
-              src="/Frame 874.png"
-              alt="Tom Cruise"
-              className="w-24 h-24 rounded-full mb-4 object-cover"
-            />
-            <p className="text-xl font-medium">Tom Cruise</p>
-            <p className="text-gray-500">Founder & Chairman</p>
-            {/* Social Media Links */}
-            <div className="flex gap-4 mt-4">
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-black"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.49 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.16-3.37-1.16-.45-1.14-1.1-1.44-1.1-1.44-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.26-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.03A9.54 9.54 0 0 1 12 6.8c.85.004 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.41.2 2.45.1 2.71.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.67-4.57 4.92.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.16.58.67.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-700"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11.5 20h-3v-10h3v10zm-1.5-11.45c-1 0-1.8-.8-1.8-1.8 0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8c0 1-.8 1.8-1.8 1.8zm13.5 11.45h-3v-5.4c0-1.29-.03-2.94-1.79-2.94s-2.07 1.4-2.07 2.84v5.5h-3v-10h2.88v1.36h.04c.4-.77 1.36-1.58 2.8-1.58 2.99 0 3.54 1.97 3.54 4.53v5.69z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.723c-.951.555-2.005.96-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482c-4.088-.205-7.719-2.164-10.15-5.144a4.822 4.822 0 0 0-.664 2.475c0 1.71.869 3.213 2.188 4.095a4.903 4.903 0 0 1-2.228-.616v.061a4.922 4.922 0 0 0 3.946 4.827 4.996 4.996 0 0 1-2.224.084 4.934 4.934 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.951 13.951 0 0 0 7.548 2.212c9.142 0 14.307-7.721 13.995-14.646a9.936 9.936 0 0 0 2.457-2.549z" />
-                </svg>
-              </a>
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(aboutContent.teamMembers || []).map((member, index) => (
+            <div
+              key={member.name}
+              
+              data-aos-delay={index * 90}
+              className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md bg-white"
+            >
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-24 h-24 rounded-full mb-4 object-cover"
+              />
+              <h4 className="text-xl font-medium text-gray-900">{member.name}</h4>
+              <p className="text-gray-500">{member.role}</p>
             </div>
-          </div>
-
-          <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
-            <img
-              src="/Frame 875.png"
-              alt="Emma Watson"
-              className="w-24 h-24 rounded-full mb-4 object-cover"
-            />
-            <p className="text-xl font-medium">Emma Watson</p>
-            <p className="text-gray-500">Managing Director</p>
-            <div className="flex gap-4 mt-4">
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-black"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.49 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.16-3.37-1.16-.45-1.14-1.1-1.44-1.1-1.44-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.26-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.03A9.54 9.54 0 0 1 12 6.8c.85.004 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.41.2 2.45.1 2.71.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.67-4.57 4.92.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.16.58.67.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-700"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11.5 20h-3v-10h3v10zm-1.5-11.45c-1 0-1.8-.8-1.8-1.8 0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8c0 1-.8 1.8-1.8 1.8zm13.5 11.45h-3v-5.4c0-1.29-.03-2.94-1.79-2.94s-2.07 1.4-2.07 2.84v5.5h-3v-10h2.88v1.36h.04c.4-.77 1.36-1.58 2.8-1.58 2.99 0 3.54 1.97 3.54 4.53v5.69z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.723c-.951.555-2.005.96-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482c-4.088-.205-7.719-2.164-10.15-5.144a4.822 4.822 0 0 0-.664 2.475c0 1.71.869 3.213 2.188 4.095a4.903 4.903 0 0 1-2.228-.616v.061a4.922 4.922 0 0 0 3.946 4.827 4.996 4.996 0 0 1-2.224.084 4.934 4.934 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.951 13.951 0 0 0 7.548 2.212c9.142 0 14.307-7.721 13.995-14.646a9.936 9.936 0 0 0 2.457-2.549z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center text-center border p-6 rounded-lg shadow-md">
-            <img
-              src="/Frame 876.png"
-              alt="Will Smith"
-              className="w-24 h-24 rounded-full mb-4 object-cover"
-            />
-            <p className="text-xl font-medium">Will Smith</p>
-            <p className="text-gray-500">Product Designer</p>
-            <div className="flex gap-4 mt-4">
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-black"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.49 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.16-3.37-1.16-.45-1.14-1.1-1.44-1.1-1.44-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.26-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.03A9.54 9.54 0 0 1 12 6.8c.85.004 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.41.2 2.45.1 2.71.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.67-4.57 4.92.36.31.68.92.68 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.16.58.67.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-700"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11.5 20h-3v-10h3v10zm-1.5-11.45c-1 0-1.8-.8-1.8-1.8 0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8c0 1-.8 1.8-1.8 1.8zm13.5 11.45h-3v-5.4c0-1.29-.03-2.94-1.79-2.94s-2.07 1.4-2.07 2.84v5.5h-3v-10h2.88v1.36h.04c.4-.77 1.36-1.58 2.8-1.58 2.99 0 3.54 1.97 3.54 4.53v5.69z" />
-                </svg>
-              </a>
-              <a rel="noopener noreferrer">
-                <svg
-                  className="w-6 h-6 text-gray-600 hover:text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.723c-.951.555-2.005.96-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482c-4.088-.205-7.719-2.164-10.15-5.144a4.822 4.822 0 0 0-.664 2.475c0 1.71.869 3.213 2.188 4.095a4.903 4.903 0 0 1-2.228-.616v.061a4.922 4.922 0 0 0 3.946 4.827 4.996 4.996 0 0 1-2.224.084 4.934 4.934 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.951 13.951 0 0 0 7.548 2.212c9.142 0 14.307-7.721 13.995-14.646a9.936 9.936 0 0 0 2.457-2.549z" />
-                </svg>
-              </a>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div
-        data-aos="fade-down"
-        className="flex w-[80%] lg:flex-row flex-col m-auto my-8 justify-evenly"
-      >
-        <div className="flex flex-col gap-5 mx-3 mb-8">
-          <img
-            src="/Services.png"
-            className="h-[50px] w-[50px] m-auto"
-            alt=""
-          />
-          <h2 className="text-[20px] font-semibold text-center">
-            FREE AND FAST DELIVERY
-          </h2>
-          <p className="text-[14px] text-center">
-            Free delivery for all orders over $140
-          </p>
-        </div>
-        <div className="flex flex-col gap-5 mx-3 mb-8">
-          <img
-            src="/Services (1).png"
-            className="h-[50px] w-[50px] m-auto"
-            alt=""
-          />
-          <h2 className="text-[20px] font-semibold text-center">
-            24/7 CUSTOMER SERVICE
-          </h2>
-          <p className="text-[14px] text-center">
-            Friendly 24/7 customer support
-          </p>
-        </div>
-        <div className="flex flex-col gap-5 mx-3 mb-8">
-          <img
-            src="/Services (2).png"
-            className="h-[50px] w-[50px] m-auto "
-            alt=""
-          />
-          <h2 className="text-[20px] font-semibold text-center">
-            MONEY BACK GUARANTEE
-          </h2>
-          <p className="text-[14px] text-center">
-            We reurn money within 30 days
-          </p>
+      <div className="mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(aboutContent.serviceCards || []).map((card, index) => (
+            <div
+              key={card.title || index}
+              
+              data-aos-delay={index * 90}
+              className="flex flex-col items-center text-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-black/90 p-2">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="h-10 w-10 object-contain"
+                />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">{card.title}</h3>
+              <p className="text-sm text-gray-600 leading-6">{card.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

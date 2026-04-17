@@ -23,7 +23,7 @@ const WishList = () => {
             Move All to Bag
           </button>
         </div>
-        <div data-aos="fade-down" className="flex flex-wrap justify-center gap-5 m-auto my-6">
+        <div className="flex flex-wrap justify-center gap-5 m-auto my-6">
           {wishListItems.map((product) => (
             <WishListCard key={product._id} data={product} />
           ))}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppStore } from "../../Store";
 import { useParams } from "react-router-dom";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaRegHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { apiClient } from "../../lib/api-Client";
 import { ADD_TO_CART, ADD_TO_WISHLIST, GET_REVIEW } from "../../Utils/Constant";
@@ -10,13 +9,19 @@ import ProductCard from "../../Component/Home/ProductCard";
 const ProductDetail = () => {
   const [data, setData] = useState([]); // Initialize as an empty array
   const [review, setReviews] = useState();
-  const { ProductName } = useParams();
+  const { productId } = useParams();
   const { productData, addCartItem, addWishListItem, userInfo } = useAppStore();
 
-  const product = productData?.find(
-    (product) => product.Product_name === ProductName
-  );
-console.log(product)
+  const product = productData?.find((item) => String(item._id) === String(productId));
+
+  if (!productData || productData.length === 0) {
+    return (
+      <div className="min-h-[100vh] flex justify-center items-center">
+        Loading product...
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="min-h-[100vh] flex justify-center items-center">
@@ -104,8 +109,8 @@ console.log(product)
   useEffect(() => {
     const limitedData = productData.slice(0, 5);
     setData(limitedData);
-    FetchReview()
-  }, []);
+    FetchReview();
+  }, [productData, productId]);
 
   return (
     <div className="min-h-[100vh]">

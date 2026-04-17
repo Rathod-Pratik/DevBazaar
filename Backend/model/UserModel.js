@@ -17,7 +17,19 @@ const UserSchema = new mongoose.Schema({
   LastName: {
     type: String,
   },
+  mobileNumber: {
+    type: String,
+  },
   address: {
+    type: String,
+  },
+  town: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  companyName: {
     type: String,
   },
   status: {

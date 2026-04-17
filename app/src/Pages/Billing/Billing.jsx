@@ -13,7 +13,7 @@ const Billing = () => {
     townCity: "",
     phoneNumber: "",
     emailAddress: "",
-    cartItems:cartItems
+    cartItems: cartItems,
   });
 
   const validateCart = () => {
@@ -41,7 +41,7 @@ const Billing = () => {
       toast.error("Valid Email Address is required");
       return;
     }
-    
+
     return true;
   };
   let totalPrice = 0;
@@ -73,7 +73,10 @@ const Billing = () => {
       </h1>
       <div className="flex flex-col lg:flex-row gap-6 lg:w-full  justify-center">
         {/* Left Section */}
-        <div data-aos="fade-right" className="w-[70%] m-auto lg:w-full gap-4 flex flex-col"  >
+        <div
+          data-aos="fade-right"
+          className="w-[70%] m-auto lg:w-full gap-4 flex flex-col"
+        >
           {[
             { label: "Name*", name: "firstName" },
             { label: "Company Name*", name: "companyName" },
@@ -98,7 +101,10 @@ const Billing = () => {
         </div>
 
         {/* Right Section */}
-        <div data-aos="fade-left" className="flex flex-col gap-3 mt-6 w-[70%] m-auto lg:w-full">
+        <div
+          data-aos="fade-left"
+          className="flex flex-col gap-3 mt-6 w-[70%] m-auto lg:w-full"
+        >
           <div className="flex flex-col gap-6 w-full lg:w-[90%] justify-between mx-auto">
             {cartItems && cartItems.length > 0 ? (
               cartItems.map((product, index) => (

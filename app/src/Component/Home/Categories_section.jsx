@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const Categories_section = () => {
+const getDefaultTargetDate = () => {
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 20);
+  targetDate.setHours(targetDate.getHours() + 23);
+  targetDate.setMinutes(0);
+  targetDate.setSeconds(0);
+  return targetDate;
+};
+
+const Categories_section = ({ sectionData }) => {
+    const content = {
+      tag: "Categories",
+      title: "Enhance Your Music Experience",
+      buttonText: "Buy Now",
+      buttonLink: "/product",
+      imageUrl: "/Frame 694.png",
+      countdownEndAt: null,
+      ...(sectionData || {}),
+    };
+
     const [timeLeft, setTimeLeft] = useState({
         days: 0,
         hours: 0,
@@ -10,12 +30,10 @@ const Categories_section = () => {
     
       // Function to calculate the remaining time
       const calculateTimeLeft = () => {
-        const now = new Date(); // Current time
-        const targetDate = new Date(); // Starting from now
-        targetDate.setDate(targetDate.getDate() + 20); // Add 20 days
-        targetDate.setHours(targetDate.getHours() + 23); // Add 23 hours
-        targetDate.setMinutes(0); // Set minutes to 0
-        targetDate.setSeconds(0); // Set seconds to 0
+        const now = new Date();
+        const targetDate = content.countdownEndAt
+          ? new Date(content.countdownEndAt)
+          : getDefaultTargetDate();
     
         const difference = targetDate - now; // Calculate difference in milliseconds
     
@@ -33,17 +51,18 @@ const Categories_section = () => {
     
       // Run the calculation every second
       useEffect(() => {
+        calculateTimeLeft();
         const timer = setInterval(calculateTimeLeft, 1000);
-        return () => clearInterval(timer); // Clear the interval when the component unmounts
-      }, []);
+        return () => clearInterval(timer);
+      }, [content.countdownEndAt]);
     
   return (
     <div className="flex flex-col-reverse md:flex-row items-center bg-black text-white p-4 md:p-8  md:min-h-[80vh] gap-8 md:gap-12">
     {/* Text Content */}
     <div data-aos="fade-right" className="flex flex-col justify-center text-start w-full md:w-1/2 p-4 space-y-6 md:space-y-8">
-      <p className="text-[#00FF66] text-sm md:text-base font-semibold">Categories</p>
+      <p className="text-[#00FF66] text-sm md:text-base font-semibold">{content.tag}</p>
       <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-        Enhance Your <br className="hidden md:block" /> Music Experience
+        {content.title}
       </h1>
       
       {/* Timer Section */}
@@ -56,16 +75,19 @@ const Categories_section = () => {
         ))}
       </div>
   
-      <button className="bg-[#00FF66] text-white px-6 py-3 rounded-lg w-fit text-sm md:text-base hover:bg-green-600 transition-colors mt-4">
-        Buy Now
-      </button>
+      <Link
+        to={content.buttonLink}
+        className="bg-[#00FF66] text-white px-6 py-3 rounded-lg w-fit text-sm md:text-base hover:bg-green-600 transition-colors mt-4"
+      >
+        {content.buttonText}
+      </Link>
     </div>
   
     {/* Image Section */}
     <div data-aos="fade-left" className="w-full md:w-1/2 flex items-center justify-center p-4">
       <div className="relative w-full max-w-xl aspect-[1/1]">
         <img 
-          src="/Frame 694.png" 
+          src={content.imageUrl}
           alt="Music Experience" 
           className="w-full h-full object-contain object-center" 
         />

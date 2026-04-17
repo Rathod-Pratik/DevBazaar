@@ -34,6 +34,12 @@ const navigate=useNavigate();
     }
 
     return new Promise((resolve) => {
+      const existingScript = document.querySelector(`script[src="${src}"]`);
+      if (existingScript) {
+        resolve(true);
+        return;
+      }
+
       const script = document.createElement("script");
       script.src = src;
       script.onload = () => {
@@ -47,6 +53,10 @@ const navigate=useNavigate();
   };
 
   const handlePayment = async () => {
+    if (!cartItems || cartItems.length === 0) {
+      return toast.error("Your cart is empty");
+    }
+
     if (!validateCart()) {
       return toast.error("Please Enter Valide details");
     }
@@ -56,6 +66,7 @@ const navigate=useNavigate();
         "https://checkout.razorpay.com/v1/checkout.js"
       );
       if (!res) {
+        SetLoading(false);
         return console.error(
           "Razorpay SDK failed to load. Please check your network."
         );
@@ -91,6 +102,8 @@ const navigate=useNavigate();
             });
 
             if (!verifyRes.data.success) {
+              SetLoading(false)
+              toast.error("Payment failed. Please try again.");
               return toast.error("Payment verification failed.");
             }
 
@@ -110,8 +123,8 @@ const navigate=useNavigate();
                   city: formData.townCity,
                   phoneNumber: formData.phoneNumber,
                   email: formData.emailAddress,
-                  productData: formData.cartItems,
-                  apartment: formData.apartment,
+                  productData: cartItems,
+                  apartment: formData.apartment || "",
                 },
                 { withCredentials: true }
               );
@@ -131,6 +144,7 @@ const navigate=useNavigate();
           } catch (error) {
             console.error("Error in payment processing:", error);
             toast.error("Something went wrong. Please try again.");
+            SetLoading(false)
           }
         },
 
@@ -144,14 +158,25 @@ const navigate=useNavigate();
         theme: {
           color: "#3399cc",
         },
+        modal: {
+          ondismiss: function () {
+            SetLoading(false);
+            toast.error("Payment cancelled.");
+          },
+        },
       };
 
       // ✅ Open Razorpay Checkout
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function () {
+        SetLoading(false);
+        toast.error("Payment failed. Please try again.");
+      });
       rzp.open();
     } catch (error) {
       console.error("Payment Error:", error);
-      toast.error("Payment failed. Please try again.");
+      toast.error(error?.response?.data?.error || "Payment failed. Please try again.");
+      SetLoading(false)
     }
   };
 

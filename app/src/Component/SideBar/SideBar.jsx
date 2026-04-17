@@ -39,6 +39,7 @@ function Sidebar() {
     { to: "/admin/user", icon: <FaUser />, label: "Users" },
     { to: "/admin/contact", icon: <FaMessage />, label: "Contacts" },
     { to: "/admin/review", icon: <FaStar />, label: "review" },
+    { to: "/admin/about", icon: <FaBlog />, label: "About Us" },
     { to: "/admin/profile", icon: <IoSettings />, label: "Profile" },
   ];
 
@@ -63,7 +64,7 @@ function Sidebar() {
       <div
         className={`fixed top-[71px] left-0 h-[calc(100vh-71px)] z-50 bg-white shadow-md transition-transform duration-300 xl:translate-x-0
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-         w-[250px]`}
+        w-[320px]`}
       >
         {/* Sidebar Links */}
         <div className="flex flex-col px-4 pt-6 text-base space-y-2 h-full">

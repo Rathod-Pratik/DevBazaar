@@ -18,6 +18,8 @@ import paymentRoutes from '../routes/PaymentRoutes.js';
 import CategoryRoutes from '../routes/CategoryRoutes.js';
 import AdminRoutes from '../routes/AdminRoutes.js';
 import ReviewRoutes from '../routes/ReviewRoutes.js';
+import HomeContentRoutes from '../routes/HomeContentRoutes.js';
+import AboutContentRoutes from '../routes/AboutContentRoutes.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -67,6 +69,8 @@ app.use('/payment', paymentRoutes);
 app.use('/category', CategoryRoutes);
 app.use('/Admin', AdminRoutes);
 app.use('/review', ReviewRoutes);
+app.use('/home', HomeContentRoutes);
+app.use('/about', AboutContentRoutes);
 
 app.get("/auth/check", (req, res) => {
   const token = req.cookies.adminToken;

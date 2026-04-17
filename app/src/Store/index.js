@@ -14,16 +14,16 @@ export const useAppStore = create(
       ...createCategorySlice(set,get),
       ...createProcessSlice(set,get),
       ...createOrderSlice(set,get),
-      ...createProductDataSlice(set,get), // Include the productData slice logic
-      ...createAuthSlice(set, get), // Include the auth slice logic
-      ...createWishListSlice(set,get), // Include the WishList slice logic
-      ...createCartSlice(set,get), // Include the Cart slice logic
-      loggedIn: false, // Default state
-      setLoggedIn: (status) => set({ loggedIn: status }), // Update loggedIn state
+      ...createProductDataSlice(set,get), 
+      ...createAuthSlice(set, get), 
+      ...createWishListSlice(set,get),
+      ...createCartSlice(set,get),
+      loggedIn: false, 
+      setLoggedIn: (status) => set({ loggedIn: status }), 
     }),
     {
-      name: "auth-storage", // Key for localStorage
-      getStorage: () => localStorage, // Use localStorage for persistence
+      name: "auth-storage", 
+      getStorage: () => localStorage,
     }
   )
 );

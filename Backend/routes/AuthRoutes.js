@@ -1,4 +1,4 @@
-import { signup, Login, GetUser, BlockUser, DeleteUser, UnblockUser, Logout } from '../controller/AuthController.js'
+import { signup, Login, GetUser, BlockUser, DeleteUser, UnblockUser, Logout, ForgotPassword, VerifyOTP, ResetPassword } from '../controller/AuthController.js'
 import { body } from 'express-validator';
 import express from 'express'
 import { verifyAdmin } from '../middleware/User.middleware.js';
@@ -17,5 +17,8 @@ router.get('/getUser' ,verifyAdmin,GetUser);
 router.post('/blockUser/:_id' ,verifyAdmin,BlockUser);
 router.post('/UnblockUser/:_id' ,verifyAdmin,UnblockUser);
 router.delete('/deleteUser/:_id' ,verifyAdmin,DeleteUser)
+router.post('/auth/forgot-password', ForgotPassword);
+router.post('/auth/verify-otp', VerifyOTP);
+router.post('/auth/reset-password', ResetPassword);
 
 export default router;
