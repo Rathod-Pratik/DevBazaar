@@ -1,3 +1,4 @@
+import "module-alias/register";
 import app from './api/index.js'
 
 const PORT = process.env.PORT || 3000

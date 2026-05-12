@@ -1,0 +1,11 @@
+{
+  "type": "module",
+
+  "_moduleAliases": {
+    "@middleware": "src/Middleware",
+    "@module": "src/Module",
+    "@models": "src/models",
+    "@utils": "src/Utils",
+    "@api":"src/api"
+  }
+}
