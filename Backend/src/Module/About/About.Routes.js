@@ -1,7 +1,6 @@
 import express from "express";
 import {
   GetAbout,
-  UpdateAbout,
   UpdateHero,
   UpdateStats,
   DeleteStat,
@@ -12,8 +11,8 @@ import {
   UpdateFeature,
   DeleteFeature,
 } from "./About.Controller.js";
-import upload from "@middleware/Multer.Middleware.js";
-import { verifyAdmin } from "@middleware/Auth.middleware.js";
+import upload from "../../Middleware/Multer.Middleware.js";
+import { verifyAdmin } from "../../Middleware/Auth.middleware.js";
 
 const router = express.Router();
 
@@ -32,7 +31,6 @@ const typeHandler = (handlers) => {
   };
 };
 
-// PUT endpoints with type parameter
 router.put("/update", verifyAdmin, upload.single("image"), typeHandler({
   hero: UpdateHero,
   stats: UpdateStats,
@@ -40,13 +38,11 @@ router.put("/update", verifyAdmin, upload.single("image"), typeHandler({
   features: UpdateFeature,
 }));
 
-// POST endpoints with type parameter
 router.post("/update", verifyAdmin, upload.single("image"), typeHandler({
   team: CreateTeamMember,
   features: CreateFeature,
 }));
 
-// DELETE endpoints with type parameter and ID
 router.delete("/delete/:id", verifyAdmin, typeHandler({
   stats: DeleteStat,
   team: DeleteTeamMember,

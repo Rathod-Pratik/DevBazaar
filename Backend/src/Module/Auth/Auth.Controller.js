@@ -1,7 +1,7 @@
 import User from "./Auth.Model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { sendOTPEmail } from "@utils/Mail.js";
+import { sendOTPEmail } from "../../Utils/Mail.js";
 import { forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, userActionSchema, validate, verifyOtpSchema } from "./Auth.Validation.js";
 
 export const signup = async (req, res) => {

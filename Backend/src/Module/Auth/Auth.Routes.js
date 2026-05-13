@@ -1,6 +1,6 @@
 import { signup, Login, GetUser, BlockUser, DeleteUser, UnblockUser, Logout, ForgotPassword, VerifyOTP, ResetPassword } from './Auth.Controller.js'
 import express from 'express'
-import { verifyAdmin } from '@middleware/Auth.middleware.js';
+import { verifyAdmin } from '../../Middleware/Auth.middleware.js';
 const router=express.Router();
 
 router.post('/auth/signup',signup);

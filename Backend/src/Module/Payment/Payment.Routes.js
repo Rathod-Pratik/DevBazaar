@@ -1,6 +1,6 @@
 import express from 'express';
 import { verifyOrder, createOrder, Refund, GetPaymentData } from './Payment.Controller.js'
-import { verifyAdmin, verifyUser } from '@middleware/Auth.middleware.js';
+import { verifyAdmin, verifyUser } from '../../Middleware/Auth.middleware.js';
 
 const route=express.Router();
 

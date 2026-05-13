@@ -5,7 +5,7 @@ import {
     productIdsQuerySchema,
     reviewCreateSchema,
 } from "./Review.Validation.js";
-import { deleteFile, uploadFileToS3, getSignedUrlS3 } from "@utils/Function.js";
+import { deleteFile, uploadFileToS3, getSignedUrlS3 } from "../../Utils/Function.js";
 
 const formatValidationErrors = (error) => error.issues.map((err) => err.message).join(", ");
 

@@ -5,10 +5,8 @@ const voucherSchema = new mongoose.Schema(
     code: {
       type: String,
       required: true,
-      unique: true,
       uppercase: true,
       trim: true,
-      index: true,
     },
 
     type: {
@@ -71,6 +69,8 @@ const voucherSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+voucherSchema.index({ code: 1 }, { unique: true });
 
 const VoucherModel = mongoose.model("Voucher", voucherSchema);
 

@@ -6,6 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
+import redis from "./Redis.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -210,7 +211,6 @@ export const Get_Signed_Url = async ({ key }) => {
     return { url: signedUrl };
 };
 
-// Wrapper to get signed URL from a full S3 URL
 export const getSignedUrlS3 = async (fileUrl) => {
     if (!fileUrl) {
         return fileUrl;
@@ -230,3 +230,30 @@ export const getSignedUrlS3 = async (fileUrl) => {
     }
 };
 
+export const setCache = async (key, data, expiry = 86400) => {
+        try {
+                await redis.set(key, JSON.stringify(data), "EX", expiry);
+                return true;
+        } catch (error) {
+                return false;
+        }
+};
+
+export const getCache = async (key) => {
+        try {
+                const data = await redis.get(key);
+                if (!data) return null;
+                return JSON.parse(data);
+        } catch (error) {
+                return null;
+        }
+};
+
+export const deleteCache = async (key) => {
+        try {
+                await redis.del(key);
+                return true;
+        } catch (error) {
+                return false;
+        }
+};

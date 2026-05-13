@@ -1,6 +1,6 @@
 import express from "express";
 import { ApplyVoucherToOrder, CreateVoucher, DeleteVoucher, GetAllVoucher, GetVoucherById, UpdateVoucher } from "./Voucher.Controller.js";
-import { verifyAdmin, verifyUser } from "@middleware/Auth.middleware.js";
+import { verifyAdmin, verifyUser } from "../../Middleware/Auth.middleware.js";
 
 const route = express.Router();
 

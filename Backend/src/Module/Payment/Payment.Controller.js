@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { razorpayInstance } from "../../../api/index.js";
+import { razorpayInstance } from "../../api/index.js";
 import CartModel from "../Cart/Cart.Model.js";
 import OrderModel from "../Order/Order.Model.js";
 import PaymentModel from "./Payment.Model.js";

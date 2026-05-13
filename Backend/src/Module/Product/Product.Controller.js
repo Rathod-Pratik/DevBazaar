@@ -1,6 +1,74 @@
 import ProductModel from "./Product.model.js";
-import { uploadFileToS3, getSignedUrlS3 } from "@utils/Function.js";
+import { uploadFileToS3, getSignedUrlS3, getCache, setCache } from "../../Utils/Function.js";
 import { createProductSchema, updateProductSchema, validate } from "./Product.Validation.js";
+import redis from "../../Utils/Redis.js";
+
+const PRODUCT_CACHE_VERSION_KEY = "product:cache:version";
+const PRODUCT_LIST_CACHE_PREFIX = "product:list";
+const PRODUCT_DETAIL_CACHE_PREFIX = "product:detail";
+const PRODUCT_SIGNED_URL_CACHE_PREFIX = "product:signed-url";
+const PRODUCT_CACHE_TTL = 3600;
+
+const safeRedisGet = async (key) => {
+  try {
+    return await redis.get(key);
+  } catch (error) {
+    return null;
+  }
+};
+
+const safeRedisIncr = async (key) => {
+  try {
+    await redis.incr(key);
+  } catch (error) {
+    return null;
+  }
+};
+
+const getCacheVersion = async () => {
+  const version = await safeRedisGet(PRODUCT_CACHE_VERSION_KEY);
+  return version || "0";
+};
+
+const invalidateProductCache = async () => {
+  await safeRedisIncr(PRODUCT_CACHE_VERSION_KEY);
+};
+
+const getCachedSignedUrl = async (fileUrl) => {
+  if (!fileUrl) return fileUrl;
+
+  const cacheKey = `${PRODUCT_SIGNED_URL_CACHE_PREFIX}:${fileUrl}`;
+  const cachedUrl = await getCache(cacheKey);
+  if (cachedUrl) return cachedUrl;
+
+  const signedUrl = await getSignedUrlS3(fileUrl);
+  if (signedUrl && signedUrl !== fileUrl) {
+    await setCache(cacheKey, signedUrl, PRODUCT_CACHE_TTL);
+  }
+
+  return signedUrl;
+};
+
+const mapProductWithUrls = async (product) => {
+  const item = product.toObject ? product.toObject() : product;
+
+  const imageKeys = Array.isArray(item.image) ? item.image : [];
+  const menifectureKeys = Array.isArray(item.Menifecture_image) ? item.Menifecture_image : [];
+
+  const image = await Promise.all(
+    imageKeys.map(async (key) => ({ key, url: await getCachedSignedUrl(key) }))
+  );
+
+  const Menifecture_image = await Promise.all(
+    menifectureKeys.map(async (key) => ({ key, url: await getCachedSignedUrl(key) }))
+  );
+
+  return {
+    ...item,
+    image,
+    Menifecture_image,
+  };
+};
 
 export const Create_Product = async (req, res) => {
   const validated = validate(createProductSchema, req.body);
@@ -56,12 +124,16 @@ export const Create_Product = async (req, res) => {
     };
 
     const AddProduct = await ProductModel.create(payload);
-    if (AddProduct) return res.status(201).json({ success: true, data: AddProduct });
+    if (AddProduct) {
+      await invalidateProductCache();
+      return res.status(201).json({ success: true, data: AddProduct });
+    }
     return res.status(400).json({ error: "Failed to create product" });
   } catch (error) {
     return res.status(400).json({ error: error.message || error });
   }
 };
+
 export const Delete_Product = async (req, res) => {
   const { id } = req.params;
 
@@ -76,6 +148,7 @@ export const Delete_Product = async (req, res) => {
     );
 
     if (updated) {
+      await invalidateProductCache();
       return res.status(200).send("Product marked as deleted");
     } else {
       return res.status(400).send("Failed to mark Product as deleted");
@@ -84,6 +157,7 @@ export const Delete_Product = async (req, res) => {
     return res.status(400).json({ Message: error });
   }
 };
+
 export const Update_Product = async (req, res) => {
   const validated = validate(updateProductSchema, req.body);
   if (!validated.success) return res.status(400).json({ error: validated.message });
@@ -91,6 +165,11 @@ export const Update_Product = async (req, res) => {
   const data = validated.data;
 
   try {
+    const productId = req.params.id || data._id;
+    if (!productId) {
+      return res.status(400).json({ error: "Product ID is required" });
+    }
+
     const updateFields = {};
     if (data.Product_name) updateFields.Product_name = data.Product_name;
     if (data.discount !== undefined) updateFields.discount = data.discount;
@@ -134,56 +213,80 @@ export const Update_Product = async (req, res) => {
       if (uploaded && uploaded.key) updateFields.image = [uploaded.key];
     }
 
-    const updateProduct = await ProductModel.findByIdAndUpdate(data._id, updateFields, { new: true });
+    const updateProduct = await ProductModel.findByIdAndUpdate(productId, updateFields, { new: true });
 
-    if (updateProduct) return res.status(200).json({ data: updateProduct, Message: "Product updated Successfully" });
+    if (updateProduct) {
+      await invalidateProductCache();
+      return res.status(200).json({ data: updateProduct, Message: "Product updated Successfully" });
+    }
     return res.status(400).json({ error: "Failed to update product" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
 };
+
 export const Get_Product = async (req, res) => {
   try {
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = Math.max(1, Number(req.query.limit) || 10);
+    const version = await getCacheVersion();
+    const cacheKey = `${PRODUCT_LIST_CACHE_PREFIX}:v${version}:page:${page}:limit:${limit}:productId:${req.query.productId || "all"}:categoryId:${req.query.categoryId || "all"}`;
+
+    const cachedResponse = await getCache(cacheKey);
+    if (cachedResponse) {
+      return res.status(200).json(cachedResponse);
+    }
+
     const skip = (page - 1) * limit;
 
-    // Exclude soft-deleted items
     const filter = { isDelete: { $ne: true } };
+    if (req.query.productId) {
+      filter._id = req.query.productId;
+    }
+    if (req.query.categoryId) {
+      filter.category = req.query.categoryId;
+    }
 
     const [total, products] = await Promise.all([
       ProductModel.countDocuments(filter),
       ProductModel.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
     ]);
 
-    if (!products || products.length === 0) {
-      return res.status(200).json({ items: [], page, limit, total, totalPages: Math.ceil(total / limit) });
+    const mapped = await Promise.all((products || []).map((product) => mapProductWithUrls(product)));
+    const response = { items: mapped, page, limit, total, totalPages: Math.ceil(total / limit) };
+
+    await setCache(cacheKey, response, PRODUCT_CACHE_TTL);
+    return res.status(200).json(response);
+
+  } catch (error) {
+    return res.status(400).json({ error: error.message || error });
+  }
+};
+
+export const Get_Product_ById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Product ID is required" });
     }
 
-    const mapped = await Promise.all(
-      products.map(async (p) => {
-        const item = p.toObject ? p.toObject() : p;
+    const version = await getCacheVersion();
+    const cacheKey = `${PRODUCT_DETAIL_CACHE_PREFIX}:v${version}:id:${id}`;
+    const cachedResponse = await getCache(cacheKey);
+    if (cachedResponse) {
+      return res.status(200).json(cachedResponse);
+    }
 
-        const images = Array.isArray(item.image) ? item.image : [];
-        const menif = Array.isArray(item.Menifecture_image) ? item.Menifecture_image : [];
+    const product = await ProductModel.findOne({ _id: id, isDelete: { $ne: true } });
 
-        const imageWithUrls = await Promise.all(
-          images.map(async (key) => ({ key, url: await getSignedUrlS3(key) }))
-        );
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
-        const menifWithUrls = await Promise.all(
-          menif.map(async (key) => ({ key, url: await getSignedUrlS3(key) }))
-        );
-
-        return {
-          ...item,
-          image: imageWithUrls,
-          Menifecture_image: menifWithUrls,
-        };
-      })
-    );
-
-    return res.status(200).json({ items: mapped, page, limit, total, totalPages: Math.ceil(total / limit) });
+    const response = { data: await mapProductWithUrls(product) };
+    await setCache(cacheKey, response, PRODUCT_CACHE_TTL);
+    return res.status(200).json(response);
 
   } catch (error) {
     return res.status(400).json({ error: error.message || error });

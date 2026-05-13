@@ -17,8 +17,8 @@ import {
   updateFeaturedReviews,
   deleteFeaturedReviews,
 } from "./Home.Controller.js";
-import { verifyAdmin } from "@middleware/Auth.middleware.js";
-import upload from "@middleware/Multer.Middleware.js";
+import { verifyAdmin } from "../../Middleware/Auth.middleware.js";
+import upload from "../../Middleware/Multer.Middleware.js";
 
 const router = express.Router();
 

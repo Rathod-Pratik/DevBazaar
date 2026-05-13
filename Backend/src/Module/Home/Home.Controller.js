@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { HeroModel, CategoriesModel, saleModel, ReviewModel as FeaturedReviewModel } from "./Home.Model.js";
 import ProductModel from "../Product/Product.model.js";
 import ReviewModel from "../Review/Review.Model.js";
-import { uploadFileToS3 } from "@utils/Function.js";
+import { uploadFileToS3 } from "../../Utils/Function.js";
 import {
   heroCreateSchema,
   heroUpdateSchema,

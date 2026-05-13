@@ -10,20 +10,17 @@ const paymentSchema = new mongoose.Schema(
 		gatewayOrderId: {
 			type: String,
 			default: "",
-			index: true,
 		},
 
 		orderId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Order",
 			default: null,
-			index: true,
 		},
 
 		gatewayPaymentId: {
 			type: String,
 			default: "",
-			index: true,
 		},
 
 		gatewaySignature: {
@@ -69,6 +66,10 @@ const paymentSchema = new mongoose.Schema(
 	},
 	{ timestamps: true }
 );
+
+paymentSchema.index({ gatewayOrderId: 1 });
+paymentSchema.index({ orderId: 1 });
+paymentSchema.index({ gatewayPaymentId: 1 });
 
 const PaymentModel = mongoose.model("Payment", paymentSchema);
 

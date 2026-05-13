@@ -1,14 +1,13 @@
 import express from 'express'
-import { Get_Product, Delete_Product, Update_Product, Create_Product } from "./Product.Controller.js";
-import upload from '@middleware/Multer.Middleware.js';
-import { verifyAdmin } from '@middleware/Auth.middleware.js';
+import { Get_Product, Get_Product_ById, Delete_Product, Update_Product, Create_Product } from "./Product.Controller.js";
+import upload from '../../Middleware/Multer.Middleware.js';
+import { verifyAdmin } from '../../Middleware/Auth.middleware.js';
 
 const router = express.Router();
 
-// Get products with pagination (query params: page, limit)
 router.get("/getproduct", Get_Product);
+router.get("/getproduct/:id", Get_Product_ById);
 
-// Create product with main image and optional menifecture images
 router.post(
   "/createproduct",
   verifyAdmin,

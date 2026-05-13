@@ -1,6 +1,6 @@
 import { CreateReview, DeleteReview, GetAllReview, GetReview, GetReviewsByProducts } from './Review.Controller.js';
 import express from 'express'
-import { verifyAdmin, verifyUser } from '@middleware/Auth.middleware.js';
+import { verifyAdmin, verifyUser } from '../../Middleware/Auth.middleware.js';
 import upload from '../../Middleware/Multer.Middleware.js';
 const route = express.Router();
 

@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 // Routes
 import AuthRoutes from '../Module/Auth/Auth.Routes.js';
 import WishListRoute from '../Module/WishList/WishList.Routes.js';
-import BillingRoutes from '../Module/Billing/Billing.Routes.js';
 import ProductRoutes from '../Module/Product/Product.Routes.js';
 import CartRoute from '../Module/Cart/Cart.Routes.js';
 import ContectRoutes from '../Module/Contact/Contect.Routes.js';
@@ -61,7 +60,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', AuthRoutes);
 app.use('/wishList', WishListRoute);
-app.use('/Billing', BillingRoutes);
 app.use('/Product', ProductRoutes);
 app.use('/Cart', CartRoute);
 app.use('/Contect', ContectRoutes);

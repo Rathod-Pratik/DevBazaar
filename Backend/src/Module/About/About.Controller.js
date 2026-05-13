@@ -1,6 +1,6 @@
 import AboutModel from "./About.Model.js";
 import { heroUpdateSchema, statsUpdateSchema, teamMemberCreateSchema, teamMemberUpdateSchema, featureCreateSchema, featureUpdateSchema, idSchema } from "./About.validation.js";
-import { uploadFileToS3, getSignedUrlS3 } from "@utils/Function.js";
+import { uploadFileToS3, getSignedUrlS3 } from "../../Utils/Function.js";
 import mongoose from "mongoose";
 
 const parseAboutData = (body) => {

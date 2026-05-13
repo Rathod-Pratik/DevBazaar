@@ -1,6 +1,6 @@
 import express from 'express'
 import { CreateCategory, DeleteCategory, getCategory, updateCategory } from './Category.Controller.js';
-import { verifyAdmin } from '@middleware/Auth.middleware.js';
+import { verifyAdmin } from '../../Middleware/Auth.middleware.js';
 
 const routes=express.Router();
 

@@ -1,5 +1,5 @@
-import CartModel from "../model/CartModel.js";
-import OrderModel from "./OrderModel.js";
+import CartModel from "../Cart/Cart.Model.js";
+import OrderModel from "./Order.Model.js";
 import { validate, cancelOrderSchema, getOrderSchema, getAllOrderSchema, createOrderSchema, getOrderByIdSchema } from "./Order.Validation.js";
 
 export const CancelOrder = async (req, res) => {

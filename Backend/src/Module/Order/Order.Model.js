@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
     orderNumber: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
     },
 
@@ -13,7 +12,6 @@ const OrderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     items: [
@@ -242,8 +240,8 @@ const OrderSchema = new mongoose.Schema(
   }
 );
 
-OrderSchema.index({ orderNumber: 1 });
+OrderSchema.index({ orderNumber: 1 }, { unique: true });
 OrderSchema.index({ userId: 1 });
-OrderSchema.index({ orderStatus: 1 });
+OrderSchema.index({ status: 1 });
 
-module.exports = mongoose.model("Order", OrderSchema);
+export default mongoose.model("Order", OrderSchema);
