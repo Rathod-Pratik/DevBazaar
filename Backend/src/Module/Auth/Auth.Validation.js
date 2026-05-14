@@ -13,11 +13,6 @@ const passwordSchema = z
 
 const nameSchema = z.string({ required_error: "name is required" }).trim().min(1, "name is required");
 
-const otpSchema = z
-	.string({ required_error: "otp is required" })
-	.trim()
-	.regex(/^\d{6}$/, "Invalid OTP");
-
 const addressUpdateSchema = z.object({
 	fullAddress: z.string().trim().min(1).optional(),
 	landmark: z.string().trim().min(1).optional(),
@@ -35,20 +30,6 @@ export const signupSchema = z.object({
 });
 
 export const loginSchema = z.object({
-	email: emailSchema,
-	password: passwordSchema,
-});
-
-export const forgotPasswordSchema = z.object({
-	email: emailSchema,
-});
-
-export const verifyOtpSchema = z.object({
-	email: emailSchema,
-	otp: otpSchema,
-});
-
-export const resetPasswordSchema = z.object({
 	email: emailSchema,
 	password: passwordSchema,
 });
@@ -86,10 +67,6 @@ export const profileUpdateSchema = z.object({
 		message: "At least one profile field is required",
 	}
 );
-
-export const userActionSchema = z.object({
-	_id: mongoId,
-});
 
 export const validate = (schema, payload) => {
 	const result = schema.safeParse(payload);

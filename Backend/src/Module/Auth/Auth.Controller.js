@@ -1,8 +1,7 @@
 import User from "./Auth.Model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { sendOTPEmail } from "../../Utils/Mail.js";
-import { forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, userActionSchema, validate, verifyOtpSchema } from "./Auth.Validation.js";
+import { loginSchema, signupSchema, validate } from "./Auth.Validation.js";
 
 export const signup = async (req, res) => {
   const validated = validate(signupSchema, req.body);
@@ -189,90 +188,4 @@ export const Logout = (req, res) => {
   res.clearCookie("adminToken", { httpOnly: true, secure: true, sameSite: "None" });
   res.clearCookie("userToken", { httpOnly: true, secure: true, sameSite: "None" });
   res.status(200).json({ success: true, message: "Logged out successfully" });
-};
-
-const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-export const ForgotPassword = async (req, res) => {
-  const validated = validate(forgotPasswordSchema, req.body);
-  if (!validated.success) {
-    return res.status(400).json({ error: validated.message });
-  }
-
-  try {
-    const { email } = validated.data;
-
-    const user = await User.findOne({ email });
-    if (!user || user.isDelete) {
-      return res.status(400).json({ NotFound: true, error: "User not found" });
-    }
-
-    const otp = generateOTP();
-    user.otp = otp;
-    await user.save();
-
-    // Send OTP via email
-    const emailSent = await sendOTPEmail(email, otp);
-    if (!emailSent) {
-      return res.status(500).json({ error: "Failed to send OTP" });
-    }
-
-    return res.status(200).json({ message: "OTP sent to your email" });
-  } catch (error) {
-    console.error("Forgot password error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-export const VerifyOTP = async (req, res) => {
-  const validated = validate(verifyOtpSchema, req.body);
-  if (!validated.success) {
-    return res.status(400).json({ error: validated.message });
-  }
-
-  try {
-    const { email, otp } = validated.data;
-
-    const user = await User.findOne({ email, otp });
-    if (!user || user.isDelete) {
-      return res.status(400).json({ InvalidOTP: true, error: "Invalid OTP" });
-    }
-
-    return res.status(200).json({ message: "OTP verified successfully" });
-  } catch (error) {
-    console.error("OTP verification error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-export const ResetPassword = async (req, res) => {
-  const validated = validate(resetPasswordSchema, req.body);
-  if (!validated.success) {
-    return res.status(400).json({ error: validated.message });
-  }
-
-  try {
-    const { email, password } = validated.data;
-
-    const user = await User.findOne({ email });
-    if (!user || user.isDelete) {
-      return res.status(400).json({ InvalidEmail: true, error: "User not found" });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    await User.findByIdAndUpdate(
-      user._id,
-      { password: hashedPassword, otp: "" },
-      { new: true }
-    );
-
-    return res.status(200).json({ message: "Password reset successfully" });
-  } catch (error) {
-    console.error("Reset password error:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
 };

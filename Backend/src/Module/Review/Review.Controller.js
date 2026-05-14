@@ -5,7 +5,8 @@ import {
     productIdsQuerySchema,
     reviewCreateSchema,
 } from "./Review.Validation.js";
-import { deleteFile, uploadFileToS3, getSignedUrlS3 } from "../../Utils/Function.js";
+import { deleteFile, uploadFileToS3, getCache, setCache } from "../../Utils/Function.js";
+import { REVIEW_CACHE_TTL, REVIEW_LIST_CACHE_PREFIX, REVIEW_DETAIL_CACHE_PREFIX, getCacheVersion, invalidateReviewCache, getCachedSignedUrl } from "./Review.Cache.js";
 
 const formatValidationErrors = (error) => error.issues.map((err) => err.message).join(", ");
 
@@ -39,7 +40,7 @@ const withSignedImageUrls = async (review) => {
                 if (image?.url) {
                     return {
                         ...image,
-                        signedUrl: await getSignedUrlS3(image.url),
+                        signedUrl: await getCachedSignedUrl(image.url),
                     };
                 }
 
@@ -61,14 +62,22 @@ export const GetReview=async(req,res)=>{
     const { ProductId } = validation.data;
 
     try {
-        const Review=await ReviewModel.find({ ProductId });
-        if(!Review){
-            return res.status(200).send("No Review found");
+        const version = await getCacheVersion();
+        const cacheKey = `${REVIEW_LIST_CACHE_PREFIX}:v${version}:product:${ProductId}`;
+        const cached = await getCache(cacheKey);
+        if (cached) return res.status(200).json(cached);
+
+        const Review = await ReviewModel.find({ ProductId });
+        if (!Review || Review.length === 0) {
+            const resp = { Review: [] };
+            await setCache(cacheKey, resp, REVIEW_CACHE_TTL);
+            return res.status(200).json(resp);
         }
-        else{
-            const reviewsWithImages = await Promise.all(Review.map(withSignedImageUrls));
-            return res.status(200).json({Review: reviewsWithImages})
-        }
+
+        const reviewsWithImages = await Promise.all(Review.map(withSignedImageUrls));
+        const resp = { Review: reviewsWithImages };
+        await setCache(cacheKey, resp, REVIEW_CACHE_TTL);
+        return res.status(200).json(resp);
     } catch (error) {
         return res.status(400).json({"Message":error.message})
     }
@@ -93,9 +102,17 @@ export const GetReviewsByProducts = async (req, res) => {
     }
 
     try {
+        const version = await getCacheVersion();
+        const keyIds = ids.join(",");
+        const cacheKey = `${REVIEW_LIST_CACHE_PREFIX}:v${version}:products:${keyIds}`;
+        const cached = await getCache(cacheKey);
+        if (cached) return res.status(200).json(cached);
+
         const reviews = await ReviewModel.find({ ProductId: { $in: ids } });
         const reviewsWithImages = await Promise.all(reviews.map(withSignedImageUrls));
-        return res.status(200).json({ Review: reviewsWithImages });
+        const resp = { Review: reviewsWithImages };
+        await setCache(cacheKey, resp, REVIEW_CACHE_TTL);
+        return res.status(200).json(resp);
     } catch (error) {
         return res.status(400).json({ Message: error.message });
     }
@@ -103,14 +120,22 @@ export const GetReviewsByProducts = async (req, res) => {
 
 export const GetAllReview=async(req,res)=>{
     try {
-        const Review=await ReviewModel.find();
-        if(!Review){
-            return res.status(200).send("No Review found");
+        const version = await getCacheVersion();
+        const cacheKey = `${REVIEW_LIST_CACHE_PREFIX}:v${version}:all`;
+        const cached = await getCache(cacheKey);
+        if (cached) return res.status(200).json(cached);
+
+        const Review = await ReviewModel.find();
+        if (!Review || Review.length === 0) {
+            const resp = { Review: [] };
+            await setCache(cacheKey, resp, REVIEW_CACHE_TTL);
+            return res.status(200).json(resp);
         }
-        else{
-            const reviewsWithImages = await Promise.all(Review.map(withSignedImageUrls));
-            return res.status(200).json({Review: reviewsWithImages})
-        }
+
+        const reviewsWithImages = await Promise.all(Review.map(withSignedImageUrls));
+        const resp = { Review: reviewsWithImages };
+        await setCache(cacheKey, resp, REVIEW_CACHE_TTL);
+        return res.status(200).json(resp);
     } catch (error) {
         return res.status(400).json({"Message":error.message})
     }
@@ -135,6 +160,7 @@ export const CreateReview=async(req,res)=>{
             images,
         })
         if(Review){
+            await invalidateReviewCache();
             const reviewWithImages = await withSignedImageUrls(Review);
             return res.status(201).json({Review: reviewWithImages})
         }
@@ -173,11 +199,11 @@ export const DeleteReview=async(req,res)=>{
 
         await ReviewModel.findByIdAndDelete(_id);
 
-        if(Review){
-            return res.status(200).send("delete review Successfully")
-        }
-        else{
-            return res.status(400).send("Failed to delete review")
+        if (Review) {
+            await invalidateReviewCache();
+            return res.status(200).send("delete review Successfully");
+        } else {
+            return res.status(400).send("Failed to delete review");
         }
     } catch (error) {
         return res.status(400).json({message:error})

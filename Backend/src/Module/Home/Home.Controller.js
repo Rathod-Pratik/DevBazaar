@@ -3,6 +3,8 @@ import { HeroModel, CategoriesModel, saleModel, ReviewModel as FeaturedReviewMod
 import ProductModel from "../Product/Product.model.js";
 import ReviewModel from "../Review/Review.Model.js";
 import { uploadFileToS3 } from "../../Utils/Function.js";
+import { getCache, setCache } from "../../Utils/Function.js";
+import { HOME_CACHE_TTL, HOME_CACHE_PREFIX, getCacheVersion, invalidateHomeCache } from "./Home.Cache.js";
 import {
   heroCreateSchema,
   heroUpdateSchema,
@@ -80,6 +82,7 @@ export const createHero = async (req, res) => {
     });
 
     await heroData.save();
+    await invalidateHomeCache();
     return res.status(201).json({ success: true, data: heroData });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -133,6 +136,7 @@ export const updateHero = async (req, res) => {
     }
 
     await heroData.save();
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, data: heroData });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -154,6 +158,7 @@ export const deleteHero = async (req, res) => {
 
     heroData.heroes.id(heroId).deleteOne();
     await heroData.save();
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, message: "Hero deleted successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -207,6 +212,8 @@ export const createCategories = async (req, res) => {
       imageUrl,
     });
 
+    await invalidateHomeCache();
+
     return res.status(201).json({ success: true, data: categories });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -249,6 +256,7 @@ export const updateCategories = async (req, res) => {
     }
 
     await categories.save();
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, data: categories });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -286,6 +294,7 @@ export const createFlashSale = async (req, res) => {
     });
 
     const populated = await flashSale.populate("products");
+    await invalidateHomeCache();
     return res.status(201).json({ success: true, data: populated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -315,6 +324,7 @@ export const updateFlashSale = async (req, res) => {
 
     await flashSale.save();
     const populated = await flashSale.populate("products");
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, data: populated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -324,6 +334,7 @@ export const updateFlashSale = async (req, res) => {
 export const deleteFlashSale = async (req, res) => {
   try {
     await saleModel.deleteOne();
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, message: "Flash sale deleted successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -361,6 +372,7 @@ export const createFeaturedReview = async (req, res) => {
     });
 
     const populated = await featured.populate("reviews");
+    await invalidateHomeCache();
     return res.status(201).json({ success: true, data: populated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -390,6 +402,7 @@ export const updateFeaturedReviews = async (req, res) => {
 
     await featured.save();
     const populated = await featured.populate("reviews");
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, data: populated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -399,6 +412,7 @@ export const updateFeaturedReviews = async (req, res) => {
 export const deleteFeaturedReviews = async (req, res) => {
   try {
     await FeaturedReviewModel.deleteOne();
+    await invalidateHomeCache();
     return res.status(200).json({ success: true, message: "Featured reviews deleted successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -407,12 +421,17 @@ export const deleteFeaturedReviews = async (req, res) => {
 
 export const getHomeContent = async (req, res) => {
   try {
+    const version = await getCacheVersion();
+    const cacheKey = `${HOME_CACHE_PREFIX}:v${version}:content`;
+    const cached = await getCache(cacheKey);
+    if (cached) return res.status(200).json(cached);
+
     const heroes = await HeroModel.findOne();
     const categories = await CategoriesModel.findOne();
     const flashSale = await saleModel.findOne().populate("products");
     const reviews = await ReviewModel.findOne().populate("reviews");
 
-    return res.status(200).json({
+    const resp = {
       success: true,
       data: {
         heroes: heroes || { heroes: [] },
@@ -420,7 +439,10 @@ export const getHomeContent = async (req, res) => {
         flashSale: flashSale || { products: [] },
         reviews: reviews || { reviews: [] },
       },
-    });
+    };
+
+    await setCache(cacheKey, resp, HOME_CACHE_TTL);
+    return res.status(200).json(resp);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

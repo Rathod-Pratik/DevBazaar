@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 
 // Routes
 import AuthRoutes from '../Module/Auth/Auth.Routes.js';
+import UserRoutes from '../Module/User/User.Routes.js';
+import OTPRoutes from '../Module/OTP/OTP.Routes.js';
 import WishListRoute from '../Module/WishList/WishList.Routes.js';
 import ProductRoutes from '../Module/Product/Product.Routes.js';
 import CartRoute from '../Module/Cart/Cart.Routes.js';
@@ -20,6 +22,7 @@ import ReviewRoutes from '../Module/Review/Review.Routes.js';
 import HomeContentRoutes from '../Module/Home/Home.Routes.js';
 import AboutContentRoutes from '../Module/About/About.Routes.js';
 import VoucherRoutes from '../Module/Voucher/Voucher.Routes.js';
+import WalletRoutes from '../Module/Wallet/Wallet.Routes.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -39,6 +42,7 @@ connectToMongo(process.env.DB_CONNECTION_STRING)
   });
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(cookieParser());
 
 // CORS options
@@ -59,6 +63,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', AuthRoutes);
+app.use('/api', UserRoutes);
+app.use('/api', OTPRoutes);
 app.use('/wishList', WishListRoute);
 app.use('/Product', ProductRoutes);
 app.use('/Cart', CartRoute);
@@ -72,6 +78,7 @@ app.use('/review', ReviewRoutes);
 app.use('/home', HomeContentRoutes);
 app.use('/about', AboutContentRoutes);
 app.use('/voucher', VoucherRoutes);
+app.use('/wallet', WalletRoutes);
 
 app.get("/auth/check", (req, res) => {
   const token = req.cookies.adminToken;

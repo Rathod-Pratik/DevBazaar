@@ -91,10 +91,6 @@ const UserSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    otp: {
-      type: String,
-      default: "",
-    },
     lastPasswordChangedAt: {
       type: Date,
       default: null,

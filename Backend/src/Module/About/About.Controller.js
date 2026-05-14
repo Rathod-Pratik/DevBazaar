@@ -1,7 +1,8 @@
 import AboutModel from "./About.Model.js";
 import { heroUpdateSchema, statsUpdateSchema, teamMemberCreateSchema, teamMemberUpdateSchema, featureCreateSchema, featureUpdateSchema, idSchema } from "./About.validation.js";
-import { uploadFileToS3, getSignedUrlS3 } from "../../Utils/Function.js";
+import { uploadFileToS3, getCache, setCache } from "../../Utils/Function.js";
 import mongoose from "mongoose";
+import { ABOUT_CACHE_PREFIX, ABOUT_CACHE_TTL, getCacheVersion, invalidateAboutCache, getCachedSignedUrl } from "./About.Cache.js";
 
 const parseAboutData = (body) => {
   const rawData = body?.data ?? body;
@@ -15,6 +16,13 @@ const parseAboutData = (body) => {
 
 export const GetAbout = async (req, res) => {
   try {
+    const version = await getCacheVersion();
+    const cacheKey = `${ABOUT_CACHE_PREFIX}:v${version}:singleton:about-us`;
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      return res.status(200).json(cached);
+    }
+
     const existing = await AboutModel.findOne({
       singletonKey: 'about-us',
     }).lean();
@@ -23,7 +31,7 @@ export const GetAbout = async (req, res) => {
 
     // Generate signed URLs for image fields if they exist
     if (aboutData.heroImage && aboutData.heroImage.includes('s3')) {
-      aboutData.heroImageSignedUrl = await getSignedUrlS3(aboutData.heroImage);
+      aboutData.heroImageSignedUrl = await getCachedSignedUrl(aboutData.heroImage);
     }
 
     // Signed URLs for team member images
@@ -33,7 +41,7 @@ export const GetAbout = async (req, res) => {
           if (member.image && member.image.includes('s3')) {
             return {
               ...member,
-              imageSignedUrl: await getSignedUrlS3(member.image)
+                imageSignedUrl: await getCachedSignedUrl(member.image)
             };
           }
           return member;
@@ -48,7 +56,7 @@ export const GetAbout = async (req, res) => {
           if (feature.icon && feature.icon.includes('s3')) {
             return {
               ...feature,
-              iconSignedUrl: await getSignedUrlS3(feature.icon)
+                iconSignedUrl: await getCachedSignedUrl(feature.icon)
             };
           }
           return feature;
@@ -56,11 +64,14 @@ export const GetAbout = async (req, res) => {
       );
     }
 
-    return res.status(200).json({
+    const response = {
       success: true,
       data: aboutData,
-      exists: Boolean(existing)
-    });
+      exists: Boolean(existing),
+    };
+
+    await setCache(cacheKey, response, ABOUT_CACHE_TTL);
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -103,6 +114,8 @@ export const UpdateHero = async (req, res) => {
       { upsert: true, new: true }
     );
 
+    await invalidateAboutCache();
+
     return res.status(200).json({
       success: true,
       message: "Hero section updated successfully",
@@ -133,6 +146,8 @@ export const UpdateStats = async (req, res) => {
       { upsert: true, new: true }
     );
 
+    await invalidateAboutCache();
+
     return res.status(200).json({
       success: true,
       message: "Stats updated successfully",
@@ -161,6 +176,8 @@ export const DeleteStat = async (req, res) => {
       { $pull: { stats: { _id: id } } },
       { new: true }
     );
+
+    await invalidateAboutCache();
 
     return res.status(200).json({
       success: true,
@@ -202,6 +219,8 @@ export const CreateTeamMember = async (req, res) => {
       { $push: { teamMembers: { name, role, image } } },
       { upsert: true, new: true }
     );
+
+    await invalidateAboutCache();
 
     return res.status(201).json({
       success: true,
@@ -262,6 +281,8 @@ export const UpdateTeamMember = async (req, res) => {
       return res.status(404).json({ success: false, message: "Team member not found" });
     }
 
+    await invalidateAboutCache();
+
     return res.status(200).json({
       success: true,
       message: "Team member updated successfully",
@@ -294,6 +315,8 @@ export const DeleteTeamMember = async (req, res) => {
     if (!updatedAbout) {
       return res.status(404).json({ success: false, message: "Team member not found" });
     }
+
+    await invalidateAboutCache();
 
     return res.status(200).json({
       success: true,
@@ -335,6 +358,8 @@ export const CreateFeature = async (req, res) => {
       { $push: { features: { title, description, icon } } },
       { upsert: true, new: true }
     );
+
+    await invalidateAboutCache();
 
     return res.status(201).json({
       success: true,
@@ -395,6 +420,8 @@ export const UpdateFeature = async (req, res) => {
       return res.status(404).json({ success: false, message: "Feature not found" });
     }
 
+    await invalidateAboutCache();
+
     return res.status(200).json({
       success: true,
       message: "Feature updated successfully",
@@ -427,6 +454,8 @@ export const DeleteFeature = async (req, res) => {
     if (!updatedAbout) {
       return res.status(404).json({ success: false, message: "Feature not found" });
     }
+
+    await invalidateAboutCache();
 
     return res.status(200).json({
       success: true,
